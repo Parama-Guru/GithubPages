@@ -1,12 +1,29 @@
-# OriginZero — approval deck
+# parama-guru.github.io
 
-A seven-slide presentation, built as a website.
+Static sites published with GitHub Pages.
 
-**View it:** https://parama-guru.github.io/
+**https://parama-guru.github.io/**
 
-- `index.html` — the deck (loads `deck.css`, `deck.js`, and fonts from Google Fonts)
-- `OriginZero-deck-offline.html` — the same deck as one self-contained file, fonts embedded; works with no internet
+| Path | What it is |
+|---|---|
+| `/` | landing page |
+| `/originzero/` | [OriginZero approval deck](https://parama-guru.github.io/originzero/) — seven slides, presented as a website |
 
-Arrow keys or scroll to move between slides. Press F11 for fullscreen.
+## OriginZero deck
 
-Applied Mathematics & Computational Science, PSG College of Technology.
+A research collaboration portal for the Applied Mathematics & Computational Science department at
+PSG College of Technology. The deck exists in two forms:
+
+- `originzero/index.html` — the site version, loading `deck.css`, `deck.js` and fonts from Google Fonts
+- `originzero/OriginZero-deck-offline.html` — the same deck as a single self-contained file with the
+  fonts, images, CSS and JS embedded; works with no internet and no sibling files
+
+Scroll or use the arrow keys to move between slides. Press F11 for fullscreen.
+
+## Publishing
+
+Served straight from `main` by GitHub Pages. No build step and no dependencies — plain HTML, CSS and
+vanilla JavaScript.
+
+The deck source lives in the [OriginZero](https://github.com/Parama-Guru/OriginZero) repository under
+`pppt/`; this repository is the published copy.
