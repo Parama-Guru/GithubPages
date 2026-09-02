@@ -2,7 +2,7 @@
 
 A seven-slide presentation, built as a website.
 
-**View it:** https://parama-guru.github.io/originzero-deck/
+**View it:** https://parama-guru.github.io/
 
 - `index.html` — the deck (loads `deck.css`, `deck.js`, and fonts from Google Fonts)
 - `OriginZero-deck-offline.html` — the same deck as one self-contained file, fonts embedded; works with no internet
