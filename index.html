@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>OriginZero — Department Research Portal</title>
+    <meta
+      name="description"
+      content="OriginZero — a research collaboration portal for the Applied Mathematics and Computational Science department at PSG College of Technology."
+    />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300;1,6..72,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="deck.css" />
+  </head>
+
+  <body>
+    <div class="grain" aria-hidden="true"></div>
+
+    <nav class="nav" aria-label="Deck navigation">
+      <span class="nav__brand">
+        <img src="../frontend/public/logo.png" alt="" />
+        OriginZero
+      </span>
+      <span class="nav__sep" aria-hidden="true"></span>
+      <span class="nav__meta">AMCS · PSG Tech</span>
+    </nav>
+
+    <ol class="dots" aria-label="Slide progress"></ol>
+
+    <main>
+      <!-- 1 ................................................................. -->
+      <section class="slide slide--hero" id="s1" aria-labelledby="s1h">
+        <div class="wrap center">
+          <p class="eyebrow reveal">Proposal for departmental approval</p>
+          <h1 class="display display--xl reveal" id="s1h">
+            Research starts with<br /><em>finding each other.</em>
+          </h1>
+          <p class="lead reveal">
+            OriginZero is a departmental portal where AMCS students and faculty publish research
+            ideas, and where collaborators are chosen on evidence rather than acquaintance.
+          </p>
+          <div class="pillrow reveal">
+            <span class="pill pill--solid">Built and running</span>
+            <span class="pill">Open to PD · PW · PT · PC</span>
+          </div>
+        </div>
+        <div class="scrollcue reveal" aria-hidden="true">Scroll</div>
+      </section>
+
+      <!-- 2 ................................................................. -->
+      <section class="slide" id="s2" aria-labelledby="s2h">
+        <div class="wrap">
+          <p class="eyebrow reveal">01 — The problem</p>
+          <h2 class="display reveal" id="s2h">
+            Good projects stall<br /><em>before they begin.</em>
+          </h2>
+          <div class="grid grid--3">
+            <article class="card reveal">
+              <span class="card__num">01</span>
+              <h3>Faculty cannot find students</h3>
+              <p>
+                A supervisor with an idea has no way to reach the students capable of it. Word of
+                mouth reaches whoever sits nearest.
+              </p>
+            </article>
+            <article class="card reveal">
+              <span class="card__num">02</span>
+              <h3>Students cannot find work</h3>
+              <p>
+                Capable students go unnoticed because nobody has a record of what they can do. The
+                same few names are asked every time.
+              </p>
+            </article>
+            <article class="card reveal">
+              <span class="card__num">03</span>
+              <h3>Selection is impressionistic</h3>
+              <p>
+                Choices rest on familiarity and a CGPA. There is no evidence of how someone thinks
+                about the actual problem.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3 ................................................................. -->
+      <section class="slide" id="s3" aria-labelledby="s3h">
+        <div class="wrap">
+          <p class="eyebrow reveal">02 — How it works</p>
+          <h2 class="display reveal" id="s3h">
+            Five steps,<br /><em>one sitting.</em>
+          </h2>
+          <p class="sub reveal">
+            Sign-in is gated on the server to <span class="mono">@psgtech.ac.in</span> addresses
+            with a PD, PW, PT or PC roll number.
+          </p>
+
+          <ol class="steps">
+            <li class="step reveal">
+              <span class="step__n">1</span>
+              <div>
+                <h3>Build a profile</h3>
+                <p>Upload a resume and it fills itself in. Skills, projects, publications.</p>
+              </div>
+            </li>
+            <li class="step reveal">
+              <span class="step__n">2</span>
+              <div>
+                <h3>Your skills — 15 questions</h3>
+                <p>Drawn from the skills on that profile, five each at easy, medium and hard.</p>
+              </div>
+            </li>
+            <li class="step reveal">
+              <span class="step__n">3</span>
+              <div>
+                <h3>General skills — 15 questions</h3>
+                <p>The same paper for everyone: core computing, mathematics and research method.</p>
+              </div>
+            </li>
+            <li class="step reveal">
+              <span class="step__n">4</span>
+              <div>
+                <h3>Choose a research idea</h3>
+                <p>Browse open proposals from faculty and students. Up to five at a time.</p>
+              </div>
+            </li>
+            <li class="step reveal">
+              <span class="step__n">5</span>
+              <div>
+                <h3>Answer in your own words</h3>
+                <p>Five questions on the proposal, then three written answers.</p>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- 4 ................................................................. -->
+      <section class="slide" id="s4" aria-labelledby="s4h">
+        <div class="wrap">
+          <p class="eyebrow reveal">03 — Fairness</p>
+          <h2 class="display reveal" id="s4h">
+            Judged on the work,<br /><em>not the name.</em>
+          </h2>
+          <div class="grid grid--2">
+            <article class="panel reveal">
+              <h3>What a supervisor sees</h3>
+              <ul class="ticks">
+                <li>Name and department</li>
+                <li>The three written answers, in full</li>
+                <li>A score for each round, and a combined rank</li>
+              </ul>
+            </article>
+            <article class="panel panel--muted reveal">
+              <h3>What is deliberately hidden</h3>
+              <ul class="crosses">
+                <li>Photograph, roll number, CGPA</li>
+                <li>The candidate's email address, at every stage</li>
+                <li>Who published the idea, until a shortlist is made</li>
+              </ul>
+            </article>
+          </div>
+          <p class="note reveal">
+            Contact details are exchanged only when a supervisor shortlists someone — and that
+            decision is final, so it is made deliberately.
+          </p>
+        </div>
+      </section>
+
+      <!-- 5 ................................................................. -->
+      <section class="slide" id="s5" aria-labelledby="s5h">
+        <div class="wrap">
+          <p class="eyebrow reveal">04 — For faculty</p>
+          <h2 class="display reveal" id="s5h">
+            Publish an idea.<br /><em>Read the answers.</em>
+          </h2>
+          <div class="grid grid--3">
+            <article class="card reveal">
+              <span class="card__num">01</span>
+              <h3>Upload what you already wrote</h3>
+              <p>
+                Drop an existing proposal document and the listing fills itself in — question,
+                method, intended contribution, and the skills a collaborator needs.
+              </p>
+            </article>
+            <article class="card reveal">
+              <span class="card__num">02</span>
+              <h3>Applicants arrive ranked</h3>
+              <p>
+                Strongest first, with every written answer attached. No inbox, no forwarded PDFs,
+                no chasing.
+              </p>
+            </article>
+            <article class="card reveal">
+              <span class="card__num">03</span>
+              <h3>Shortlist and begin</h3>
+              <p>
+                One click shares your address with the student you chose. Nothing is shared with
+                anyone else.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6 ................................................................. -->
+      <section class="slide" id="s6" aria-labelledby="s6h">
+        <div class="wrap">
+          <p class="eyebrow reveal">05 — Where it stands</p>
+          <h2 class="display reveal" id="s6h">
+            Not a proposal.<br /><em>It is already running.</em>
+          </h2>
+          <div class="stats">
+            <div class="stat reveal">
+              <span class="stat__v" data-count>1496</span>
+              <span class="stat__l">questions in the offline bank</span>
+            </div>
+            <div class="stat reveal">
+              <span class="stat__v" data-count>67</span>
+              <span class="stat__l">skill and research topics covered</span>
+            </div>
+            <div class="stat reveal">
+              <span class="stat__v" data-count>3</span>
+              <span class="stat__l">assessment rounds per application</span>
+            </div>
+            <div class="stat reveal">
+              <span class="stat__v">Live</span>
+              <span class="stat__l">deployed and reachable today</span>
+            </div>
+          </div>
+          <p class="note reveal">
+            The assessment runs from a pre-built bank, so a test never waits on anything external.
+            The bank grows on its own as new skills appear on student profiles.
+          </p>
+        </div>
+      </section>
+
+      <!-- 7 ................................................................. -->
+      <section class="slide slide--end" id="s7" aria-labelledby="s7h">
+        <div class="wrap center">
+          <p class="eyebrow reveal">What we are asking</p>
+          <h2 class="display display--xl reveal" id="s7h">
+            Approval to open it<br /><em>to the department.</em>
+          </h2>
+          <div class="asks">
+            <div class="ask reveal">
+              <span class="ask__n">01</span>
+              <p>Permission to enrol AMCS students for the coming semester</p>
+            </div>
+            <div class="ask reveal">
+              <span class="ask__n">02</span>
+              <p>Faculty accounts, so supervisors can publish their own research</p>
+            </div>
+            <div class="ask reveal">
+              <span class="ask__n">03</span>
+              <p>A first set of departmental projects to open the portal with</p>
+            </div>
+          </div>
+          <p class="lead reveal">Ready for a live walkthrough whenever it suits you.</p>
+        </div>
+      </section>
+    </main>
+
+    <script src="deck.js"></script>
+  </body>
+</html>

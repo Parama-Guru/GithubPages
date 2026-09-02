@@ -1,0 +1,482 @@
+/* Design tokens read from a live render of lassie.ai, not invented.
+   abcMarist is commercial, so Newsreader (OFL) stands in for it. */
+:root {
+  --paper: rgb(249, 248, 245);
+  --ink: rgb(26, 22, 19);
+  --muted: rgb(102, 102, 102);
+  --white: rgb(255, 255, 255);
+  --sand-40: rgba(227, 221, 207, 0.4);
+  --sand-20: rgba(227, 221, 207, 0.2);
+  --hair: rgba(26, 22, 19, 0.1);
+
+  --r-sm: 12px;
+  --r-md: 16px;
+  --r-pill: 56px;
+
+  --ease-ui: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-reveal: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --display: 'Newsreader', Georgia, serif;
+  --sans: 'DM Sans', system-ui, sans-serif;
+  --mono: 'DM Mono', ui-monospace, monospace;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-snap-type: y proximity;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Paper tooth. The reference has film grain over its media; this is the flat equivalent. */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ------------------------------------------------------------------ nav */
+.nav {
+  position: fixed;
+  top: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 8px 9px 14px;
+  border-radius: var(--r-pill);
+  background: var(--white);
+  border: 1px solid var(--sand-40);
+  box-shadow: 0 1px 2px rgba(26, 22, 19, 0.04);
+  font-size: 14px;
+}
+.nav__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+}
+.nav__brand img {
+  height: 18px;
+  width: auto;
+  display: block;
+}
+.nav__sep {
+  width: 1px;
+  height: 16px;
+  background: var(--hair);
+}
+.nav__meta {
+  padding-right: 8px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 12.5px;
+}
+
+/* ------------------------------------------------------------------ dots */
+.dots {
+  position: fixed;
+  right: 26px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.dots a {
+  display: block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(26, 22, 19, 0.18);
+  transition: background 0.3s var(--ease-ui), transform 0.3s var(--ease-ui);
+}
+.dots a:hover {
+  background: rgba(26, 22, 19, 0.45);
+}
+.dots a[aria-current='true'] {
+  background: var(--ink);
+  transform: scale(1.5);
+}
+
+/* ------------------------------------------------------------------ slide */
+.slide {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  scroll-snap-align: start;
+  /* A deck slide has to fit one screen, so the rhythm follows viewport height. */
+  padding: clamp(64px, 9.5vh, 132px) 0 clamp(44px, 7vh, 88px);
+  border-top: 1px solid var(--sand-40);
+}
+.slide:first-child {
+  border-top: 0;
+}
+.slide--hero,
+.slide--end {
+  position: relative;
+  background:
+    radial-gradient(70% 90% at 50% 0%, var(--sand-20), transparent 70%),
+    var(--paper);
+}
+
+.wrap {
+  width: min(1080px, calc(100% - 56px));
+  margin-inline: auto;
+}
+.center {
+  text-align: center;
+}
+.center .lead,
+.center .sub {
+  margin-inline: auto;
+}
+
+/* ------------------------------------------------------------------ type */
+.eyebrow {
+  margin: 0 0 clamp(12px, 2vh, 22px);
+  font-family: var(--mono);
+  font-size: 12.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.display {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 350;
+  font-size: clamp(34px, min(5.2vw, 8.2vh), 58px);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+}
+.display--xl {
+  font-size: clamp(42px, min(7vw, 11vh), 77px);
+}
+.display em {
+  font-style: italic;
+  font-weight: 300;
+}
+
+.lead {
+  max-width: 56ch;
+  margin: clamp(16px, 2.6vh, 26px) 0 0;
+  font-size: clamp(15.5px, 1.5vw, 19px);
+  color: var(--muted);
+}
+.sub {
+  max-width: 62ch;
+  margin: clamp(12px, 2vh, 22px) 0 0;
+  color: var(--muted);
+}
+.note {
+  max-width: 66ch;
+  margin: clamp(20px, 3.4vh, 40px) 0 0;
+  padding-left: 18px;
+  border-left: 2px solid var(--sand-40);
+  color: var(--muted);
+  font-size: 15.5px;
+}
+.mono {
+  font-family: var(--mono);
+  font-size: 0.92em;
+  color: var(--ink);
+}
+
+/* ------------------------------------------------------------------ pills */
+.pillrow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 34px;
+}
+.pill {
+  padding: 9px 18px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--sand-40);
+  background: var(--white);
+  font-size: 14px;
+  color: var(--muted);
+}
+.pill--solid {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+
+.scrollcue {
+  position: absolute;
+  left: 50%;
+  bottom: 40px;
+  transform: translateX(-50%);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.scrollcue::after {
+  content: '';
+  display: block;
+  width: 1px;
+  height: 26px;
+  margin: 10px auto 0;
+  background: linear-gradient(var(--muted), transparent);
+}
+
+/* ------------------------------------------------------------------ grids */
+.grid {
+  display: grid;
+  gap: 20px;
+  margin-top: clamp(26px, 4.4vh, 56px);
+}
+.grid--3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+.grid--2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.card {
+  padding: clamp(20px, 3vh, 30px) 28px clamp(22px, 3.2vh, 32px);
+  border-radius: var(--r-md);
+  background: var(--white);
+  border: 1px solid var(--sand-40);
+}
+.card__num {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--muted);
+}
+.card h3 {
+  margin: clamp(10px, 1.6vh, 16px) 0 10px;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(19px, 2.7vh, 23px);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+.card p {
+  margin: 0;
+  font-size: 15.5px;
+  color: var(--muted);
+}
+
+.panel {
+  padding: 32px 30px;
+  border-radius: var(--r-md);
+  background: var(--white);
+  border: 1px solid var(--sand-40);
+}
+.panel--muted {
+  background: var(--sand-20);
+}
+.panel h3 {
+  margin: 0 0 20px;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 24px;
+  letter-spacing: -0.01em;
+}
+.ticks,
+.crosses {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ticks li,
+.crosses li {
+  position: relative;
+  padding: 11px 0 11px 30px;
+  border-top: 1px solid var(--hair);
+  font-size: 15.5px;
+}
+.ticks li:first-child,
+.crosses li:first-child {
+  border-top: 0;
+}
+.ticks li::before,
+.crosses li::before {
+  position: absolute;
+  left: 0;
+  font-family: var(--mono);
+  font-size: 15px;
+}
+.ticks li::before {
+  content: '+';
+  color: var(--ink);
+}
+.crosses li::before {
+  content: '\2013';
+  color: var(--muted);
+}
+.crosses li {
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ steps */
+.steps {
+  margin: clamp(16px, 2.8vh, 40px) 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--hair);
+}
+.step {
+  display: flex;
+  gap: 22px;
+  align-items: baseline;
+  padding: clamp(8px, 1.3vh, 17px) 4px;
+  border-bottom: 1px solid var(--hair);
+}
+.step__n {
+  flex: none;
+  width: 30px;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--muted);
+}
+.step h3 {
+  margin: 0 0 3px;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(17px, 2.4vh, 23px);
+  letter-spacing: -0.01em;
+}
+.step p {
+  margin: 0;
+  max-width: 62ch;
+  font-size: 14.5px;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ stats */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-top: clamp(26px, 4.4vh, 56px);
+}
+.stat {
+  padding: clamp(20px, 3vh, 30px) 26px;
+  border-radius: var(--r-md);
+  background: var(--white);
+  border: 1px solid var(--sand-40);
+}
+.stat__v {
+  display: block;
+  font-family: var(--display);
+  font-weight: 350;
+  font-size: clamp(38px, 4.4vw, 54px);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+.stat__l {
+  display: block;
+  margin-top: 12px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------------ asks */
+.asks {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin: clamp(26px, 4.4vh, 56px) 0 0;
+  text-align: left;
+}
+.ask {
+  padding: 26px 24px;
+  border-radius: var(--r-md);
+  background: var(--white);
+  border: 1px solid var(--sand-40);
+}
+.ask__n {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--muted);
+}
+.ask p {
+  margin: 12px 0 0;
+  font-size: 16px;
+}
+
+/* ------------------------------------------------------------------ reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.7s var(--ease-reveal),
+    transform 0.7s var(--ease-reveal);
+}
+.reveal.in {
+  opacity: 1;
+  transform: none;
+}
+
+/* ------------------------------------------------------------------ narrow */
+@media (max-width: 900px) {
+  .grid--3,
+  .grid--2,
+  .stats,
+  .asks {
+    grid-template-columns: 1fr;
+  }
+  .slide {
+    padding: 110px 0 64px;
+    min-height: auto;
+  }
+  /* The hero is no longer full-height here, so the cue would land on the pills. */
+  .scrollcue {
+    display: none;
+  }
+  .dots {
+    display: none;
+  }
+  .nav__meta {
+    display: none;
+  }
+  .nav__sep {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
