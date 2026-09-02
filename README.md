@@ -1,13 +1,13 @@
-# parama-guru.github.io
+# GithubPages
 
 Static sites published with GitHub Pages.
 
-**https://parama-guru.github.io/**
+**https://parama-guru.github.io/GithubPages/**
 
 | Path | What it is |
 |---|---|
-| `/` | landing page |
-| `/originzero/` | [OriginZero approval deck](https://parama-guru.github.io/originzero/) — seven slides, presented as a website |
+| `/GithubPages/` | landing page |
+| `/GithubPages/originzero/` | [OriginZero approval deck](https://parama-guru.github.io/GithubPages/originzero/) — seven slides, presented as a website |
 
 ## OriginZero deck
 
@@ -25,5 +25,5 @@ Scroll or use the arrow keys to move between slides. Press F11 for fullscreen.
 Served straight from `main` by GitHub Pages. No build step and no dependencies — plain HTML, CSS and
 vanilla JavaScript.
 
-The deck source lives in the [OriginZero](https://github.com/Parama-Guru/OriginZero) repository under
-`pppt/`; this repository is the published copy.
+The deck source lives in the OriginZero repository under `pppt/`; this repository is the published
+copy.
