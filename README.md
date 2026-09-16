@@ -7,6 +7,7 @@ Static sites published with GitHub Pages.
 | Path | What it is |
 |---|---|
 | `/GithubPages/` | landing page |
+| `/GithubPages/ns/` | [Network Science presentation](https://parama-guru.github.io/GithubPages/ns/) - Semester 9, 2027; Signed Random Networks |
 | `/GithubPages/ir/` | [Information Retrieval presentation](https://parama-guru.github.io/GithubPages/ir/) - Semester 8, 2027; Query Expansion Techniques |
 | `/GithubPages/CCT/` | [CCT: Confusion-Calibrated Tutoring](https://parama-guru.github.io/GithubPages/CCT/) - NIT Hackathon, 2027 |
 | `/GithubPages/originzero/` | [OriginZero approval deck](https://parama-guru.github.io/GithubPages/originzero/) — seven slides, presented as a website |
@@ -28,6 +29,11 @@ Served straight from the root of `main` by GitHub Pages, with `.nojekyll` disabl
 No backend, Node.js, package installation, or build step is needed for hosting or viewing the published files.
 The `.nojekyll` marker is retained intentionally: GitHub's branch-deployment workflow uses it to skip
 Jekyll processing for these already prepared static files.
+
+The [Network Science presentation](ns/index.html) covers Signed Random Networks for Semester 9, 2027.
+Its 15 slides total 18 minutes, divided equally among three speakers, with interactive Three.js graphs,
+structural balance experiments, and light/dark themes. The standalone file works offline and needs no
+backend or runtime downloads. See [ns/README.md](ns/README.md) and the [speaker script](ns/speaker-notes.md).
 
 The [IR presentation](ir/index.html) is a self-contained file with Three.js, styles, and fonts embedded.
 It includes 16 chapters, a 15-minute speaking script, light/dark themes, and interactive explanations.
