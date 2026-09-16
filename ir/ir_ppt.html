@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Query Expansion Techniques in Information Retrieval</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        background: #111;
+        color: #fff;
+        overflow: hidden;
+    }
+
+    .presentation {
+        width: 100vw;
+        height: 100vh;
+        position: relative;
+    }
+
+    .slide {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        padding: 7vh 8vw;
+        display: none;
+        background: #f7f7f5;
+        color: #171717;
+        overflow: hidden;
+    }
+
+    .slide.active {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .slide-number {
+        position: absolute;
+        top: 35px;
+        right: 55px;
+        font-size: 14px;
+        color: #777;
+        letter-spacing: 1px;
+    }
+
+    .accent {
+        width: 55px;
+        height: 5px;
+        background: #171717;
+        margin-bottom: 25px;
+    }
+
+    h1 {
+        font-size: clamp(42px, 5vw, 78px);
+        line-height: 1.05;
+        font-weight: 700;
+        max-width: 1000px;
+        letter-spacing: -2px;
+    }
+
+    h2 {
+        font-size: clamp(34px, 4vw, 58px);
+        line-height: 1.1;
+        margin-bottom: 35px;
+        letter-spacing: -1.5px;
+    }
+
+    h3 {
+        font-size: 24px;
+        margin-bottom: 12px;
+    }
+
+    p {
+        font-size: clamp(18px, 1.7vw, 26px);
+        line-height: 1.5;
+    }
+
+    ul {
+        margin-left: 25px;
+        font-size: clamp(18px, 1.6vw, 25px);
+        line-height: 1.65;
+    }
+
+    li {
+        margin-bottom: 8px;
+    }
+
+    .subtitle {
+        margin-top: 25px;
+        font-size: clamp(20px, 2vw, 30px);
+        color: #555;
+    }
+
+    .small {
+        font-size: 17px;
+        color: #666;
+    }
+
+    .center {
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    /* Title slide */
+    .title-slide {
+        background: #171717;
+        color: #fff;
+    }
+
+    .title-slide .accent {
+        background: #fff;
+    }
+
+    .title-slide .subtitle {
+        color: #bbb;
+    }
+
+    .title-slide h1 {
+        max-width: 1100px;
+    }
+
+    .meta {
+        margin-top: 55px;
+        color: #aaa;
+        font-size: 18px;
+        line-height: 1.8;
+    }
+
+    /* Content layouts */
+    .two-column {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 70px;
+        align-items: center;
+        flex: 1;
+    }
+
+    .three-column {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+        margin-top: 20px;
+    }
+
+    .card {
+        background: #fff;
+        border: 1px solid #ddd;
+        padding: 30px;
+        border-radius: 18px;
+        min-height: 190px;
+    }
+
+    .card h3 {
+        font-size: 24px;
+        margin-bottom: 18px;
+    }
+
+    .card p {
+        font-size: 18px;
+        color: #555;
+    }
+
+    /* Query example */
+    .query-box {
+        background: #171717;
+        color: #fff;
+        border-radius: 20px;
+        padding: 30px 35px;
+        font-family: "Courier New", monospace;
+        font-size: clamp(18px, 1.8vw, 28px);
+        margin: 20px 0;
+    }
+
+    .arrow {
+        text-align: center;
+        font-size: 38px;
+        margin: 8px 0;
+    }
+
+    .highlight {
+        font-weight: bold;
+        text-decoration: underline;
+        text-underline-offset: 5px;
+    }
+
+    /* Process diagram */
+    .process {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        margin: 35px 0;
+        flex-wrap: wrap;
+    }
+
+    .process-box {
+        background: #171717;
+        color: #fff;
+        padding: 22px 25px;
+        border-radius: 12px;
+        font-size: 18px;
+        text-align: center;
+        min-width: 145px;
+    }
+
+    .process-arrow {
+        font-size: 28px;
+        color: #555;
+    }
+
+    /* Comparison */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        background: #fff;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    th, td {
+        padding: 22px 25px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+        font-size: 18px;
+    }
+
+    th {
+        background: #171717;
+        color: #fff;
+        font-size: 19px;
+    }
+
+    tr:last-child td {
+        border-bottom: none;
+    }
+
+    /* Metrics */
+    .metrics {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 15px;
+        margin-top: 25px;
+    }
+
+    .metric {
+        background: #171717;
+        color: #fff;
+        padding: 22px 12px;
+        text-align: center;
+        border-radius: 12px;
+        font-size: 18px;
+    }
+
+    /* Navigation */
+    .navigation {
+        position: fixed;
+        bottom: 28px;
+        right: 40px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        z-index: 100;
+    }
+
+    .nav-btn {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        border: 1px solid #aaa;
+        background: rgba(255,255,255,0.9);
+        color: #111;
+        cursor: pointer;
+        font-size: 20px;
+    }
+
+    .nav-btn:hover {
+        background: #171717;
+        color: #fff;
+    }
+
+    .counter {
+        color: #777;
+        font-size: 14px;
+        min-width: 45px;
+        text-align: center;
+    }
+
+    /* Footer */
+    .footer {
+        position: absolute;
+        bottom: 32px;
+        left: 8vw;
+        font-size: 13px;
+        color: #999;
+    }
+
+    /* Responsive */
+    @media (max-width: 800px) {
+        .slide {
+            padding: 7vh 7vw;
+        }
+
+        .two-column {
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+
+        .three-column {
+            grid-template-columns: 1fr;
+        }
+
+        .metrics {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .process-box {
+            min-width: 120px;
+        }
+
+        table {
+            font-size: 14px;
+        }
+
+        th, td {
+            padding: 13px;
+            font-size: 14px;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="presentation">
+
+    <!-- Slide 1 -->
+    <section class="slide title-slide active center">
+        <div class="accent"></div>
+
+        <h1>Query Expansion Techniques in Information Retrieval</h1>
+
+        <p class="subtitle">
+            Improving Search Results Through Better Queries
+        </p>
+
+        <div class="meta">
+            <div>Your Name</div>
+            <div>Information Retrieval Course</div>
+            <div>Department / College</div>
+        </div>
+
+        <div class="slide-number">01 / 10</div>
+    </section>
+
+
+    <!-- Slide 2 -->
+    <section class="slide">
+        <div class="slide-number">02 / 10</div>
+
+        <div class="accent"></div>
+        <h2>What is Query Expansion?</h2>
+
+        <div class="two-column">
+
+            <div>
+                <p>
+                    Query Expansion is the process of adding
+                    <span class="highlight">related terms</span>
+                    to a user's original search query.
+                </p>
+
+                <br>
+
+                <ul>
+                    <li>Users often enter short queries.</li>
+                    <li>The original query may not contain enough information.</li>
+                    <li>Related terms can help find more relevant documents.</li>
+                </ul>
+            </div>
+
+            <div>
+                <div class="query-box">
+                    Original Query<br><br>
+                    car accident
+                </div>
+
+                <div class="arrow">↓</div>
+
+                <div class="query-box">
+                    Expanded Query<br><br>
+                    car automobile accident collision
+                </div>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            Information Retrieval
+        </div>
+    </section>
+
+
+    <!-- Slide 3 -->
+    <section class="slide">
+        <div class="slide-number">03 / 10</div>
+
+        <div class="accent"></div>
+        <h2>Why Do We Need Query Expansion?</h2>
+
+        <div class="two-column">
+
+            <div>
+                <h3>The Vocabulary Problem</h3>
+
+                <p>
+                    Users and documents may use
+                    <strong>different words for the same concept.</strong>
+                </p>
+
+                <div class="query-box">
+                    User Query:<br>
+                    heart attack treatment
+                </div>
+
+                <div class="query-box">
+                    Document:<br>
+                    myocardial infarction management
+                </div>
+            </div>
+
+            <div>
+                <h3>Query Expansion Helps With</h3>
+
+                <ul>
+                    <li>Synonyms</li>
+                    <li>Different terminology</li>
+                    <li>Short or incomplete queries</li>
+                    <li>Vocabulary differences between users and documents</li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            The goal is to reduce the vocabulary gap.
+        </div>
+    </section>
+
+
+    <!-- Slide 4 -->
+    <section class="slide">
+        <div class="slide-number">04 / 10</div>
+
+        <div class="accent"></div>
+        <h2>Main Query Expansion Approaches</h2>
+
+        <div class="three-column">
+
+            <div class="card">
+                <h3>01</h3>
+                <h3>Pseudo-Relevance Feedback</h3>
+                <p>
+                    Learns useful terms from the top retrieved documents.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>02</h3>
+                <h3>WordNet-Based Expansion</h3>
+                <p>
+                    Uses predefined relationships between words.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>03</h3>
+                <h3>Embedding-Based Expansion</h3>
+                <p>
+                    Uses AI to identify semantically similar concepts.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="process">
+
+            <div class="process-box">
+                Original<br>Query
+            </div>
+
+            <div class="process-arrow">→</div>
+
+            <div class="process-box">
+                Expansion
+            </div>
+
+            <div class="process-arrow">→</div>
+
+            <div class="process-box">
+                Improved<br>Query
+            </div>
+
+            <div class="process-arrow">→</div>
+
+            <div class="process-box">
+                Better<br>Retrieval
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- Slide 5 -->
+    <section class="slide">
+        <div class="slide-number">05 / 10</div>
+
+        <div class="accent"></div>
+        <h2>Pseudo-Relevance Feedback</h2>
+
+        <div class="two-column">
+
+            <div>
+                <h3>Basic Idea</h3>
+
+                <p>
+                    The system assumes that the
+                    <strong>top few retrieved documents are relevant</strong>
+                    and uses them to improve the query.
+                </p>
+
+                <br>
+
+                <p>
+                    It does not ask the user for feedback.
+                    The system automatically selects useful terms.
+                </p>
+            </div>
+
+            <div>
+                <div class="query-box">
+                    User Query<br><br>
+                    car accident
+                </div>
+
+                <div class="arrow">↓</div>
+
+                <div class="query-box">
+                    Top Documents<br><br>
+                    vehicle · collision · driver · road
+                </div>
+
+                <div class="arrow">↓</div>
+
+                <div class="query-box">
+                    Expanded Query<br><br>
+                    car accident vehicle collision driver
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- Slide 6 -->
+    <section class="slide">
+        <div class="slide-number">06 / 10</div>
+
+        <div class="accent"></div>
+        <h2>WordNet-Based Query Expansion</h2>
+
+        <div class="two-column">
+
+            <div>
+                <h3>Basic Idea</h3>
+
+                <p>
+                    WordNet is a lexical database that stores relationships
+                    between English words.
+                </p>
+
+                <br>
+
+                <ul>
+                    <li>Synonyms</li>
+                    <li>More general terms</li>
+                    <li>More specific terms</li>
+                </ul>
+            </div>
+
+            <div>
+
+                <div class="query-box">
+                    User Query<br><br>
+                    car
+                </div>
+
+                <div class="arrow">↓</div>
+
+                <div class="query-box">
+                    Related Words<br><br>
+                    automobile · auto · motorcar
+                </div>
+
+                <div class="arrow">↓</div>
+
+                <div class="query-box">
+                    Expanded Query<br><br>
+                    car OR automobile OR auto
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- Slide 7 -->
+    <section class="slide">
+        <div class="slide-number">07 / 10</div>
+
+        <div class="accent"></div>
+        <h2>Embedding-Based Query Expansion</h2>
+
+        <div class="two-column">
+
+            <div>
+                <h3>Basic Idea</h3>
+
+                <p>
+                    Embedding models represent words or sentences as
+                    <strong>numerical vectors</strong>.
+                </p>
+
+                <br>
+
+                <p>
+                    Terms with similar meanings tend to have similar
+                    representations.
+                </p>
+
+                <br>
+
+                <p>
+                    This allows the system to find
+                    <strong>semantic relationships</strong>
+                    rather than relying only on exact words.
+                </p>
+            </div>
+
+            <div>
+
+                <div class="query-box">
+                    User Query<br><br>
+                    laptop repair
+                </div>
+
+                <div class="arrow">↓</div>
+
+                <div class="query-box">
+                    Semantically Related<br><br>
+                    computer troubleshooting<br>
+                    notebook repair<br>
+                    laptop maintenance
+                </div>
+
+                <div class="arrow">↓</div>
+
+                <div class="query-box">
+                    Expanded Query<br><br>
+                    laptop repair computer troubleshooting
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- Slide 8 -->
+    <section class="slide">
+        <div class="slide-number">08 / 10</div>
+
+        <div class="accent"></div>
+        <h2>Comparison of Techniques</h2>
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Technique</th>
+                    <th>How It Finds Terms</th>
+                    <th>Main Strength</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td><strong>PRF</strong></td>
+                    <td>From top retrieved documents</td>
+                    <td>Learns from actual search results</td>
+                </tr>
+
+                <tr>
+                    <td><strong>WordNet</strong></td>
+                    <td>Lexical relationships</td>
+                    <td>Simple and interpretable</td>
+                </tr>
+
+                <tr>
+                    <td><strong>Embeddings</strong></td>
+                    <td>Semantic similarity</td>
+                    <td>Understands meaning</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+        <div style="margin-top:35px;">
+            <p>
+                <strong>Important:</strong>
+                Each technique can introduce irrelevant terms,
+                so expansion must be controlled.
+            </p>
+        </div>
+    </section>
+
+
+    <!-- Slide 9 -->
+    <section class="slide">
+        <div class="slide-number">09 / 10</div>
+
+        <div class="accent"></div>
+        <h2>Applications & Evaluation</h2>
+
+        <div class="two-column">
+
+            <div>
+                <h3>Applications</h3>
+
+                <ul>
+                    <li>Web search</li>
+                    <li>Academic search</li>
+                    <li>Digital libraries</li>
+                    <li>E-commerce search</li>
+                    <li>Question-answering systems</li>
+                    <li>Modern semantic / RAG systems</li>
+                </ul>
+            </div>
+
+            <div>
+                <h3>How Do We Measure Improvement?</h3>
+
+                <p>
+                    Evaluation metrics help determine whether
+                    query expansion actually improves retrieval quality.
+                </p>
+
+                <div class="metrics">
+                    <div class="metric">Precision</div>
+                    <div class="metric">Recall</div>
+                    <div class="metric">F1</div>
+                    <div class="metric">MAP</div>
+                    <div class="metric">NDCG</div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- Slide 10 -->
+    <section class="slide center">
+        <div class="slide-number">10 / 10</div>
+
+        <div class="accent"></div>
+
+        <h2>Conclusion</h2>
+
+        <div style="max-width:900px; text-align:left;">
+
+            <ul>
+                <li>
+                    Query expansion improves retrieval by adding useful terms.
+                </li>
+
+                <li>
+                    <strong>PRF</strong> learns from initial search results.
+                </li>
+
+                <li>
+                    <strong>WordNet</strong> uses predefined word relationships.
+                </li>
+
+                <li>
+                    <strong>Embeddings</strong> find semantically related concepts.
+                </li>
+
+                <li>
+                    Modern search systems increasingly combine
+                    <strong>traditional IR + semantic methods</strong>.
+                </li>
+            </ul>
+
+            <div class="query-box" style="margin-top:40px; text-align:center;">
+                The goal is not simply to retrieve more documents,<br>
+                but to retrieve more relevant documents.
+            </div>
+
+        </div>
+    </section>
+
+</div>
+
+
+<!-- Navigation -->
+<div class="navigation">
+
+    <button class="nav-btn" onclick="previousSlide()">‹</button>
+
+    <div class="counter" id="counter">
+        1 / 10
+    </div>
+
+    <button class="nav-btn" onclick="nextSlide()">›</button>
+
+</div>
+
+
+<script>
+
+    let currentSlide = 0;
+
+    const slides = document.querySelectorAll(".slide");
+    const counter = document.getElementById("counter");
+
+    function showSlide(index) {
+
+        if (index < 0) {
+            index = slides.length - 1;
+        }
+
+        if (index >= slides.length) {
+            index = 0;
+        }
+
+        slides.forEach((slide, i) => {
+            slide.classList.toggle("active", i === index);
+        });
+
+        currentSlide = index;
+
+        counter.textContent =
+            `${currentSlide + 1} / ${slides.length}`;
+    }
+
+    function nextSlide() {
+        showSlide(currentSlide + 1);
+    }
+
+    function previousSlide() {
+        showSlide(currentSlide - 1);
+    }
+
+    document.addEventListener("keydown", function(event) {
+
+        if (
+            event.key === "ArrowRight" ||
+            event.key === " " ||
+            event.key === "PageDown"
+        ) {
+            nextSlide();
+        }
+
+        if (
+            event.key === "ArrowLeft" ||
+            event.key === "PageUp"
+        ) {
+            previousSlide();
+        }
+
+        if (event.key === "Home") {
+            showSlide(0);
+        }
+
+        if (event.key === "End") {
+            showSlide(slides.length - 1);
+        }
+
+    });
+
+</script>
+
+</body>
+</html>

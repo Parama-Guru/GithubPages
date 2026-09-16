@@ -77,6 +77,19 @@
         transform: translateY(-2px);
         border-color: rgba(26, 22, 19, 0.22);
       }
+      a.card + a.card {
+        margin-top: 16px;
+      }
+      a.card:focus-visible {
+        outline: 2px solid var(--ink);
+        outline-offset: 5px;
+      }
+      a.card .card-meta {
+        margin-bottom: 12px;
+        font-family: 'DM Mono', monospace;
+        font-size: 11px;
+        color: var(--muted);
+      }
       a.card h2 {
         font-family: 'Newsreader', Georgia, serif;
         font-weight: 300;
@@ -111,6 +124,15 @@
       <p class="lead">
         Applied Mathematics &amp; Computational Science, PSG College of Technology.
       </p>
+
+      <a class="card" href="ir/">
+        <p class="card-meta">Semester 9 / 2027</p>
+        <h2>Information Retrieval presentation</h2>
+        <p>
+          Query Expansion Techniques in Information Retrieval and Web Search.
+          A 15-minute presentation with interactive figures.
+        </p>
+      </a>
 
       <a class="card" href="originzero/">
         <h2>OriginZero — approval deck</h2>

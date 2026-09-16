@@ -7,6 +7,7 @@ Static sites published with GitHub Pages.
 | Path | What it is |
 |---|---|
 | `/GithubPages/` | landing page |
+| `/GithubPages/ir/` | [Information Retrieval presentation](https://parama-guru.github.io/GithubPages/ir/) - Semester 8, 2027; Query Expansion Techniques |
 | `/GithubPages/originzero/` | [OriginZero approval deck](https://parama-guru.github.io/GithubPages/originzero/) — seven slides, presented as a website |
 
 ## OriginZero deck
@@ -22,8 +23,16 @@ Scroll or use the arrow keys to move between slides. Press F11 for fullscreen.
 
 ## Publishing
 
-Served straight from `main` by GitHub Pages. No build step and no dependencies — plain HTML, CSS and
-vanilla JavaScript.
+Served straight from the root of `main` by GitHub Pages, with `.nojekyll` disabling Jekyll processing.
+No backend, Node.js, package installation, or build step is needed for hosting or viewing the published files.
 
-The deck source lives in the OriginZero repository under `pppt/`; this repository is the published
+The [IR presentation](ir/index.html) is a self-contained file with Three.js, styles, and fonts embedded.
+It includes 16 chapters, a 15-minute speaking script, light/dark themes, and interactive explanations.
+Download that one file for offline viewing. Development workspaces, `node_modules`, caches, and test artifacts
+are local-only and excluded from GitHub. See [ir/README.md](ir/README.md) for content and compatibility notes.
+
+The reusable [create-webpage skill](.github/skills/create-webpage/SKILL.md) is available at the repository root
+for future website tasks, with shared requirements in [AGENTS.md](AGENTS.md).
+
+The OriginZero deck source lives in the OriginZero repository under `pppt/`; this repository is the published
 copy.
