@@ -55,4 +55,8 @@ The original [ir_ppt.html](ir_ppt.html) is preserved as a reference. The complet
 
 Development tooling is not published in this repository. The original editing workspace is retained locally and ignored; installed dependencies and generated caches are disposable. They are not needed on GitHub or in Pages.
 
+The local TypeScript configuration was checked on 17 September 2026: strict typechecking, the production build, seven content tests, and seven browser tests passed with the locked development dependencies installed. No TypeScript configuration change was needed. Lint now explicitly targets local source, tests, and configuration because the editing workspace is Git-ignored.
+
+An editor message saying `Cannot find type definition file for 'vite/client'` after dependency cleanup means the optional Vite development package is absent. It is not an error in the published presentation. Restore the locked development dependencies before editing or rebuilding; do not remove the Vite types or weaken strict checks to hide the missing-tooling message.
+
 Future edits must preserve the single-file delivery contract and rerun offline, responsive, and static-host checks before replacing the published artifact. Do not substitute raw TypeScript source for the browser-ready file.

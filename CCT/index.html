@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CCT — Confusion-Calibrated Tutoring</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Background layers -->
+  <div class="bg-gradient"></div>
+  <div class="bg-grid"></div>
+  <div class="bg-orbs">
+    <span class="orb orb-1"></span>
+    <span class="orb orb-2"></span>
+    <span class="orb orb-3"></span>
+    <span class="orb orb-4"></span>
+  </div>
+  <canvas id="particles"></canvas>
+
+  <!-- Progress bar -->
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+  <!-- Top brand bar -->
+  <header class="topbar glass">
+    <div class="brand">
+      <span class="brand-mark">CCT</span>
+      <span class="brand-sep"></span>
+      <span class="brand-text">Confusion-Calibrated Tutoring</span>
+    </div>
+    <div class="topbar-meta">
+      <span class="badge">NIT Hackathon · 2027</span>
+      <span class="badge">H26EDU05</span>
+    </div>
+  </header>
+
+  <!-- Deck -->
+  <main class="deck" id="deck">
+
+    <!-- ============ SLIDE 1 · TEAM DETAILS ============ -->
+    <section class="slide slide-cover is-active" data-title="Team">
+      <div class="cover-inner">
+        <span class="kicker reveal">Team H26EDU05 · PSG College of Technology</span>
+        <h1 class="cover-title reveal">
+          <span class="grad-text">Confusion-Calibrated</span><br />Tutoring
+        </h1>
+        <div class="team-cards reveal">
+          <div class="glass tcard">
+            <span class="label">Team ID</span>
+            <span class="value mono">H26EDU05</span>
+          </div>
+          <div class="glass tcard">
+            <span class="label">Project Title</span>
+            <span class="value">Confusion-Calibrated Tutoring</span>
+          </div>
+          <div class="glass tcard">
+            <span class="label">College</span>
+            <span class="value">PSG College of Technology</span>
+          </div>
+        </div>
+        <div class="team-people reveal">
+          <div class="person">
+            <span class="avatar">P</span>
+            <div><span class="person-name">Paramaguru H</span><span class="person-sub">Team Lead</span></div>
+          </div>
+          <div class="person">
+            <span class="avatar alt">M</span>
+            <div><span class="person-name">Mohamed Aklamaash</span><span class="person-sub">Team Member</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="cover-visual reveal">
+        <div class="loop-ring">
+          <span class="loop-node n1">Measure</span>
+          <span class="loop-node n2">Decide</span>
+          <span class="loop-node n3">Train</span>
+          <svg viewBox="0 0 200 200" class="loop-svg">
+            <circle cx="100" cy="100" r="78" class="loop-circle" />
+          </svg>
+          <span class="loop-core">CCT</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SLIDE 2 · PROBLEM STATEMENT & OBJECTIVES ============ -->
+    <section class="slide" data-title="Problem">
+      <div class="slide-head">
+        <span class="kicker">Problem Statement</span>
+        <h2 class="slide-title">Tutors optimise in-session performance, <span class="grad-text">not durable learning</span></h2>
+      </div>
+      <div class="two-col">
+        <div class="glass card reveal">
+          <p class="lead">
+            LLM tutors resolve student confusion immediately — they explain and reveal answers, which maximises how well
+            the session <em>feels</em> and how quickly the current problem is solved.
+          </p>
+          <p class="lead">
+            Cognitive science shows durable learning requires a controlled degree of struggle — desirable
+            difficulty and productive failure. By removing all friction, current tutors produce strong
+            in-session performance but weak retention and transfer — the learning–performance paradox.
+          </p>
+          <p class="muted">
+            No deployed tutor measures a student's confusion or decides how much struggle to preserve.
+            Confusion is unobserved, and teaching strategy is therefore heuristic.
+          </p>
+        </div>
+        <div class="glass card obj-card reveal">
+          <h3 class="card-h">Objectives</h3>
+          <ul class="obj-list">
+            <li><span class="oi">1</span><span>Measure per-turn confusion as a <b>calibrated</b>, uncertainty-aware signal grounded in <b>cognitive science</b>.</span></li>
+            <li><span class="oi">2</span><span>Ask questions with an <b>adaptive question system</b> — difficulty and the next <b>graph-linked question</b> chosen from the learner's confusion and mastery.</span></li>
+            <li><span class="oi">3</span><span>Hold confusion inside a <b>productive-struggle band</b> so the student truly <b>learns the concept</b>, not just the answer.</span></li>
+            <li><span class="oi">4</span><span>Train the tutor policy on <b>delayed transfer</b> — retention measured after a time gap, not in-session comfort.</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SLIDE 3 · SYSTEM DESIGN & ALGORITHMS ============ -->
+    <section class="slide" data-title="System Design">
+      <div class="slide-head">
+        <span class="kicker">System Design &amp; Algorithms</span>
+        <h2 class="slide-title">A control layer around the language model</h2>
+      </div>
+      <div class="arch">
+        <div class="arch-cycle">
+          <span class="cycle-tag">Per-turn loop</span>
+          <div class="arch-flow">
+            <div class="node glass io reveal" style="--i:0">
+              <span class="node-name">Question</span>
+              <span class="node-desc">Served from the adaptive map</span>
+            </div>
+            <span class="arrow reveal" style="--i:1">&rarr;</span>
+            <div class="node glass accent-1 reveal" style="--i:2">
+              <span class="node-num">1</span>
+              <span class="node-name">Confusion Estimator</span>
+              <span class="node-desc">Confusion (0&ndash;1) and uncertainty per turn</span>
+            </div>
+            <span class="arrow reveal" style="--i:3">&rarr;</span>
+            <div class="node glass accent-2 reveal" style="--i:4">
+              <span class="node-num">2</span>
+              <span class="node-name">Budget Controller</span>
+              <span class="node-desc">Band status: below / inside / above</span>
+            </div>
+            <span class="arrow reveal" style="--i:5">&rarr;</span>
+            <div class="node glass accent-3 reveal" style="--i:6">
+              <span class="node-num">3</span>
+              <span class="node-name">Tutor Policy</span>
+              <span class="node-desc">Strategy: probe / verify / scaffold</span>
+            </div>
+            <span class="arrow reveal" style="--i:7">&rarr;</span>
+            <div class="node glass io reveal" style="--i:8">
+              <span class="node-name">Response</span>
+              <span class="node-desc">Language model renders the reply</span>
+            </div>
+          </div>
+          <div class="loop-return reveal">
+            <span class="lr-label">Student replies &mdash; the turn repeats until the question is solved</span>
+          </div>
+        </div>
+        <div class="arch-exit reveal">
+          <span class="exit-arrow">&rarr;</span>
+          <span>Question solved &mdash; the next question is served from the adaptive map, and the loop begins again.</span>
+        </div>
+      </div>
+      <div class="algo-grid algo-compact">
+        <div class="glass algo reveal">
+          <div class="a-h"><span class="a-n">A1</span><span class="a-t">Confusion Estimation</span></div>
+          <p>A multi-head DistilBERT classifier over the student turn: one shared encoder with two heads producing a
+            confusion score and an uncertainty score. Scores are calibrated so confusion is a usable probability.</p>
+          <div class="a-meta"><span class="a-chip">DistilBERT</span><span class="a-chip">2 heads</span><span class="a-chip">calibration</span></div>
+        </div>
+        <div class="glass algo reveal">
+          <div class="a-h"><span class="a-n">A2</span><span class="a-t">Budget Control</span></div>
+          <p>Deterministic control against a per-skill band. An uncertainty gate suppresses low-confidence signals, and
+            hysteresis prevents band-status jitter across adjacent turns; the band adapts slowly per student.</p>
+          <div class="a-meta"><span class="a-chip">band [b, b&#772;]</span><span class="a-chip">hysteresis</span><span class="a-chip">uncertainty gate</span></div>
+        </div>
+        <div class="glass algo reveal">
+          <div class="a-h"><span class="a-n">A3</span><span class="a-t">Policy Optimisation</span></div>
+          <p>The PPO tutor policy is pre-trained on the simulated dataset to a usable, sub-optimal start, then keeps
+            learning online from each user's conversations &mdash; adapting continuously to become more personalized.</p>
+          <div class="a-meta"><span class="a-chip">PPO</span><span class="a-chip">simulated &rarr; personalized</span><span class="a-chip">online update</span></div>
+        </div>
+        <div class="glass algo reveal">
+          <div class="a-h"><span class="a-n">A4</span><span class="a-t">Adaptive Learning</span></div>
+          <p>Beyond the initial dataset, the system adapts to each learner from real input &mdash; the band and question
+            difficulty shift with their confusion and recall as the policy keeps updating on live conversations.</p>
+          <div class="a-meta"><span class="a-chip">per-learner band</span><span class="a-chip">difficulty adapts</span><span class="a-chip">real data</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SLIDE 4 · RESEARCH IMPACT ============ -->
+    <section class="slide" data-title="Research Impact">
+      <div class="slide-head">
+        <span class="kicker">Research Impact</span>
+        <h2 class="slide-title">A novel, niche solution &mdash; <span class="grad-text">trained, not prompted</span></h2>
+      </div>
+      <div class="research-layout">
+        <div class="glass research-table reveal">
+          <div class="research-row research-head">
+            <span>Metric</span><span>Untrained</span><span>Trained</span><span>Direction</span>
+          </div>
+          <div class="research-row">
+            <span class="research-metric">Delayed Transfer Accuracy</span>
+            <span class="research-value">0.573</span>
+            <span class="research-value trained">0.745</span>
+            <span class="research-direction good">&uarr; good</span>
+          </div>
+          <div class="research-row">
+            <span class="research-metric">Turns-in-band fraction</span>
+            <span class="research-value">0.574</span>
+            <span class="research-value trained">0.727</span>
+            <span class="research-direction good">&uarr; good</span>
+          </div>
+          <div class="research-row">
+            <span class="research-metric">Premature-answer rate <em>(sampled)</em></span>
+            <span class="research-value">0.100</span>
+            <span class="research-value trained">0.052</span>
+            <span class="research-direction good">&darr; good</span>
+          </div>
+        </div>
+        <div class="glass card novelty-card reveal">
+          <span class="p-tag">Niche &amp; novelty</span>
+          <h3 class="card-h">A gap no one else fills</h3>
+          <p class="muted">The niche: tutors that deliberately <b>preserve confusion</b> to build retention, instead of
+            removing it for a smoother session.</p>
+          <p class="muted">The novelty: CCT is the first to compose all four &mdash; a <b>trained tutor policy</b>, a
+            <b>calibrated per-turn confusion</b> signal, an explicit <b>productive-struggle band</b>, and a
+            <b>delayed-transfer</b> objective &mdash; the paradox PEARL and TASA name but never train on.</p>
+        </div>
+      </div>
+      <div class="reward-band reveal">
+        <span class="reward-lead">The reward is our novelty &mdash; the RL is grounded only on these three terms</span>
+        <div class="eq eq-inline">
+          <span class="eq-r">R</span><span class="eq-eq">=</span>
+          <span class="term pos"><span class="coef">&alpha;</span>&middot;<span class="tname">DTA</span></span>
+          <span class="eq-op">&minus;</span>
+          <span class="term neg"><span class="coef">&beta;</span>&middot;<span class="tname">hinge</span></span>
+          <span class="eq-op">&minus;</span>
+          <span class="term neg"><span class="coef">&gamma;</span>&middot;<span class="tname">scaffold</span></span>
+        </div>
+      </div>
+      <div class="reward-cols reveal">
+        <div class="glass rl-card"><span class="rl-sym pos">+ &alpha; &middot; DTA</span><span class="rl-name">Delayed transfer</span><p>Scored from the graph: when a <b>related question</b> is later answered correctly, the concept counts as retained </p></div>
+        <div class="glass rl-card"><span class="rl-sym neg">&minus; &beta; &middot; hinge</span><span class="rl-name">Band violation</span><p>Both too-easy and too-confusing turns cost reward, holding the learner inside the <b>productive-struggle band</b>.</p></div>
+        <div class="glass rl-card"><span class="rl-sym neg">&minus; &gamma; &middot; scaffold</span><span class="rl-name">Premature help</span><p>Revealing the answer before the student has struggled erases the very learning we want to keep.</p></div>
+      </div>
+    </section>
+
+    <!-- ============ SLIDE 5 · TECHNOLOGY STACK ============ -->
+    <section class="slide" data-title="Tech Stack">
+      <div class="slide-head">
+        <span class="kicker">Technology Stack</span>
+        <h2 class="slide-title">Implementation and tooling</h2>
+      </div>
+      <div class="stack-grid">
+        <div class="glass stack-card reveal">
+          <h3>Backend &amp; Serving</h3>
+          <ul>
+            <li><b>Python</b><span>3.11</span></li>
+            <li><b>FastAPI</b><span>REST API</span></li>
+            <li><b>Uvicorn</b><span>ASGI server</span></li>
+            <li><b>python-multipart</b><span>uploads</span></li>
+          </ul>
+        </div>
+        <div class="glass stack-card reveal">
+          <h3>Machine Learning &amp; RL</h3>
+          <ul>
+            <li><b>PyTorch</b><span>models + PPO</span></li>
+            <li><b>Transformers</b><span>DistilBERT</span></li>
+            <li><b>scikit-learn / joblib</b><span>calibration</span></li>
+            <li><b>PPO + GAE</b><span>in-house</span></li>
+          </ul>
+        </div>
+        <div class="glass stack-card reveal">
+          <h3>Data, Config &amp; Frontend</h3>
+          <ul>
+            <li><b>PyYAML</b><span>configuration</span></li>
+            <li><b>LangChain splitters, pypdf</b><span>ingestion</span></li>
+            <li><b>Next.js, React, TypeScript</b><span>product UI</span></li>
+            <li><b>NumPy</b><span>RL policy</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SLIDE 6 · RESULTS & DEMO ============ -->
+    <section class="slide" data-title="Results">
+      <div class="slide-head">
+        <span class="kicker">Results &amp; Demonstration</span>
+        <h2 class="slide-title">Working end-to-end pipeline</h2>
+      </div>
+      <div class="results-grid">
+        <div class="demo-frame reveal">
+          <div class="df-bar"><span class="df-title">demo &middot; session walkthrough</span></div>
+          <div class="df-body">
+            <div>
+              <div class="df-cap">Demo recording</div>
+              <div class="df-link">Not included in this deck</div>
+            </div>
+          </div>
+        </div>
+        <div class="glass card results-panel reveal">
+          <ul class="result-list">
+            <li><span class="rk">4</span><span><b>Components integrated</b> &mdash; estimator, controller, policy, and adaptive question generation run end-to-end via the session runner.</span></li>
+            <li><span class="rk">&lt;1 ms</span><span><b>Controller latency</b> — deterministic band decision per turn, no GPU required.</span></li>
+            <li><span class="rk">Trained</span><span><b>Confusion estimator</b> — DistilBERT artifact versioned and served offline.</span></li>
+            <li><span class="rk">PPO</span><span><b>Policy training</b> &mdash; raises delayed transfer over the untrained policy on the simulated dataset (0.573 &rarr; 0.745).</span></li>
+            <li><span class="rk">App</span><span><b>Web application</b> &mdash; a Next.js frontend with a Python API backend serving live tutoring sessions.</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SLIDE 7 · COMPARISON & NOVELTY ============ -->
+    <section class="slide" data-title="Comparison">
+      <div class="slide-head">
+        <span class="kicker">Comparison with Existing Solutions</span>
+        <h2 class="slide-title">Where CCT differs</h2>
+      </div>
+      <div class="matrix glass reveal">
+        <div class="matrix-row matrix-head">
+          <span class="mrow-label">Approach</span>
+          <span class="mh">Trained tutor policy</span>
+          <span class="mh">Measured confusion</span>
+          <span class="mh">Productive-struggle band</span>
+          <span class="mh">Delayed-transfer objective</span>
+        </div>
+        <div class="matrix-row">
+          <span class="mrow-label">Prompt-only tutors <em>(Khanmigo, ChatGPT)</em></span>
+          <span class="cell x">&#10007;</span><span class="cell x">&#10007;</span><span class="cell x">&#10007;</span><span class="cell x">&#10007;</span>
+        </div>
+        <div class="matrix-row">
+          <span class="mrow-label">Socratic-form RL <em>(PEARL, 2026)</em></span>
+          <span class="cell v">&#10003;</span><span class="cell x">&#10007;</span><span class="cell x">&#10007;</span><span class="cell x">&#10007;</span>
+        </div>
+        <div class="matrix-row">
+          <span class="mrow-label">Single-conversation RL <em>(Nam, 2025)</em></span>
+          <span class="cell v">&#10003;</span><span class="cell x">&#10007;</span><span class="cell x">&#10007;</span><span class="cell x">&#10007;</span>
+        </div>
+        <div class="matrix-row">
+          <span class="mrow-label">Forgetting-conditioned <em>(TASA, 2025)</em></span>
+          <span class="cell x">&#10007;</span><span class="cell x">&#10007;</span><span class="cell x">&#10007;</span><span class="cell v">&#10003;</span>
+        </div>
+        <div class="matrix-row cct">
+          <span class="mrow-label">CCT <em>(this work)</em></span>
+          <span class="cell v">&#10003;</span><span class="cell v">&#10003;</span><span class="cell v">&#10003;</span><span class="cell v">&#10003;</span>
+        </div>
+      </div>
+      <div class="gap-banner glass reveal">
+        <span><b>Novelty.</b> CCT is the first system to combine a trained tutor policy, a calibrated per-turn confusion
+        signal, an explicit productive-struggle band, and a delayed-transfer training objective. It operationalises the
+        learning&ndash;performance paradox that prior work names but does not address.</span>
+      </div>
+    </section>
+
+    <!-- ============ SLIDE 8 · BUSINESS IMPACT ============ -->
+    <section class="slide" data-title="Business Impact">
+      <div class="slide-head">
+        <span class="kicker">Business Impact</span>
+        <h2 class="slide-title">We optimise for <span class="grad-text">capability</span>, not task completion</h2>
+      </div>
+      <p class="lead biz-lead reveal">AI made intelligence abundant &mdash; but if an engineer still asks the same questions six months later, organisations aren't building capability, they're <b>renting</b> it. CCT optimises for <b>capability growth</b>, not task completion.</p>
+      <div class="biz-row reveal">
+        <div class="glass biz-card"><span class="biz-k">Enterprises</span><p>Faster onboarding and more independent task completion &mdash; employees who grow monthly, not more dependent on AI.</p></div>
+        <div class="glass biz-card"><span class="biz-k">Universities</span><p>Shift from assignment completion to measurable understanding and long-term retention.</p></div>
+        <div class="glass biz-card"><span class="biz-k">Bootcamps &amp; training</span><p>Success measured by interview performance and job readiness, not course completion.</p></div>
+      </div>
+      <div class="biz-row reveal">
+        <div class="glass sig-card moat"><span class="sig-tag moat-tag">Our moat</span><p>Most AI companies collect <b>conversation data</b>. We collect <b>learning trajectories</b> &mdash; time-to-help, hints that unlock understanding, recurring misconceptions, transfer, retention.</p></div>
+        <div class="glass sig-card"><span class="sig-tag ns">North Star</span><p><b>Independence Score</b> &mdash; how well a learner solves problems without help over time. As it rises, AI dependency falls.</p></div>
+        <div class="glass sig-card zt"><span class="sig-tag zt-tag">Zero-token control</span><p>Confusion estimate, band decision, and strategy run <b>offline with zero LLM tokens</b> &mdash; at enterprise scale, <b>millions saved</b> vs prompt-engineered tutors.</p></div>
+      </div>
+    </section>
+
+    <!-- ============ SLIDE 9 · SUMMARY & FUTURE WORK ============ -->
+    <section class="slide" data-title="Summary">
+      <div class="slide-head">
+        <span class="kicker">Conclusion &amp; Next Steps</span>
+        <h2 class="slide-title">A tutor that learns <span class="grad-text">when to help</span></h2>
+      </div>
+      <div class="summary-grid">
+        <div class="glass card reveal">
+          <h3 class="card-h">Summary</h3>
+          <ul class="sum-list">
+            <li>CCT manages confusion within an adaptive productive-struggle band instead of removing all difficulty.</li>
+            <li>Source documents become a graph-based conceptual map of connected questions with chunk-level provenance.</li>
+            <li>The real-time platform integrates confusion estimation, adaptive control, PPO strategy selection, and tutor response in one learning loop.</li>
+            <li>The policy starts from synthetic training and is wired to continue adapting from completed learner conversations.</li>
+          </ul>
+        </div>
+        <div class="glass card reveal">
+          <h3 class="card-h">Next Steps</h3>
+          <ul class="sum-list">
+            <li><b>Research publication.</b> Submit the end-to-end system and human-centered evaluation to ACM CHI 2027.</li>
+            <li><b>Native application.</b> Extend the web platform into a dedicated mobile learning experience.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <nav class="nav glass" aria-label="Presentation navigation">
+    <button class="nav-btn" id="prevBtn" type="button" aria-label="Previous slide" title="Previous slide">&larr;</button>
+    <div class="dots" id="dots" aria-label="Slides"></div>
+    <span class="nav-counter" aria-live="polite"><span id="curNum">1</span> / <span id="totNum">9</span></span>
+    <button class="nav-btn" id="nextBtn" type="button" aria-label="Next slide" title="Next slide">&rarr;</button>
+  </nav>
+
+  <script src="script.js"></script>
+</body>
+</html>
