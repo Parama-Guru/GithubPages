@@ -22,7 +22,11 @@ The root site lists this deck as **Information Retrieval presentation / Semester
 - Interactive Boolean query expansion, original-query weighting, word senses, and benchmark-year comparison.
 - Chapter overview, timed playback, fullscreen where supported, and 18 linked source records.
 
-Open speaker notes with the book icon. Arrow keys or Page Up/Down navigate chapters; Home/End select the first/last chapter. Space starts or pauses timed presentation playback when an input or button is not focused. Desktop figures support bounded camera rotation. Small screens stack the content and scroll vertically rather than squeezing or clipping the slides.
+Left/Right arrows or Page Up/Down navigate chapters, including when a navigation button is focused or speaker notes are open. **Tab opens speaker notes** from the presentation; **Escape closes the dialog**. Press **/** or the keyboard icon to open the shortcut guide. N also opens notes; O opens the overview. Home/End select the first/last chapter. Space starts or pauses timed presentation playback when an input or button is not focused.
+
+Inside dialogs and form controls, Tab moves focus normally; Shift+Tab always moves focus backward. The guide's **Tab opens speaker notes** checkbox can be turned off to restore normal Tab navigation everywhere. Sliders, text inputs, and editable content retain their native keys. The preference lasts for the current page session.
+
+Desktop figures support bounded camera rotation. Small screens stack the content and scroll vertically rather than squeezing or clipping the slides.
 
 Timings include the animated sequence and short demonstration pauses; actual speaking pace varies. Timed playback pauses while a dialog is open or the tab is hidden. Background motion can be paused independently.
 
@@ -38,6 +42,7 @@ Verified in Microsoft Edge on Windows:
 - Bundled font loading, nonblank canvas pixels, animation, and camera interaction.
 - Every chapter in both themes at 1920x1080, 1440x900, 1024x768, 390x844, 320x568, and 844x390: 192 layout/diagram states.
 - Navigation, references, speaker notes and script export, expansion controls, benchmark switching, and explainer controls.
+- Arrow/Tab/slash rehearsal shortcuts, synchronized notes, native form keys, normal-Tab preference, and shortcut-guide layouts in both themes down to 320px wide.
 - Reduced-motion preference and missing-WebGL fallback.
 - Serving the identical file under a static subdirectory.
 
@@ -55,7 +60,7 @@ The original [ir_ppt.html](ir_ppt.html) is preserved as a reference. The complet
 
 Development tooling is not published in this repository. The original editing workspace is retained locally and ignored; installed dependencies and generated caches are disposable. They are not needed on GitHub or in Pages.
 
-The local TypeScript configuration was checked on 17 September 2026: strict typechecking, the production build, seven content tests, and seven browser tests passed with the locked development dependencies installed. No TypeScript configuration change was needed. Lint now explicitly targets local source, tests, and configuration because the editing workspace is Git-ignored.
+The local TypeScript configuration was checked on 17 September 2026 with locked development dependencies installed. Strict typechecking, production build, content tests, and browser tests verify changes. No TypeScript configuration change was needed. Lint explicitly targets local source, tests, and configuration because the editing workspace is Git-ignored.
 
 An editor message saying `Cannot find type definition file for 'vite/client'` after dependency cleanup means the optional Vite development package is absent. It is not an error in the published presentation. Restore the locked development dependencies before editing or rebuilding; do not remove the Vite types or weaken strict checks to hide the missing-tooling message.
 

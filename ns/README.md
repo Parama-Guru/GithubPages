@@ -22,7 +22,9 @@ The full [speaker script](speaker-notes.md) includes handoffs, demonstrations, a
 
 ## Controls
 
-- Arrow Left / Right or Page Up / Down: navigate slides.
+- Arrow Left / Right or Page Up / Down: navigate slides, including from navigation buttons and while notes are open. Notes stay synchronized with the slide.
+- Tab: open speaker notes from the presentation. Escape: return to the slide.
+- / or the keyboard icon: open the shortcut guide. Press / again or Escape to close it.
 - Home / End: jump to first / last slide.
 - Space: play or pause the current 12-second explainer.
 - N: speaker notes. O: overview. Escape: close a dialog.
@@ -31,6 +33,8 @@ The full [speaker script](speaker-notes.md) includes handoffs, demonstrations, a
 - The timer button starts or pauses the talk clock. Reset is in speaker notes.
 - Theme, sources, overview, and fullscreen controls are in the top toolbar. Fullscreen availability depends on the browser. Narrow screens use normal page scrolling.
 - Reduced motion follows the system preference and can also be selected in notes. Add `?webgl=off` before the slide hash to exercise the readable fallback.
+
+Inside dialogs and form controls, Tab moves focus normally; Shift+Tab always moves focus backward. Turn off **Tab opens speaker notes** in the shortcut guide for normal Tab navigation everywhere. Sliders, text inputs, and editable content retain their native keys. The preference lasts for the current page session. The explainer pauses while a dialog is open; the separate talk timer keeps its own state.
 
 ## Scientific Scope
 
@@ -64,7 +68,7 @@ Source ownership: `app/src/content.ts` contains the lesson and script; `network.
 
 Tests cover the eight triangle assignments, random generation, global balance, shuffling invariants, exact frustration, equation rendering, sources, and the 18-minute split. Playwright tests the actual standalone file offline and under static subdirectory hosting, plus fonts, canvas pixels, animation changes, graph framing, navigation, themes, dialogs, controls, reduced motion, and the WebGL fallback.
 
-All slides are checked at 1440x900, 1024x768, 390x844, and 844x390 in both themes. Screenshots and contact sheets are written under `artifacts/`, not committed. Browser tests use installed Microsoft Edge; change `channel` in `app/playwright.config.ts` for another installed Chromium browser. Safari and Firefox are not yet verified.
+All slides are checked at 1440x900, 1024x768, 390x844, and 844x390 in both themes. Rehearsal shortcuts and the shortcut guide are also checked down to 320x568, including native control keys and the normal-Tab preference. Screenshots and contact sheets are written under `artifacts/`, not committed. Browser tests use installed Microsoft Edge; change `channel` in `app/playwright.config.ts` for another installed Chromium browser. Safari and Firefox are not yet verified.
 
 ## Research and Design References
 
