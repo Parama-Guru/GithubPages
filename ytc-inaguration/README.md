@@ -6,9 +6,13 @@ Open [index.html](index.html) directly in a modern browser. No installation, ser
 
 ## Programme
 
-The 21-slide presentation contains the welcome address, faculty-address holding slide, club vision, all 16 supplied office bearers, Indian tourism, the influence of AI in tourism, conclusion, and vote of thanks.
+The 22-slide presentation contains the welcome address, faculty-address holding slide, club vision, two faculty-advisor placeholders, all 16 supplied office bearers, Tamil Nadu tourism and heritage, the influence of AI in tourism, conclusion, and vote of thanks. Paramaguru H precedes Rithika Sri R in the secretary introductions.
 
-Prepared material is allocated 17 minutes, plus the untimed faculty address. Indian tourism and AI in tourism are allocated exactly five minutes each. The slide timings guide rehearsal, not automatic advance. Team timings include pauses and audience acknowledgement.
+Prepared material is allocated 17 minutes, plus the untimed faculty address. Tamil Nadu heritage and AI in tourism are allocated exactly five minutes each. Faculty and student introductions share a three-minute allocation. The slide timings guide rehearsal, not automatic advance.
+
+The heritage chapter covers the Great Living Chola Temples (Thanjavur, Gangaikondacholapuram, Darasuram), the Pallava monuments of Mamallapuram, the Nilgiri Mountain Railway, and responsible visiting. Historical claims cite UNESCO. Real photographs come from Wikimedia Commons with individual attribution and reuse licences; they are not Google search-result screenshots. The opening uses the Shore Temple and the closing uses a different Nilgiri railway photograph.
+
+The AI chapter uses a separate Three.js decision-flow model: priorities, suggestions, source checks, and human decisions. The heritage globe locates Tamil Nadu sites, while the railway slide has a schematic route sequence. All three are illustrative, not geographic routing engines or live AI services.
 
 [speaker-notes.md](speaker-notes.md) contains the full speaking script, timings, handover cues, and references. The same notes are available from the book icon in the presentation.
 
@@ -21,14 +25,15 @@ Prepared material is allocated 17 minutes, plus the untimed faculty address. Ind
 - Escape closes a dialog. Dialogs trap keyboard focus while open.
 - Sun/moon icon changes theme; the preference is stored when browser storage is available.
 - Fullscreen icon enters or exits fullscreen where supported.
-- Motion toggle pauses/enables motion. Globe and itinerary timelines also have play/pause, replay, and seeking controls.
-- Drag the globe to adjust its view. Reduced-motion preferences show the final state by default. Missing WebGL uses a photograph fallback.
+- Motion toggle pauses/enables motion. Globe, AI workflow, railway, and itinerary timelines have play/pause, replay, and seeking controls.
+- Drag the globe or AI model to adjust its view. Reduced-motion preferences show the final state by default. Missing WebGL uses a heritage photograph or an HTML AI workflow fallback.
 
-On smaller screens, the slide area scrolls vertically while navigation remains accessible. No slide advances automatically.
+Native scrollbars are hidden. On smaller screens, the slide area still scrolls using touch, wheel, or the focused slide's Up/Down keys while navigation remains accessible. No slide advances automatically.
 
 ## Pending Event Confirmation
 
 - Faculty speaker's name, designation, and speaking duration.
+- Both faculty advisors' names, departments, and portraits. The two profile slots deliberately say "to be confirmed" until supplied.
 - Topic assignment for the Secretary and the second office-bearer presenter.
 - Final name spellings, designations, portrait permissions, and club social account.
 - Expansion of ERM, retained as supplied without an invented expansion.
@@ -42,11 +47,12 @@ Verified in Microsoft Edge/Chromium on Windows:
 
 - Content tests: two five-minute topics, 17-minute total, unique slide IDs, speaking notes, reference IDs, and navigation boundaries.
 - TypeScript strict typecheck and production build.
-- All 21 slides at 1440x900, 1024x768, 390x844, and 844x390, in light and dark themes.
+- All 22 slides at 1920x1080, 1440x900, 1024x768, 390x844, 320x740, and 844x390, in light and dark themes.
 - Offline direct-file loading with no HTTP asset requests; local font and image decoding.
-- Horizontal overflow, content/tool intersections, and desktop slide fit.
+- Horizontal overflow, hidden-scrollbar regression, preserved wheel/keyboard scrolling, content/tool intersections, and desktop slide fit.
 - Keyboard navigation, boundary controls, overview, notes, focus containment, source dialogs, theme persistence, and fullscreen.
-- Nonblank globe pixels, changing frames, dragging, pause, replay, seeking, reduced motion, and WebGL fallback.
+- Distinct globe and AI canvas pixels, changing frames, dragging, pause, replay, seeking, reduced motion, and both WebGL fallbacks.
+- Two faculty slots, secretary ordering, landmark facts, photographic credit links, and distinct opening/closing backgrounds without stale background layers.
 - Mobile globe playback and dialogs in both themes.
 - Static hosting beneath `/GithubPages/ytc-inaguration/`.
 

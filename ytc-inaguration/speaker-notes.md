@@ -2,9 +2,9 @@
 
 29 September 2026 | F201 | PSG College of Technology
 
-17 minutes of prepared material plus the faculty address. Each topic is allocated 5 minutes. Rehearse and adjust delivery; team introductions include pauses for acknowledgement.
+17 minutes of prepared material plus the faculty address. Tamil Nadu tourism and heritage and AI in tourism are allocated 5 minutes each. Rehearse and adjust delivery; faculty and team introductions share the existing 3-minute allocation.
 
-Before the event: confirm faculty name/designation, topic assignments, second speaker, all name spellings, and the activity programme. ERM is retained exactly as supplied; its expansion is not confirmed.
+Before the event: confirm both faculty advisors' names, departments and portraits; faculty speaker and designation; topic assignments; second speaker; and the activity programme. Paramaguru H is introduced before Rithika Sri R. The two advisor profiles are explicitly unconfirmed. ERM is retained exactly as supplied; its expansion is not confirmed.
 
 ## 1. Yuva Tourism Club
 
@@ -22,7 +22,7 @@ It is a pleasure to welcome each of you to this occasion. Tourism begins with cu
 
 Ceremony | 40 seconds
 
-We will begin with the faculty address, followed by an introduction to the purpose of our club and the office bearers for this year. We will then spend ten minutes on two connected themes. The first looks at the richness of Indian tourism and our responsibility as travellers. The second considers how artificial intelligence is influencing the way people discover, plan, and experience travel. We will close by bringing these ideas back to what they mean for us as a student community, followed by the vote of thanks.
+We will begin with the faculty address, followed by our club vision and introductions to our faculty advisors and office bearers. We will then spend ten minutes on two connected themes. The first explores Tamil Nadu tourism and heritage through Chola temples, the monuments of Mamallapuram, and the Nilgiri Mountain Railway. The second considers how artificial intelligence is influencing the way people discover, plan, and experience travel. We will conclude with our shared responsibilities and a vote of thanks.
 
 ## 4. Faculty address
 
@@ -36,106 +36,113 @@ Our club | 60 seconds
 
 Our proposed direction rests on three ideas: explore, understand, and contribute. Explore means approaching places with curiosity. Understand means learning their histories, traditions, and present-day realities. Contribute means recognising that a visitor has responsibilities towards the people and environments that welcome them. Possible activities include student-led destination talks, local heritage walks, and responsible-travel awareness initiatives. These are proposed directions, not an announced calendar. Dates, permissions, logistics, and faculty approval must come before any commitment. As a club, we can start by listening to members and identifying activities that are useful, inclusive, and practical. A meaningful year is built not by the number of trips alone, but by the quality of what we learn together.
 
-## 6. Meet our secretaries.
-
-Our club | 50 seconds
-
-Introduce the secretaries by the names and roles displayed. Acknowledge each person with a short pause so the audience can recognise them. The secretary role is presented as a responsibility to coordinate, communicate, and help the team work together. Do not add personal achievements, departments, or biographies that have not been confirmed. Invite a brief round of applause before moving to the next group.
-
-## 7. Working together.
+## 6. The guidance behind our journey.
 
 Our club | 40 seconds
 
+Introduce the two faculty advisors using their confirmed names and departments. These have not yet been supplied, and the two spaces on screen are intentionally marked as awaiting confirmation. Do not read the placeholder labels as names. Thank our faculty advisors for guiding the club, supporting student initiative, and helping us turn ideas into responsible, practical activities. Their mentorship will be important as we plan, learn, and work together through the year. Invite a brief acknowledgement before introducing the student office bearers.
+
+## 7. Meet our secretaries.
+
+Our club | 40 seconds
+
+Introduce the secretaries by the names and roles displayed. Acknowledge each person with a short pause so the audience can recognise them. The secretary role is presented as a responsibility to coordinate, communicate, and help the team work together. Do not add personal achievements, departments, or biographies that have not been confirmed. Invite a brief round of applause before moving to the next group.
+
+## 8. Working together.
+
+Our club | 30 seconds
+
 Introduce each office bearer by the name and role on screen. Pause between introductions and allow time for acknowledgement. Keep the emphasis on shared responsibility and collaboration; no individual biography has been supplied. Names and roles are transcribed from the provided team artwork and should be confirmed before the event.
 
-## 8. Ideas into action.
+## 9. Ideas into action.
 
-Our club | 45 seconds
+Our club | 35 seconds
 
 Continue the team introductions using the displayed names and designations. These roles help translate the club's ideas into a coherent experience for members. Allow each name its own moment. Do not rush the introductions or add unverified responsibilities. Thank the group and invite a brief acknowledgement from the audience.
 
-## 9. One team. Shared purpose.
+## 10. One team. Shared purpose.
 
-Our club | 45 seconds
+Our club | 35 seconds
 
-Introduce the remaining office bearers by name and role. Thank the entire team for taking up these responsibilities. Together, we hope to create a club that welcomes participation and values thoughtful exploration. Invite a round of applause for all office bearers. Transition: Having introduced the people behind the club, let us turn to the places, communities, and ideas that bring us together. Hand over to the confirmed Indian tourism speaker; the topic assignment is still to be decided.
+Introduce the remaining office bearers by name and role. Thank our faculty advisors and the entire student team for taking up these responsibilities. Invite a round of applause. Transition: Having introduced the people behind the club, let us explore the heritage closest to home. Hand over to the confirmed Tamil Nadu tourism and heritage speaker; topic assignments have not yet been finalised.
 
-## 10. Indian tourism
+## 11. Tamil Nadu tourism & heritage
 
-Indian tourism | 40 seconds
+Tamil Nadu heritage | 40 seconds
 
-When we say Indian tourism, it is tempting to think first of a list of famous places. But tourism is also a way of encountering living cultures, different landscapes, and the people who give a place its character. A monument tells one part of a story. The craftsperson nearby, the local guide, and the community around it tell other parts. In the next five minutes, let us look at tourism through three questions: what makes India compelling, whom travel can benefit, and what responsible participation looks like for students like us.
+Our first journey begins in Tamil Nadu. In five minutes, we will connect three different expressions of heritage: the living Chola temples of the Cauvery region, the Pallava monuments of Mamallapuram, and the Nilgiri Mountain Railway. These are not simply attractive backdrops. They help us understand architecture, craftsmanship, engineering, and the communities that keep places meaningful. From our base in Coimbatore, they invite us to look more closely at our own state. The map is a geographic introduction, not a proposed single-day route. Let us begin with the Chola temples.
 
-## 11. One country. Many ways to discover.
+## 12. Great Living Chola Temples
 
-Indian tourism | 70 seconds
+Tamil Nadu heritage | 70 seconds
 
-India offers different kinds of discovery, often within the same journey. Built heritage includes monuments, historic settlements, temples, and other places where architecture carries memory. Natural landscapes range from mountains and forests to coasts and wetlands. Living culture includes food, languages, festivals, crafts, and everyday practices. These categories are connected, not separate boxes. Hampi, for example, invites attention to both its historic monuments and its surrounding landscape. In Tamil Nadu, a visit to a heritage site can become richer when we also learn about local craft traditions and the community that keeps them alive. The important shift is from collecting photographs to asking informed questions. What is the history of this place? Who looks after it? What customs should a visitor respect? A thoughtful visit turns a destination into a learning experience. Pause on the photographs and let the audience consider a place they know.
+The UNESCO property called the Great Living Chola Temples includes three temples: Brihadisvara at Thanjavur, Brihadisvara at Gangaikondacholapuram, and Airavatesvara at Darasuram. Built in the eleventh and twelfth centuries, they reveal the development of Chola architecture and art. At Thanjavur, notice the rising tiers of the vimana, the tower above the sanctum. At Gangaikondacholapuram, the tower has a more gently curving profile. At Darasuram, the front mandapa was conceived as a chariot with wheels, and the detailed carving rewards close observation. The word living matters: worship and ritual remain part of these places. They are both protected monuments and active sacred spaces. As visitors, we should appreciate their engineering and artistry while following the rules of worship, access, and photography. Look at the photographs and compare the silhouette, the scale, and the details. Tourism becomes more meaningful when we notice how a place was made and how it continues to be used.
 
-## 12. A journey reaches beyond the traveller.
+## 13. Mamallapuram: stories in stone.
 
-Indian tourism | 60 seconds
+Tamil Nadu heritage | 60 seconds
 
-A trip connects many kinds of work: transport, accommodation, food, guiding, handicrafts, and the care of visitor sites. But tourism does not automatically benefit everyone equally. The way visitors spend and behave matters. Choosing a locally run service can help keep more value in the community. Paying fairly for a guide or a handmade product recognises skill and labour. Seeking permission before photographing people shows respect. We should also remember that a destination is someone's home, not a stage built only for visitors. Tourism can create opportunities, but it can also create pressure on water, waste systems, housing, and shared spaces. Responsible tourism asks us to pay attention to both sides. The visual shows connections, not measured economic shares or a promise of benefit.
+Mamallapuram, also called Mahabalipuram, brings us to the Coromandel Coast. Its UNESCO-listed monuments were created under the Pallava rulers, with celebrated works from the seventh and eighth centuries. They demonstrate several ways of working with stone. The rathas are monolithic forms carved from individual large boulders. The cave sanctuaries are cut into rock. The open-air relief commonly called Arjuna's Penance or the Descent of the Ganges transforms a rock face into a scene of extraordinary detail. The Shore Temple represents structural temple architecture beside the sea. These are different building and carving methods, not interchangeable descriptions. A useful way to visit is to compare what has been carved out of a rock with what has been constructed from stone blocks. Follow protected routes and do not climb on or touch fragile carvings. The important souvenir is a better understanding of the craftsmanship.
 
-## 13. Leave a lighter footprint.
+## 14. Heritage that still moves.
 
-Indian tourism | 70 seconds
+Tamil Nadu heritage | 70 seconds
 
-Responsible travel begins before departure. Learn the rules of a place, check whether permits are needed, and plan around local conditions rather than a social-media trend. During a visit, stay on permitted routes, reduce single-use waste where practical, and avoid disturbing wildlife or damaging heritage. Cultural respect is equally important. Follow local expectations around dress and conduct, ask before photographing people, and do not treat a community's daily life as a performance. Spend thoughtfully: use credible local guides and businesses where appropriate, and pay fairly. Finally, share responsibly after returning. A photograph or recommendation can influence others. Avoid exposing sensitive locations, spreading incorrect information, or encouraging unsafe behaviour. None of this requires an expensive trip. It requires attention. For a student tourism club, making these habits normal is one of the most useful contributions we can make. Pause briefly after each of the three principles.
+Heritage is not limited to temples and monuments. Near Coimbatore, the Nilgiri Mountain Railway connects Mettupalayam with Udhagamandalam, also known as Ooty. UNESCO describes the roughly forty-six-kilometre metre-gauge line as an important achievement in mountain railway engineering. Construction began in 1891 and was completed in 1908. On its steep mountain section, a rack-and-pinion system helps the train negotiate the gradient. The railway is part of the UNESCO World Heritage property called Mountain Railways of India, alongside lines in other states. Our focus here is specifically the Nilgiri component in Tamil Nadu. The experience brings engineering and landscape together: track, bridges, stations, and the effort required to maintain a working railway in difficult terrain. It is not a preserved object behind glass. It is transport heritage that still serves people. Before planning a visit, confirm current services, tickets, and conditions with the railway. A beautiful photograph is not a timetable. Respect railway safety rules and the communities and environments along the line.
 
-## 14. Begin with the places around us.
+## 15. Our heritage. Our responsibility.
 
-Indian tourism | 60 seconds
+Tamil Nadu heritage | 60 seconds
 
-We do not have to begin with a distant destination. We can start with a nearby place, a well-researched story, or a conversation with someone who knows the area. A student-led heritage walk, subject to permissions and planning, could combine local history with practical visitor etiquette. A destination presentation could distinguish reliable information from attractive but misleading claims. A responsible-travel discussion could help members think about waste, accessibility, and community impact before a visit. These are ideas to develop with faculty guidance, not confirmed events. The central message of this chapter is simple: travel becomes more valuable when curiosity is joined by care. India's diversity gives us much to discover. Our task is to approach that discovery with respect. Now, we turn to a technology that is changing how many travellers begin that process: artificial intelligence. Hand over only to the confirmed speaker.
+These places offer three perspectives on Tamil Nadu: living religious traditions, extraordinary stone craftsmanship, and working transport heritage. What connects them is the need for thoughtful visitors. Learn before arriving. Use reliable sources and local knowledge to understand the place, not simply its most popular photo angle. Follow the rules on access, dress, photography, and safety. Never write on monuments, climb restricted structures, or disturb worship. Support credible local guides, craftspeople, and businesses, and pay fairly for their work. For our club, a well-researched local visit or heritage discussion can be a useful beginning, subject to faculty guidance and permissions. The aim is not to collect locations as quickly as possible. It is to understand more and leave places respected. That brings us to our next theme: how AI can help us prepare for travel, and why a generated recommendation must still be checked. Hand over to the confirmed presenter.
 
-## 15. AI & tourism
+## 16. AI & tourism
 
 AI & tourism | 40 seconds
 
 Artificial intelligence is influencing several stages of travel, from searching for ideas to communicating during a visit. It can help organise information, suggest options, and reduce some language barriers. But a fluent answer is not the same as a verified answer. The useful question is not whether AI can plan everything for us. It is where AI can help, what information it needs, and which decisions still require trusted sources and human judgment. We will follow a simple example, then look at wider uses and the limits that responsible travellers should understand.
 
-## 16. From an idea to an informed itinerary.
+## 17. From an idea to an informed itinerary.
 
 AI & tourism | 90 seconds
 
 Imagine a student group considering a short heritage visit from Coimbatore. This is an illustrative scenario, not a confirmed club trip or a live booking. First, describe the constraints: available time, budget, interests, accessibility needs, and group size. Avoid entering unnecessary personal information. Second, ask an AI tool to propose a few options and explain the trade-offs. It might help compare themes or organise a draft schedule. Third, verify every detail that could affect the trip. Check opening hours and ticket rules with the site or operator. Check transport availability with the provider. Confirm accessibility, permissions, weather, and safety advice through appropriate sources. AI may invent a service or repeat outdated details, so this stage is essential. Finally, people make the decision. The organiser confirms feasibility, the group considers comfort and inclusion, and local knowledge helps refine the plan. Use the timeline to show that verification sits between the generated suggestion and the decision. AI can make the first draft faster; it cannot turn an unverified draft into a trustworthy itinerary by itself.
 
-## 17. Beyond the itinerary.
+## 18. Beyond the itinerary.
 
 AI & tourism | 55 seconds
 
 The influence of AI extends beyond a traveller's itinerary. Language tools can assist with translation, although sensitive or unfamiliar expressions still deserve care. Recommendation systems can help people find options, but they can also narrow attention or reflect commercial priorities. Tourism operators may use forecasting tools to support staffing, demand planning, and resource decisions. Information assistants can answer routine questions, provided their content is maintained and there is a way to reach a person. These are possible applications, not claims that every destination or business uses them successfully. Their value depends on suitable data, good implementation, and human oversight. Accessibility must also be checked rather than assumed. A tool that works well for one traveller may not meet another traveller's needs.
 
-## 18. Useful does not always mean reliable.
+## 19. Useful does not always mean reliable.
 
 AI & tourism | 75 seconds
 
 First, check accuracy. Does the place or service exist, and is the information current? Verify important details with the relevant destination, operator, or authority. Second, protect privacy. Do not casually share identity documents, booking references, payment details, or another person's information with a tool. Use the minimum information needed, and understand the service's data practices. Third, question the recommendation. Which options are missing? Is the suggestion accessible, culturally appropriate, and suitable for the actual traveller? Recommendations may reflect gaps in data or commercial incentives. A confident tone should never replace evidence. There should also be a clear human path when things go wrong: a real operator, organiser, or local contact. For our club, a sensible principle would be to use AI for exploration and drafting, use trusted sources for verification, and keep people responsible for decisions. This is how convenience and care can work together.
 
-## 19. Let technology assist. Let people lead.
+## 20. Let technology assist. Let people lead.
 
 AI & tourism | 40 seconds
 
 The strongest use of AI in tourism is supportive. It can help us organise questions, compare possibilities, and prepare for a visit. It does not replace a guide's lived knowledge, a community's voice, or our responsibility to behave thoughtfully. The practical sequence is simple: explore with technology, verify with trusted sources, and decide with people. That brings us back to the purpose of the Yuva Tourism Club. We want to be curious enough to discover new places, informed enough to understand them, and responsible enough to leave them respected.
 
-## 20. Explore with curiosity. Travel with responsibility.
+## 21. Rooted in heritage. Open to tomorrow.
 
 Closing | 30 seconds
 
-Today, we have brought together two ideas: the richness of Indian tourism and the growing influence of AI on travel. Both lead to the same responsibility: make informed choices and respect the people and places we encounter. As the Yuva Tourism Club begins this year, let us build a culture of curiosity, thoughtful participation, and shared learning. We look forward to shaping that journey together.
+Today, we have brought together Tamil Nadu's remarkable heritage and the growing influence of AI on travel. From living temples to coastal monuments and a mountain railway, the places around us deserve curiosity and care. Technology can help us prepare, but people remain responsible for our decisions. Guided by our faculty advisors, let us build a year of thoughtful exploration and shared learning.
 
-## 21. Thank you.
+## 22. With sincere thanks.
 
 Closing | 30 seconds
 
-On behalf of the Yuva Tourism Club, I extend our sincere thanks to our faculty for their guidance and support, to all office bearers for their commitment, and to every student who joined us today. Thank you also to everyone who helped make this inaugural programme possible. We look forward to your participation in the year ahead. Thank you.
+On behalf of the Yuva Tourism Club, I extend our special thanks to our two faculty advisors for their mentorship, encouragement, and support. Use their confirmed names here when available. We also thank our faculty members, all office bearers for their commitment, and every student who joined us today. Thank you to everyone who helped make this inaugural programme possible. We look forward to learning and exploring together throughout the year.
 
 ## References
 
-- [Incredible India](https://www.incredibleindia.gov.in/) | Ministry of Tourism, Government of India
-- [India: World Heritage properties](https://whc.unesco.org/en/statesparties/in) | UNESCO World Heritage Centre
+- [Great Living Chola Temples](https://whc.unesco.org/en/list/250/) | UNESCO World Heritage Centre
+- [Group of Monuments at Mahabalipuram](https://whc.unesco.org/en/list/249/) | UNESCO World Heritage Centre
+- [Mountain Railways of India: Nilgiri Mountain Railway](https://whc.unesco.org/en/list/944/) | UNESCO World Heritage Centre
 - [Travel for LiFE](https://www.incredibleindia.gov.in/en/travel-for-life) | Ministry of Tourism, Government of India
 - [Artificial Intelligence and tourism in APEC economies](https://www.oecd.org/en/publications/artificial-intelligence-and-tourism-in-apec-economies_4549486a-en.html) | OECD, 9 September 2026
 - [AI Risk Management Framework](https://www.nist.gov/itl/ai-risk-management-framework) | NIST

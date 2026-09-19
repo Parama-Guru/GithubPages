@@ -2,10 +2,49 @@ Yuva Tourism Club inauguration: third-party notices
 
 Team portraits and club information: supplied by the event organiser in photos/1.png through photos/17.png. Original artwork is unchanged; the presentation embeds optimized crops. The supplied artwork identifies the club social account. Confirm names, roles, image permissions, and account ownership before public distribution.
 
-Destination photographs: downloaded from Unsplash and optimized as WebP, under the Unsplash License (https://unsplash.com/license). The images are used as presentation illustrations, not offered as standalone stock photographs. Source URLs:
-- Taj Mahal, Agra: https://images.unsplash.com/photo-1564507592333-c60657eea523
-- Kerala backwaters: https://images.unsplash.com/photo-1593693397690-362cb9666fc2
-- Ceremonial kalash: https://images.unsplash.com/photo-1606293926075-69a00dbfde81
+Tamil Nadu heritage photographs: downloaded from Wikimedia Commons with verified individual licences, not copied from Google search-result screenshots. Source facts come from UNESCO, not from image captions. Each adapted photograph remains available under its original Creative Commons licence; the licences do not imply photographer endorsement of this club or presentation.
+
+File:Brihadisvara Temple during Maha Shivaratri-WUS03611 (edit).jpg
+Author: Rainer Halama; edited by UnpetitproleX
+Source: https://commons.wikimedia.org/wiki/File:Brihadisvara_Temple_during_Maha_Shivaratri-WUS03611_(edit).jpg
+Original image: https://upload.wikimedia.org/wikipedia/commons/d/dd/Brihadisvara_Temple_during_Maha_Shivaratri-WUS03611_%28edit%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original
+Licence: CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0)
+Changes: Resized, converted to WebP; displayed crops in presentation. Cropped adaptations remain under the original licence.
+
+File:Gangaikondacholapuram Temple 4.jpg
+Author: QiNi
+Source: https://commons.wikimedia.org/wiki/File:Gangaikondacholapuram_Temple_4.jpg
+Original image: https://upload.wikimedia.org/wikipedia/commons/9/9e/Gangaikondacholapuram_Temple_4.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original
+Licence: CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0)
+Changes: Resized, converted to WebP; displayed crops in presentation. Cropped adaptations remain under the original licence.
+
+File:A different view of Airavatesvara Temple.jpg
+Author: Supraja kannan
+Source: https://commons.wikimedia.org/wiki/File:A_different_view_of_Airavatesvara_Temple.jpg
+Original image: https://upload.wikimedia.org/wikipedia/commons/9/99/A_different_view_of_Airavatesvara_Temple.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original
+Licence: CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0)
+Changes: Resized, converted to WebP; displayed crops in presentation. Cropped adaptations remain under the original licence.
+
+File:Shore Temple 01.jpg
+Author: Bernard Gagnon
+Source: https://commons.wikimedia.org/wiki/File:Shore_Temple_01.jpg
+Original image: https://upload.wikimedia.org/wikipedia/commons/6/6a/Shore_Temple_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original
+Licence: CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0)
+Changes: Resized, converted to WebP; displayed crops in presentation. Cropped adaptations remain under the original licence.
+
+File:Descent of the Ganges 01.jpg
+Author: Bernard Gagnon
+Source: https://commons.wikimedia.org/wiki/File:Descent_of_the_Ganges_01.jpg
+Original image: https://upload.wikimedia.org/wikipedia/commons/6/69/Descent_of_the_Ganges_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original
+Licence: CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0)
+Changes: Resized, converted to WebP; displayed crops in presentation. Cropped adaptations remain under the original licence.
+
+File:Nilgiri Mountain Railway on Bridge, May 2010.JPG
+Author: Stephan Niewolik
+Source: https://commons.wikimedia.org/wiki/File:Nilgiri_Mountain_Railway_on_Bridge,_May_2010.JPG
+Original image: https://upload.wikimedia.org/wikipedia/commons/d/d6/Nilgiri_Mountain_Railway_on_Bridge%2C_May_2010.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original
+Licence: CC BY 3.0 (https://creativecommons.org/licenses/by/3.0)
+Changes: Resized, converted to WebP; displayed crops in presentation. Cropped adaptations remain under the original licence.
 
 Earth texture: https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg, from the Three.js example assets. Used for a globe with illustrative connections, not a political boundary map or a transport route map.
 
