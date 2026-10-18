@@ -19,7 +19,7 @@ os.makedirs(OUT, exist_ok=True)
 def reset():
     bpy.ops.object.select_all(action="SELECT")
     bpy.ops.object.delete()
-    for block in (bpy.data.meshes, bpy.data.materials, bpy.data.curves):
+    for block in (bpy.data.meshes, bpy.data.materials, bpy.data.curves, bpy.data.images, bpy.data.actions):
         for item in list(block):
             block.remove(item)
 
@@ -112,7 +112,7 @@ def parent(child, parent_obj):
     child.matrix_parent_inverse = parent_obj.matrix_world.inverted()
 
 
-def export(filename):
+def export(filename, animated=False):
     path = os.path.join(OUT, filename)
     bpy.ops.export_scene.gltf(
         filepath=path,
@@ -122,10 +122,74 @@ def export(filename):
         export_cameras=False,
         export_lights=False,
         export_extras=False,
-        export_animations=False,
+        export_animations=animated,
+        export_animation_mode="SCENE",
+        export_force_sampling=True,
         export_materials="EXPORT",
     )
     print("exported", path)
+
+
+def occlusion_group():
+    group = bpy.data.node_groups.get("glTF Material Output")
+    if group:
+        return group
+    group = bpy.data.node_groups.new("glTF Material Output", "ShaderNodeTree")
+    group.interface.new_socket("Occlusion", in_out="INPUT", socket_type="NodeSocketFloat")
+    return group
+
+
+def bake_ao(objects, name, size=512, samples=48):
+    scene = bpy.context.scene
+    scene.render.engine = "CYCLES"
+    scene.cycles.device = "CPU"
+    scene.cycles.samples = samples
+    scene.render.bake.margin = 6
+    bpy.ops.mesh.primitive_plane_add(size=40, location=(0, 0, 0))
+    ground = bpy.context.object
+    bpy.ops.object.select_all(action="DESELECT")
+    for obj in objects:
+        obj.select_set(True)
+    bpy.context.view_layer.objects.active = objects[0]
+    bpy.ops.object.mode_set(mode="EDIT")
+    bpy.ops.mesh.select_all(action="SELECT")
+    bpy.ops.uv.smart_project(angle_limit=math.radians(66), island_margin=0.012)
+    bpy.ops.object.mode_set(mode="OBJECT")
+    image = bpy.data.images.new(f"{name}_ao", size, size, alpha=False)
+    image.colorspace_settings.name = "Non-Color"
+    materials = {slot.material for obj in objects for slot in obj.material_slots if slot.material}
+    for mat in materials:
+        node = mat.node_tree.nodes.new("ShaderNodeTexImage")
+        node.image = image
+        mat.node_tree.nodes.active = node
+    bpy.ops.object.bake(type="AO")
+    group = occlusion_group()
+    for mat in materials:
+        tree = mat.node_tree
+        node = tree.nodes.active
+        split = tree.nodes.new("ShaderNodeSeparateColor")
+        tree.links.new(node.outputs["Color"], split.inputs["Color"])
+        output = tree.nodes.new("ShaderNodeGroup")
+        output.node_tree = group
+        tree.links.new(split.outputs["Red"], output.inputs["Occlusion"])
+    image.file_format = "PNG"
+    image.pack()
+    bpy.data.objects.remove(ground, do_unlink=True)
+    print("baked ambient occlusion", name)
+
+
+def keyframes(obj, path, values, frames):
+    for value, frame in zip(values, frames):
+        setattr(obj, path, value)
+        obj.keyframe_insert(data_path=path, frame=frame)
+
+
+def timeline(name, end):
+    scene = bpy.context.scene
+    scene.name = name
+    scene.frame_start = 0
+    scene.frame_end = end
+    scene.render.fps = 50
 
 
 def palette():
@@ -144,7 +208,20 @@ def palette():
         "lamp_amber": material("LampAmber", (0.5, 0.3, 0.02), 0.0, 0.3, (1.0, 0.6, 0.08), 6.0),
         "display": material("MeterGlass", (0.02, 0.05, 0.06), 0.0, 0.1, (0.2, 0.75, 1.0), 2.5),
         "warning": material("WarningYellow", (0.95, 0.68, 0.06), 0.0, 0.5),
+        "pane": glass_material(),
     }
+
+
+def glass_material():
+    mat = material("DoorGlass", (0.66, 0.83, 0.9), 0.0, 0.04)
+    bsdf = mat.node_tree.nodes["Principled BSDF"]
+    bsdf.inputs["Alpha"].default_value = 0.18
+    for attribute, value in (("surface_render_method", "BLENDED"), ("blend_method", "BLEND")):
+        try:
+            setattr(mat, attribute, value)
+        except (AttributeError, TypeError):
+            pass
+    return mat
 
 
 def switchgear():
@@ -186,7 +263,39 @@ def switchgear():
     door = join("Door", door_parts)
     set_origin(door, (-w / 2 + 0.01, -d / 2 - 0.013, h / 2 + 0.1))
     parent(door, frame)
-    export("switchgear.glb")
+    bake_ao([frame, interior, inner, breaker, door], "switchgear")
+    timeline("Open", 100)
+    keyframes(door, "rotation_euler", [(0, 0, 0), (0, 0, -1.85)], [0, 55])
+    home = breaker.location.copy()
+    keyframes(breaker, "location", [home, home, (home.x, home.y - 0.42, home.z)], [0, 40, 100])
+    export("switchgear.glb", animated=True)
+
+
+def entrance():
+    reset()
+    m = palette()
+    height = 3.0
+    leaves = []
+    for name, sign in (("DoorLeft", 1), ("DoorRight", -1)):
+        hinge = -sign * 1.6
+        parts = [
+            box(f"{name}Stile", (0.06, 0.06, height - 0.04), (hinge + sign * 0.03, 0.05, height / 2), m["steel"], 0.006),
+            box(f"{name}Edge", (0.06, 0.06, height - 0.04), (hinge + sign * 1.55, 0.05, height / 2), m["steel"], 0.006),
+            box(f"{name}Head", (1.58, 0.06, 0.06), (hinge + sign * 0.79, 0.05, height - 0.03), m["steel"], 0.006),
+            box(f"{name}Kick", (1.58, 0.06, 0.12), (hinge + sign * 0.79, 0.05, 0.06), m["steel"], 0.006),
+            box(f"{name}Glass", (1.5, 0.02, height - 0.18), (hinge + sign * 0.79, 0.05, height / 2 + 0.03), m["pane"]),
+            box(f"{name}Handle", (0.04, 0.06, 1.1), (hinge + sign * 1.32, -0.03, 1.15), m["copper"], 0.008),
+        ]
+        leaf = join(name, parts)
+        set_origin(leaf, (hinge, 0.05, 0))
+        leaves.append((leaf, sign))
+    timeline("Open", 100)
+    for leaf, sign in leaves:
+        keyframes(leaf, "rotation_euler", [(0, 0, 0), (0, 0, sign * 1.42)], [0, 100])
+        for fcurve in leaf.animation_data.action.fcurves:
+            for point in fcurve.keyframe_points:
+                point.interpolation = "LINEAR"
+    export("entrance.glb", animated=True)
 
 
 def insulator_string(name, sheds, mat, cap):
@@ -229,6 +338,7 @@ def transformer():
         bushings.append(cylinder(f"LVTerm{i}", 0.03, 0.12, (x, -0.55, 2.75), m["copper"], 12))
     hv = join("Bushings", bushings)
     parent(hv, body)
+    bake_ao([body, hv], "transformer", 512)
     export("transformer.glb")
 
 
@@ -237,7 +347,8 @@ def insulator_asset():
     m = palette()
     string = insulator_string("InsulatorString", 9, m["glass"], m["galvanised"])
     clamp = box("Clamp", (0.08, 0.05, 0.1), (0, 0, -9 * 0.16 - 0.04), m["galvanised"], 0.01)
-    join("InsulatorString", [string, clamp])
+    joined = join("InsulatorString", [string, clamp])
+    bake_ao([joined], "insulator", 256)
     export("insulator.glb")
 
 
@@ -284,6 +395,7 @@ def lattice_tower():
 
 
 switchgear()
+entrance()
 transformer()
 insulator_asset()
 lattice_tower()

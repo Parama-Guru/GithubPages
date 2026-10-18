@@ -141,6 +141,19 @@ export function radial(inner = "rgba(255,255,255,1)"): Texture {
   });
 }
 
+export function cornerShade(): Texture {
+  return cached("corner-shade", () => {
+    const { element, context } = canvas(256, 8);
+    const gradient = context.createLinearGradient(0, 0, 256, 0);
+    gradient.addColorStop(0, "rgba(0,0,0,0.72)");
+    gradient.addColorStop(0.25, "rgba(0,0,0,0.38)");
+    gradient.addColorStop(1, "rgba(0,0,0,0)");
+    context.fillStyle = gradient;
+    context.fillRect(0, 0, 256, 8);
+    return finish(new CanvasTexture(element), false, false);
+  });
+}
+
 export function image(url: string): Texture {
   return cached(`image-${url}`, () => finish(loader.load(url), false));
 }

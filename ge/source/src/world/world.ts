@@ -22,7 +22,7 @@ import {
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import { acceleratedRaycast, computeBoundsTree, disposeBoundsTree } from "three-mesh-bvh";
 import type { RouteId, ZoneKey } from "@/routes/routes";
-import { preloadAssets, type AssetName } from "./assets";
+import { configureLoaders, preloadAssets, type AssetName } from "./assets";
 import { batch, type Frame, type LightSpec, type Pickable, type Zone } from "./kit";
 import { createMaterials, disposeMaterials, skyMaterial } from "./materials";
 import { clamp01, lerpPose, smootherstep, type Pose } from "./math";
@@ -49,13 +49,13 @@ const builders: Record<ZoneKey, () => Promise<ZoneBuilder>> = {
 const LIGHTS = 6;
 const exterior = new Set<ZoneKey>(["approach", "yard"]);
 const zoneAssets: Record<ZoneKey, AssetName[]> = {
-  approach: ["transformer", "tower"],
+  approach: ["transformer", "tower", "entrance"],
   lobby: [],
   control: [],
   hall: ["switchgear"],
   gallery: [],
   safety: [],
-  office: [],
+  office: ["entrance"],
   yard: ["transformer", "insulator", "tower"],
 };
 
@@ -117,6 +117,7 @@ export class World {
     this.renderer.setClearColor("#05080c");
     this.renderer.toneMappingExposure = 1.05;
     this.renderer.info.autoReset = false;
+    configureLoaders(this.renderer);
     this.scene.background = new Color("#05080c");
     this.scene.fog = new FogExp2("#070b12", 0.014);
     const pmrem = new PMREMGenerator(this.renderer);

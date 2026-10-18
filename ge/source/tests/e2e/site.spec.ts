@@ -46,7 +46,7 @@ test.describe("3D journey", () => {
   test("walks through all eight zones within budget and only uses local files", async ({ page }) => {
     const external: string[] = [];
     page.on("request", (request) => {
-      if (!request.url().startsWith("http://127.0.0.1")) external.push(request.url());
+      if (!/^(http:\/\/127\.0\.0\.1|blob:|data:)/.test(request.url())) external.push(request.url());
     });
     await page.goto("");
     await ready(page);

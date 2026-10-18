@@ -94,6 +94,17 @@ export function room(m: Materials, spec: Room): Group {
     stripParts.push(placed(new BoxGeometry(0.12, 0.04, depth - 1.6), [x, spec.height - 0.03, centre]));
   }
   if (stripParts.length) group.add(merged(spec.stripMaterial ?? m.lightStrip, stripParts));
+  const shade = 1.1;
+  for (const side of [-1, 1]) {
+    const floorShade = plane(m.corner, shade, depth, [side * (spec.width / 2 - shade / 2), 0.008, centre], [-Math.PI / 2, 0, 0]);
+    floorShade.scale.x = -side;
+    floorShade.renderOrder = 1;
+    const wallShade = plane(m.corner, shade, depth, [side * (spec.width / 2 - 0.01), shade / 2, centre], [0, side * -Math.PI / 2, Math.PI / 2]);
+    wallShade.renderOrder = 1;
+    const ceilingShade = plane(m.corner, shade * 0.8, depth, [side * (spec.width / 2 - shade * 0.4), spec.height - 0.01, centre], [Math.PI / 2, 0, 0]);
+    ceilingShade.scale.x = -side;
+    group.add(floorShade, wallShade, ceilingShade);
+  }
   return group;
 }
 

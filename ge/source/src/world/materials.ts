@@ -3,7 +3,7 @@ import energyFrag from "./shaders/energy.frag";
 import energyVert from "./shaders/energy.vert";
 import skyFrag from "./shaders/sky.frag";
 import skyVert from "./shaders/sky.vert";
-import { asphalt, concrete, floorTiles, gravel, radial, wallPanels } from "./textures";
+import { asphalt, concrete, cornerShade, floorTiles, gravel, radial, wallPanels } from "./textures";
 
 export type Materials = ReturnType<typeof createMaterials>;
 
@@ -47,6 +47,7 @@ export function createMaterials() {
     screen: glow("#0e2433", 1),
     pool: new MeshBasicMaterial({ map: radial("rgba(255,214,160,0.9)"), transparent: true, blending: AdditiveBlending, depthWrite: false, toneMapped: false }),
     poolCool: new MeshBasicMaterial({ map: radial("rgba(170,220,255,0.75)"), transparent: true, blending: AdditiveBlending, depthWrite: false, toneMapped: false }),
+    corner: new MeshBasicMaterial({ map: cornerShade(), transparent: true, depthWrite: false, side: DoubleSide, color: "#ffffff" }),
     shadow: new MeshBasicMaterial({ map: radial("rgba(0,0,0,0.85)"), transparent: true, depthWrite: false, color: "#000000" }),
   };
 }

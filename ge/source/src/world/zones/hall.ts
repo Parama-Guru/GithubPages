@@ -1,6 +1,6 @@
 import { BoxGeometry, BufferGeometry, Group, InstancedMesh, Matrix4, Mesh, MeshBasicMaterial, Object3D, PlaneGeometry, Quaternion, Vector3 } from "three";
 import { projectImages, projectYears } from "@/content";
-import { instance } from "../assets";
+import { animated, instance } from "../assets";
 import { box, contactShadow, framed, merged, partition, placed, plane, pool, room } from "../kit";
 import { energyMaterial } from "../materials";
 import { image, label } from "../textures";
@@ -29,22 +29,24 @@ export const buildHall: ZoneBuilder = async (context) => {
   const { m } = context;
   const energy = energyMaterial("#8fd8ff", 14);
   const heroEnergy = energyMaterial("#ffd08a", 3);
-  const hero = await instance("switchgear");
-  const door = hero.getObjectByName("Door");
-  const breaker = hero.getObjectByName("Breaker");
-  const breakerHome = breaker?.position.z ?? 0;
+  const rig = await animated("switchgear");
+  const hero = rig.root;
 
   const zone = createZone(context, (frame) => {
     const power = cue(-frame.camera.z, 31.5, 38);
     energy.uniforms.uPower!.value = power * 0.85;
     energy.uniforms.uTime!.value = frame.time;
-    if (door) door.rotation.y = -cue(frame.panel, 0, 0.55) * 1.85;
-    if (breaker) breaker.position.z = breakerHome + cue(frame.panel, 0.4, 1) * 0.42;
+    rig.scrub(frame.panel);
     heroEnergy.uniforms.uPower!.value = cue(frame.panel, 0.55, 1);
     heroEnergy.uniforms.uTime!.value = frame.time;
   });
   zone.own(energy);
   zone.own(heroEnergy);
+  const dispose = zone.dispose;
+  zone.dispose = () => {
+    rig.dispose();
+    dispose();
+  };
   const g = zone.group;
 
   g.add(room(m, { width: 12, height: 8, near: -32, far: -64, strips: 2, stripMaterial: m.lightCool }));

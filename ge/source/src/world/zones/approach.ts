@@ -1,7 +1,7 @@
-import { BoxGeometry, BufferGeometry, CatmullRomCurve3, Group, Mesh, TubeGeometry, Vector3 } from "three";
+import { BoxGeometry, BufferGeometry, CatmullRomCurve3, Mesh, TubeGeometry, Vector3 } from "three";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 import { company } from "@/content";
-import { instance } from "../assets";
+import { animated, instance } from "../assets";
 import { box, contactShadow, cylinder, merged, placed, plane, pool } from "../kit";
 import { label } from "../textures";
 import { createZone, cue, glowMaterial, type ZoneBuilder } from "./shared";
@@ -39,13 +39,16 @@ export const buildApproach: ZoneBuilder = async (context) => {
     });
   };
 
-  const doors = { left: new Group(), right: new Group() };
+  const doors = await animated("entrance");
   const zone = createZone(context, (frame) => {
     drawSign(frame.motion ? Math.min(1, frame.time / 1.2) : 1);
-    const open = cue(-frame.camera.z, -9.5, -2.5);
-    doors.left.rotation.y = open * 1.42;
-    doors.right.rotation.y = -open * 1.42;
+    doors.scrub(cue(-frame.camera.z, -9.5, -2.5));
   });
+  const dispose = zone.dispose;
+  zone.dispose = () => {
+    doors.dispose();
+    dispose();
+  };
   const g = zone.group;
 
   g.add(plane(m.asphalt, 90, 64, [0, 0, 32], [-Math.PI / 2, 0, 0], 4));
@@ -87,24 +90,9 @@ export const buildApproach: ZoneBuilder = async (context) => {
   g.add(signPlate);
   drawSign(0);
 
-  const frameParts = (sign: number): BufferGeometry[] => [
-    placed(new BoxGeometry(0.06, doorHeight - 0.04, 0.06), [sign * 0.03, doorHeight / 2, 0]),
-    placed(new BoxGeometry(0.06, doorHeight - 0.04, 0.06), [sign * 1.55, doorHeight / 2, 0]),
-    placed(new BoxGeometry(1.58, 0.06, 0.06), [sign * 0.79, doorHeight - 0.03, 0]),
-    placed(new BoxGeometry(1.58, 0.12, 0.06), [sign * 0.79, 0.06, 0]),
-  ];
-  for (const [door, sign] of [
-    [doors.left, 1],
-    [doors.right, -1],
-  ] as const) {
-    door.add(merged(m.steel, frameParts(sign)));
-    door.add(box(m.glass, [1.5, doorHeight - 0.18, 0.02], [sign * 0.79, doorHeight / 2 + 0.03, 0]));
-    door.add(box(m.copper, [0.04, 1.1, 0.06], [sign * 1.32, 1.15, 0.08]));
-    door.position.set(-sign * 1.6, 0, -0.05);
-    g.add(door);
-    zone.pickables.push({ object: door, id: "doors", label: "Enter the facility" });
-  }
-
+  doors.root.position.z = -0.1;
+  g.add(doors.root);
+  zone.pickables.push({ object: doors.root, id: "doors", label: "Enter the facility" });
   for (const x of [-2.6, 2.6]) {
     for (let z = 4; z <= 20; z += 4) {
       g.add(cylinder(m.darkMetal, 0.09, 0.9, [x, 0.45, z], 10));

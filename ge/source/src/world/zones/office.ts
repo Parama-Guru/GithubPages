@@ -1,6 +1,7 @@
-import { BoxGeometry, BufferGeometry, Group, MeshBasicMaterial } from "three";
+import { BoxGeometry, BufferGeometry, MeshBasicMaterial } from "three";
 import { downloads, leadership } from "@/content";
 import { countNodes, organisation } from "@/content/organisation";
+import { animated } from "../assets";
 import { box, framed, merged, placed, plane, pool, room } from "../kit";
 import { image, label } from "../textures";
 import { orgBoard } from "./painters";
@@ -11,7 +12,7 @@ export const buildOffice: ZoneBuilder = async (context) => {
   const total = countNodes(organisation);
   const board = label("org-board", 2048, 1024, orgBoard(0));
   let shown = -1;
-  const exits = { left: new Group(), right: new Group() };
+  const exits = await animated("entrance");
 
   const zone = createZone(context, (frame) => {
     const reveal = cue(-frame.camera.z, 93.4, 95.4);
@@ -20,10 +21,13 @@ export const buildOffice: ZoneBuilder = async (context) => {
       shown = count;
       board.redraw(orgBoard(count));
     }
-    const open = cue(-frame.camera.z, 104.5, 108.8);
-    exits.left.rotation.y = open * 1.4;
-    exits.right.rotation.y = -open * 1.4;
+    exits.scrub(cue(-frame.camera.z, 104.5, 108.8));
   });
+  const dispose = zone.dispose;
+  zone.dispose = () => {
+    exits.dispose();
+    dispose();
+  };
   const g = zone.group;
   g.add(room(m, { width: 10, height: 4.2, near: -94, far: -110, strips: 2, stripMaterial: m.lightWarm, floor: m.floorDark }));
 
@@ -33,16 +37,8 @@ export const buildOffice: ZoneBuilder = async (context) => {
   const side = (W - opening) / 2;
   g.add(box(m.wallDark, [side, H, 0.3], [-(opening / 2 + side / 2), H / 2, -110]), box(m.wallDark, [side, H, 0.3], [opening / 2 + side / 2, H / 2, -110]));
   g.add(box(m.wallDark, [opening, H - 3, 0.3], [0, 3 + (H - 3) / 2, -110]));
-  for (const [door, sign] of [
-    [exits.left, 1],
-    [exits.right, -1],
-  ] as const) {
-    door.add(box(m.steel, [1.58, 0.08, 0.06], [sign * 0.79, 2.96, 0]), box(m.steel, [1.58, 0.1, 0.06], [sign * 0.79, 0.05, 0]));
-    door.add(box(m.steel, [0.06, 3, 0.06], [sign * 1.55, 1.5, 0]));
-    door.add(box(m.glass, [1.5, 2.86, 0.02], [sign * 0.79, 1.5, 0]));
-    door.position.set(-sign * 1.6, 0, -110);
-    g.add(door);
-  }
+  exits.root.position.z = -110.05;
+  g.add(exits.root);
 
   const boardMaterial = zone.own(new MeshBasicMaterial({ map: board.texture, toneMapped: false }));
   boardMaterial.color.setScalar(0.62);
