@@ -1,6 +1,7 @@
 import { HalfFloatType, type PerspectiveCamera, type Scene, type WebGLRenderer } from "three";
 import {
   BloomEffect,
+  BrightnessContrastEffect,
   DepthOfFieldEffect,
   EffectComposer,
   EffectPass,
@@ -15,6 +16,7 @@ import type { Tier } from "./zones/shared";
 
 export type Post = {
   render(delta: number, focus: number, distance: number): void;
+  setExposure(value: number): void;
   setSize(width: number, height: number): void;
   dispose(): void;
 };
@@ -25,8 +27,9 @@ export function createPost(renderer: WebGLRenderer, scene: Scene, camera: Perspe
   const bloom = new BloomEffect({ mipmapBlur: true, luminanceThreshold: 0.82, luminanceSmoothing: 0.18, intensity: 1.15, radius: 0.72 });
   const vignette = new VignetteEffect({ offset: 0.32, darkness: 0.62 });
   const tone = new ToneMappingEffect({ mode: ToneMappingMode.AGX });
+  const exposure = new BrightnessContrastEffect({ brightness: 0, contrast: 0 });
   const dof = tier === "high" ? new DepthOfFieldEffect(camera, { worldFocusRange: 6, bokehScale: 0 }) : null;
-  composer.addPass(new EffectPass(camera, bloom, vignette, tone));
+  composer.addPass(new EffectPass(camera, bloom, vignette, tone, exposure));
   if (dof) composer.addPass(new EffectPass(camera, dof));
   composer.addPass(new EffectPass(camera, new SMAAEffect({ preset: tier === "high" ? SMAAPreset.HIGH : SMAAPreset.MEDIUM })));
   return {
@@ -36,6 +39,10 @@ export function createPost(renderer: WebGLRenderer, scene: Scene, camera: Perspe
         dof.cocMaterial.worldFocusDistance = distance;
       }
       composer.render(delta);
+    },
+    setExposure(value) {
+      exposure.brightness = (value - 1) * 0.22;
+      exposure.contrast = (value - 1) * -0.1;
     },
     setSize(width, height) {
       composer.setSize(width, height);

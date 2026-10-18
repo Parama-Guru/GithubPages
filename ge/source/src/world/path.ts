@@ -93,3 +93,23 @@ export const zoneOrder: ZoneKey[] = ["approach", "lobby", "control", "hall", "ga
 export function zoneAt(z: number): ZoneKey {
   return zoneOrder.find((key) => z <= zoneExtents[key][1] && z >= zoneExtents[key][0]) ?? (z > 0 ? "approach" : "yard");
 }
+
+function bump(value: number, from: number, to: number): number {
+  if (value <= from || value >= to) return 0;
+  return Math.sin(((value - from) / (to - from)) * Math.PI);
+}
+
+export function exposureAt(z: number): number {
+  return 1 + 0.42 * bump(z, -4.5, 3.5) - 0.3 * bump(z, -116, -107);
+}
+
+export function travelAt(ranges: ChapterRange[], progress: number): number {
+  for (let index = 0; index < ranges.length - 1; index++) {
+    const range = ranges[index] as ChapterRange;
+    const next = ranges[index + 1] as ChapterRange;
+    const start = range.start + (range.end - range.start) * 0.5;
+    const end = next.start + (next.end - next.start) * 0.12;
+    if (progress > start && progress < end) return bump(progress, start, end);
+  }
+  return 0;
+}

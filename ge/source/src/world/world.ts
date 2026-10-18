@@ -26,7 +26,7 @@ import { preloadAssets, type AssetName } from "./assets";
 import { batch, type Frame, type LightSpec, type Pickable, type Zone } from "./kit";
 import { createMaterials, disposeMaterials, skyMaterial } from "./materials";
 import { clamp01, lerpPose, smootherstep, type Pose } from "./math";
-import { evenRanges, sampleJourney, sampleRoute, zoneAt, zoneOrder, type ChapterRange } from "./path";
+import { evenRanges, exposureAt, sampleJourney, sampleRoute, travelAt, zoneAt, zoneOrder, type ChapterRange } from "./path";
 import { createPost, type Post } from "./post";
 import { disposeTextures, fontsReady } from "./textures";
 import type { Tier, ZoneBuilder } from "./zones/shared";
@@ -106,6 +106,7 @@ export class World {
   private disposed = false;
   private focus = 0;
   private lastZone: ZoneKey = "approach";
+  private present: { object: Object3D; from: Vector3; to: Vector3; start: number; duration: number; restore: boolean; done: () => void } | null = null;
 
   constructor(options: WorldOptions) {
     this.options = options;
@@ -433,7 +434,7 @@ export class World {
     if (this.transition && now - this.transition.start >= this.transition.duration) this.transition = null;
     const settling = Math.abs(this.parallax.x - this.parallaxTarget.x) + Math.abs(this.parallax.y - this.parallaxTarget.y) > 0.002;
     const ambient = this.motion && document.visibilityState === "visible";
-    const due = this.dirty || transitioning || settling || (ambient && Math.round(now / 33) !== Math.round((now - delta * 1000) / 33));
+    const due = this.dirty || transitioning || settling || this.present !== null || (ambient && Math.round(now / 33) !== Math.round((now - delta * 1000) / 33));
     if (!due) return;
     if (ambient) this.clock += delta;
     this.parallax.lerp(this.parallaxTarget, 1 - Math.exp(-delta * 3));
@@ -453,7 +454,11 @@ export class World {
     if (transitioning && this.transition) {
       const t = (now - this.transition.start) / this.transition.duration;
       this.focus = Math.sin(Math.PI * clamp01(t));
-    } else this.focus = 0;
+    } else this.focus = this.target.kind === "journey" ? travelAt(this.ranges, this.journey) * 0.75 : 0;
+    this.animatePresent(now);
+    const exposure = exposureAt(this.camera.position.z);
+    if (this.post) this.post.setExposure(exposure);
+    else this.renderer.toneMappingExposure = 1.05 * exposure;
     const distance = new Vector3(...pose.target).distanceTo(this.camera.position);
     this.renderer.info.reset();
     if (this.post) this.post.render(delta, this.focus, distance);
@@ -470,6 +475,64 @@ export class World {
     canvas.dataset.camera = this.camera.position.toArray().map((value) => value.toFixed(2)).join(",");
     canvas.dataset.panel = this.panel.toFixed(2);
     canvas.dataset.motion = String(this.motion);
+    canvas.dataset.exposure = exposure.toFixed(2);
+    canvas.dataset.focus = this.focus.toFixed(2);
+  }
+
+  private animatePresent(now: number): void {
+    const present = this.present;
+    if (!present) return;
+    const t = smootherstep((now - present.start) / present.duration);
+    present.object.position.lerpVectors(present.from, present.to, present.restore ? 1 - t : t);
+    if (t >= 1) {
+      if (present.restore) present.object.position.copy(present.from);
+      this.present = null;
+      present.done();
+    }
+  }
+
+  presentPick(): Promise<void> {
+    const hit = this.hovered ?? this.intersect();
+    if (!hit || !this.motion) return Promise.resolve();
+    const object = hit.object;
+    const from = object.position.clone();
+    const world = object.getWorldPosition(new Vector3());
+    const toward = this.camera.position.clone().sub(world).multiplyScalar(0.45);
+    const destination = world.clone().add(toward);
+    const to = object.parent ? object.parent.worldToLocal(destination) : destination;
+    return new Promise((resolve) => {
+      this.present = {
+        object,
+        from,
+        to,
+        start: performance.now(),
+        duration: 650,
+        restore: false,
+        done: () => {
+          resolve();
+          setTimeout(() => {
+            this.present = { object, from, to, start: performance.now(), duration: 10, restore: true, done: () => undefined };
+            this.dirty = true;
+          }, 2200);
+        },
+      };
+      this.dirty = true;
+    });
+  }
+
+  async prepare(target: Target): Promise<void> {
+    const previous = this.target;
+    const previousProgress = this.routeProgress;
+    this.target = target;
+    this.routeProgress = 0;
+    const pose = this.currentTargetPose();
+    this.target = previous;
+    this.routeProgress = previousProgress;
+    const zone = zoneAt(pose.position[2]);
+    const index = zoneOrder.indexOf(zone);
+    const assets = [zoneOrder[index - 1], zone, zoneOrder[index + 1]].filter(Boolean).flatMap((key) => zoneAssets[key as ZoneKey]);
+    await preloadAssets([...new Set(assets)], () => undefined);
+    await this.ensure(zone);
   }
 
   private hover(): void {
@@ -497,5 +560,9 @@ export class World {
 
   get currentTier(): Tier {
     return this.tier;
+  }
+
+  get animating(): boolean {
+    return this.motion;
   }
 }

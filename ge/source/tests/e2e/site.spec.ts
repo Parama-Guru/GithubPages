@@ -109,8 +109,9 @@ test.describe("3D journey", () => {
     await button.click();
     await expect(button).toHaveAttribute("aria-pressed", "true");
     await expect.poll(async () => (await canvasData(page)).panel, { timeout: 8_000 }).toBe("1.00");
-    await button.click();
+    await page.keyboard.press("Escape");
     await expect.poll(async () => (await canvasData(page)).panel, { timeout: 8_000 }).toBe("0.00");
+    await expect(button).toHaveAttribute("aria-pressed", "false");
   });
 
   test("pausing stops ambient rendering", async ({ page }) => {

@@ -18,7 +18,7 @@ import { play, quiet, setSound } from "./app/sound";
 const html = document.documentElement;
 const caps = detect();
 const main = document.querySelector<HTMLElement>("#main") as HTMLElement;
-const canvas = document.querySelector<HTMLCanvasElement>("[data-canvas]") as HTMLCanvasElement;
+let canvas = document.querySelector<HTMLCanvasElement>("[data-canvas]") as HTMLCanvasElement;
 const stage = document.querySelector<HTMLElement>(".world") as HTMLElement;
 const hoverLabel = document.querySelector<HTMLElement>("[data-hover-label]");
 const params = new URLSearchParams(location.search);
@@ -62,6 +62,15 @@ function targetFor(next: Route): Target {
 
 const motion = createMotion(!caps.reduced && !poster);
 
+let panelTimer = 0;
+
+function openMore(id: string): void {
+  const dialog = document.querySelector<HTMLDialogElement>(`#more-${CSS.escape(id)}`);
+  if (!dialog || dialog.open) return;
+  dialog.showModal();
+  motion.lenis?.stop();
+}
+
 function setPanel(open: boolean): void {
   gsap.to(panel, {
     value: open ? 1 : 0,
@@ -73,7 +82,11 @@ function setPanel(open: boolean): void {
     button.setAttribute("aria-pressed", String(open));
     if (button.firstChild) button.firstChild.textContent = open ? "Close the switchgear panel" : "Open a switchgear panel";
   }
-  if (open) play("breaker");
+  window.clearTimeout(panelTimer);
+  if (open) {
+    play("breaker");
+    panelTimer = window.setTimeout(() => current.id === "home" && openMore("projects"), caps.reduced ? 0 : 1500);
+  }
 }
 
 function enterFacility(y: number): void {
@@ -85,19 +98,33 @@ function mount(next: Route): Controller {
   if (next.id === "home") {
     const journey = initJourney(main, motion, world, enterFacility);
     const toggle = (event: Event) => {
-      const button = (event.target as HTMLElement).closest("[data-action='panel']");
-      if (button) setPanel(panel.value < 0.5);
+      const target = event.target as HTMLElement;
+      if (target.closest("[data-action='panel']")) setPanel(panel.value < 0.5);
+      const opener = target.closest<HTMLElement>("[data-more]");
+      if (opener?.dataset.more) openMore(opener.dataset.more);
+      if (target.closest("[data-close-more]")) target.closest("dialog")?.close();
+    };
+    const closed = (event: Event) => {
+      const dialog = event.target as HTMLElement;
+      if (!dialog.classList?.contains("detail")) return;
+      motion.lenis?.start();
+      if (dialog.id === "more-projects" && panel.value > 0.5) setPanel(false);
+      document.querySelector<HTMLElement>(`[data-more="${dialog.id.slice(5)}"]`)?.focus({ preventScroll: true });
     };
     main.addEventListener("click", toggle);
+    main.addEventListener("close", closed, true);
     return {
       destroy() {
         journey.destroy();
         main.removeEventListener("click", toggle);
+        main.removeEventListener("close", closed, true);
       },
     };
   }
   return initPage(main, motion, world);
 }
+
+const curtain = document.querySelector<HTMLElement>("[data-curtain]");
 
 async function navigate(url: URL, push = true): Promise<void> {
   const next = matchRoute(url.pathname);
@@ -107,13 +134,21 @@ async function navigate(url: URL, push = true): Promise<void> {
   }
   if (push) history.pushState(null, "", url.pathname + url.search + url.hash);
   main.classList.add("is-leaving");
-  world?.goTo(targetFor(next), caps.reduced ? 0 : 2);
   if (panel.value > 0) setPanel(false);
+  if (world) {
+    const preparing = world.prepare(targetFor(next));
+    const slow = window.setTimeout(() => curtain?.classList.add("is-visible"), 160);
+    await preparing.catch(() => undefined);
+    window.clearTimeout(slow);
+    curtain?.classList.remove("is-visible");
+  }
+  world?.goTo(targetFor(next), caps.reduced ? 0 : 2);
   await new Promise((resolve) => setTimeout(resolve, world && !caps.reduced ? 420 : 60));
   controller.destroy();
   main.innerHTML = renderMain(next.id);
   updateHead(next);
   updateChrome(next);
+  motion.lenis?.start();
   motion.lenis?.scrollTo(0, { immediate: true, force: true });
   window.scrollTo(0, 0);
   current = next;
@@ -184,7 +219,10 @@ function bindShell(): void {
           if (second) enterFacility(second.offsetTop + (second.offsetHeight - window.innerHeight) * 0.32);
         } else void navigate(new URL(href("home"), location.href));
       } else if (id === "panel") setPanel(panel.value < 0.5);
-      else if (id.startsWith("route:")) void navigate(new URL(href(id.slice(6) as RouteId), location.href));
+      else if (id.startsWith("route:")) {
+        const destination = new URL(href(id.slice(6) as RouteId), location.href);
+        void world.presentPick().then(() => navigate(destination));
+      }
     }
   });
   document.addEventListener(
@@ -217,21 +255,33 @@ function bindShell(): void {
   setSound(caps.sound);
 }
 
-function bindPointer(active: World): void {
+function bindPointer(): void {
   window.addEventListener(
     "pointermove",
     (event) => {
+      if (!world) return;
       if (event.pointerType === "touch" || uiTarget(event.target)) {
-        active.clearPointer();
+        world.clearPointer();
         return;
       }
-      active.setPointer(event.clientX, event.clientY);
+      world.setPointer(event.clientX, event.clientY);
     },
     { passive: true },
   );
-  document.addEventListener("pointerleave", () => active.clearPointer());
+  window.addEventListener(
+    "pointerdown",
+    (event) => {
+      if (world && event.pointerType === "touch" && !uiTarget(event.target)) world.setPointer(event.clientX, event.clientY);
+    },
+    { passive: true },
+  );
+  document.addEventListener("pointerleave", () => world?.clearPointer());
+  window.addEventListener("resize", () => world?.resize());
+  document.addEventListener("visibilitychange", () => (document.hidden ? world?.stop() : world?.start()));
+  window.setInterval(() => {
+    if (world && world.animating && world.averageFrame > 24 && world.downgrade()) console.info(`Quality lowered to ${world.currentTier}`);
+  }, 3000);
 }
-
 function onHover(label: string | null, x: number, y: number): void {
   if (!hoverLabel) return;
   hoverLabel.classList.toggle("is-visible", Boolean(label));
@@ -241,20 +291,33 @@ function onHover(label: string | null, x: number, y: number): void {
   hoverLabel.style.top = `${y}px`;
 }
 
-function fallback(reason: string): void {
+let bound = false;
+let recoveries = 0;
+
+function fallback(reason: string, recover = false): void {
   console.warn(`3D experience unavailable: ${reason}`);
   world?.dispose();
   world = null;
   stage.dataset.world = "static";
+  stage.classList.remove("is-interactive");
   html.classList.remove("has-3d", "is-loading");
   html.classList.add("is-loaded");
   controller.destroy();
   controller = mount(current);
   ScrollTrigger.refresh();
+  if (recover && recoveries < 2) {
+    recoveries++;
+    const fresh = canvas.cloneNode(false) as HTMLCanvasElement;
+    for (const key of Object.keys(fresh.dataset)) if (key !== "canvas") delete fresh.dataset[key];
+    canvas.replaceWith(fresh);
+    canvas = fresh;
+    window.setTimeout(() => void bootWorld(true), 1200);
+  }
 }
 
-async function bootWorld(): Promise<void> {
-  html.classList.add("has-3d", "is-loading");
+async function bootWorld(quiet = false): Promise<void> {
+  html.classList.add("has-3d");
+  if (!quiet) html.classList.add("is-loading");
   stage.dataset.world = "loading";
   const bar = document.querySelector<HTMLElement>("[data-loader-bar]");
   const value = document.querySelector<HTMLElement>("[data-loader-value]");
@@ -262,7 +325,7 @@ async function bootWorld(): Promise<void> {
   const timeout = setTimeout(() => fallback("loading took too long"), 25000);
   try {
     const { World } = await import("@/world/world");
-    world = new World({
+    const created = new World({
       canvas,
       tier: caps.tier,
       motion: !caps.reduced && !preferences.paused(),
@@ -272,29 +335,32 @@ async function bootWorld(): Promise<void> {
         if (value) value.textContent = `${Math.round(progress * 100)}%`;
       },
     });
-    await world.load(targetFor(current));
+    world = created;
+    await created.load(targetFor(current));
     clearTimeout(timeout);
-    if (!world) return;
-    const wait = Math.max(0, 900 - (performance.now() - started));
+    if (world !== created) return;
+    const wait = quiet ? 0 : Math.max(0, 900 - (performance.now() - started));
     await new Promise((resolve) => setTimeout(resolve, wait));
     stage.dataset.world = "ready";
     stage.classList.add("is-interactive");
-    world.start();
-    bindPointer(world);
-    window.addEventListener("resize", () => world?.resize());
-    document.addEventListener("visibilitychange", () => (document.hidden ? world?.stop() : world?.start()));
-    canvas.addEventListener("webglcontextlost", () => fallback("graphics context lost"));
-    window.setInterval(() => {
-      if (world && world.averageFrame > 24 && world.downgrade()) console.info(`Quality lowered to ${world.currentTier}`);
-    }, 3000);
+    created.start();
+    if (!bound) {
+      bound = true;
+      bindPointer();
+    }
+    canvas.addEventListener("webglcontextlost", () => fallback("graphics context lost", true), { once: true });
     html.classList.add("is-loaded");
     setTimeout(() => html.classList.remove("is-loading"), 1000);
+    if (quiet) {
+      controller.destroy();
+      controller = mount(current);
+      ScrollTrigger.refresh();
+    }
   } catch (error) {
     clearTimeout(timeout);
     fallback(error instanceof Error ? error.message : String(error));
   }
 }
-
 async function renderPoster(name: string): Promise<void> {
   html.classList.add("is-poster", "has-3d");
   const { World } = await import("@/world/world");

@@ -86,18 +86,92 @@ const chapterBodies: Record<string, (index: number) => string> = {
     <div class="actions">${link("contact", "Send an enquiry", "button")}</div>`,
 };
 
+const more = (id: string) => `<button class="more-button" type="button" data-more="${id}" aria-haspopup="dialog"><span aria-hidden="true">+</span>Read more</button>`;
+
+const details: Record<string, { label: string; title: string; route: RouteId; body: () => string }> = {
+  about: {
+    label: "About",
+    title: "Ganesh Electricals",
+    route: "about",
+    body: () => `<p>${esc(company.about)}</p>
+      <h3>Timeline</h3>
+      <ol class="detail-timeline">${timeline.map((item) => `<li><strong>${item.year}</strong><span>${esc(item.title)}</span><p>${esc(item.body)}</p><time>${item.date}</time></li>`).join("")}</ol>`,
+  },
+  "why-us": {
+    label: "Why choose us",
+    title: whyUs.title,
+    route: "features",
+    body: () => `<p>${esc(whyUs.lead)}</p>${whyUs.principles.map((item) => `<h3>${esc(item.title)}</h3><p>${esc(item.body)}</p>`).join("")}${statistics()}`,
+  },
+  projects: {
+    label: "Projects",
+    title: "Projects",
+    route: "projects",
+    body: () => `<ul class="tags">${company.scopes.map((scope) => `<li>${esc(scope)}</li>`).join("")}</ul>
+      <ul class="year-cards">${projectYears
+        .map((year) => {
+          const count = year.tables.reduce((sum, table) => sum + table.rows.length - 1, 0);
+          return `<li><a href="${href(`projects-${year.slug}` as RouteId)}"><strong>${year.years}</strong><span>${count} projects</span>${arrow}</a></li>`;
+        })
+        .join("")}</ul>`,
+  },
+  clients: {
+    label: "Clients",
+    title: "Our Clients",
+    route: "clients",
+    body: () => `<p>${esc(clients.lead)}</p>${logos()}<h3>Testimonials</h3>${clients.testimonials
+      .map((item) => `<blockquote>${esc(item.quote)}<footer>${esc(item.author)}</footer></blockquote>`)
+      .join("")}`,
+  },
+  quality: {
+    label: "Quality & Safety",
+    title: "Quality & Safety",
+    route: "quality-safety",
+    body: () =>
+      quality.sections.map((section) => `<h3>${esc(section.title)}</h3>${section.paragraphs.map((text) => `<p>${esc(text)}</p>`).join("")}`).join("") +
+      `<h3>EHS Policy</h3><p>${esc(quality.ehs.intro)}</p><p>${esc(quality.ehs.committed)}</p><ol class="commitments">${quality.ehs.commitments
+        .map((item) => `<li>${esc(item)}</li>`)
+        .join("")}</ol><p>${esc(quality.ehs.closing)}</p>`,
+  },
+  leadership: {
+    label: "Leadership",
+    title: "Leadership",
+    route: "leadership",
+    body: () => `<p class="detail-name">${esc(leadership.name)}</p>${leadership.paragraphs.map((text) => `<p>${esc(text)}</p>`).join("")}`,
+  },
+};
+
+function dialogs() {
+  return Object.entries(details)
+    .map(
+      ([id, detail]) => `<dialog class="detail" id="more-${id}" aria-labelledby="more-${id}-title" data-lenis-prevent>
+        <div class="detail-inner">
+          <button class="detail-close" type="button" data-close-more aria-label="Close">×</button>
+          <p class="chapter-label"><span></span>${esc(detail.label)}</p>
+          <h2 id="more-${id}-title">${esc(detail.title)}</h2>
+          <div class="detail-body">${detail.body()}</div>
+          <div class="actions">${link(detail.route, `Open the ${detail.label} page`)}</div>
+        </div>
+      </dialog>`,
+    )
+    .join("");
+}
+
 function home() {
   return `<div class="journey" data-journey>
     ${chapters
       .map(
         (chapter, index) => `<section class="chapter" id="${chapter.id}" data-chapter="${chapter.id}" data-zone="${chapter.zone}" aria-labelledby="${chapter.id}-title">
-          <div class="chapter-panel">${(chapterBodies[chapter.id] ?? (() => ""))(index).replace(/<h([12]) class="([^"]+)"/, `<h$1 id="${chapter.id}-title" class="$2"`)}</div>
+          <div class="chapter-panel">${(chapterBodies[chapter.id] ?? (() => ""))(index)
+            .replace(/<h([12]) class="([^"]+)"/, `<h$1 id="${chapter.id}-title" class="$2"`)
+            .replace('<div class="actions">', details[chapter.id] ? `<div class="actions">${more(chapter.id)}` : '<div class="actions">')}</div>
           <picture class="chapter-poster" aria-hidden="true"><img src="/GithubPages/ge/posters/${chapter.id}.webp" width="1280" height="800" alt="" loading="lazy" decoding="async"></picture>
         </section>`,
       )
       .join("")}
     <p class="scroll-cue" aria-hidden="true"><span>Scroll to enter</span><i></i></p>
-  </div>`;
+  </div>
+  ${dialogs()}`;
 }
 
 function breadcrumbs(id: RouteId) {
