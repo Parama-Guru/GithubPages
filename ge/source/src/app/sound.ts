@@ -24,6 +24,7 @@ function noise(ctx: AudioContext, seconds: number): AudioBuffer {
 
 export function setSound(value: boolean): void {
   enabled = value;
+  document.documentElement.dataset.sound = value ? "on" : "off";
   if (!value) {
     humGain?.gain.setTargetAtTime(0, context?.currentTime ?? 0, 0.2);
     void context?.suspend();
@@ -35,6 +36,7 @@ export function setSound(value: boolean): void {
 export function play(voice: Voice): void {
   const ctx = audio();
   if (!ctx) return;
+  document.documentElement.dataset.lastSound = voice;
   const now = ctx.currentTime;
   if (voice === "hum") {
     if (!humGain) {

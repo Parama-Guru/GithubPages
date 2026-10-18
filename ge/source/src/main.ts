@@ -160,6 +160,8 @@ async function navigate(url: URL, push = true): Promise<void> {
 }
 
 function jumpTo(id: string): void {
+  motion.lenis?.resize();
+  ScrollTrigger.refresh();
   const y = current.id === "home" && html.classList.contains("has-3d") ? chapterScroll(main, id) : null;
   const element = document.getElementById(id);
   if (y !== null) scrollTo(motion, y, 1.6);
@@ -211,6 +213,7 @@ function bindShell(): void {
       return;
     }
     if (world && !uiTarget(target)) {
+      world.setPointer(event.clientX, event.clientY);
       const id = world.pick();
       if (!id) return;
       if (id === "doors") {

@@ -1,21 +1,14 @@
-import { AnimationMixer, type AnimationClip, type Group, type Mesh, type MeshStandardMaterial, type Object3D, type WebGLRenderer } from "three";
+import { AnimationMixer, type AnimationClip, type Group, type Mesh, type MeshStandardMaterial, type Object3D } from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import { KTX2Loader } from "three/addons/loaders/KTX2Loader.js";
 import { MeshoptDecoder } from "three/addons/libs/meshopt_decoder.module.js";
 
 export type AssetName = "switchgear" | "transformer" | "insulator" | "tower" | "entrance";
 
 const loader = new GLTFLoader();
 loader.setMeshoptDecoder(MeshoptDecoder);
-let ktx2: KTX2Loader | null = null;
 
 const scenes = new Map<AssetName, Promise<{ scene: Group; clips: AnimationClip[] }>>();
 
-export function configureLoaders(renderer: WebGLRenderer): void {
-  if (ktx2) return;
-  ktx2 = new KTX2Loader().setTranscoderPath("/GithubPages/ge/decoders/basis/").detectSupport(renderer);
-  loader.setKTX2Loader(ktx2);
-}
 
 function prepare(scene: Group): void {
   scene.traverse((object) => {

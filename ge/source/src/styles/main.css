@@ -139,6 +139,7 @@ html.is-loading .loader {
   display: grid;
 }
 html.is-loaded .loader {
+  pointer-events: none;
   opacity: 0;
   visibility: hidden;
 }

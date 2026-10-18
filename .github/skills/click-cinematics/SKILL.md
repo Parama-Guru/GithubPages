@@ -20,6 +20,12 @@ A click should never put the world into a state that scrolling cannot explain.
 2. **Object interaction (open a cabinet, rack out a breaker):** a separate 0–1 state tweened with GSAP (`setPanel`), mapped to transforms in the zone's update (door rotation first, breaker translation after 0.4, energy glow after 0.55). Toggling reverses it. Expose it in the DOM (`aria-pressed`) and in a data attribute for tests.
 3. **Route cinematic (frame → page):** call the router; the router flies the camera to the page's pose and swaps content.
 
+## Pitfalls found in testing
+
+- Touch pointers fire `pointerleave` after `pointerup` and before `click`; set the pick point from the click event coordinates, not from the last pointer move.
+- A fading full-screen loader keeps catching taps until its transition ends; add `pointer-events: none` as soon as it starts fading.
+- After client-side navigation, call `lenis.resize()` and `ScrollTrigger.refresh()` before scrolling to a hash target, or the old page height clamps the scroll.
+
 ## Accessibility
 
 - Every 3D action has an HTML equivalent: an "Enter" button, a toggle with `aria-pressed`, links to the pages.

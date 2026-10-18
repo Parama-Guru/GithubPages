@@ -2,9 +2,8 @@ import { execFileSync } from "node:child_process";
 import { mkdir, readdir, rm, stat } from "node:fs/promises";
 import path from "node:path";
 import { NodeIO } from "@gltf-transform/core";
-import { EXTMeshoptCompression, KHRMeshQuantization, KHRTextureBasisu } from "@gltf-transform/extensions";
-import { dedup, meshopt, prune, weld } from "@gltf-transform/functions";
-import { ktx2 } from "ktx2-encoder/gltf-transform";
+import { EXTMeshoptCompression, EXTTextureWebP, KHRMeshQuantization } from "@gltf-transform/extensions";
+import { dedup, meshopt, prune, textureCompress, weld } from "@gltf-transform/functions";
 import { MeshoptEncoder } from "meshoptimizer";
 import sharp from "sharp";
 
@@ -20,11 +19,7 @@ await mkdir(out, { recursive: true });
 execFileSync(blender, ["--background", "--factory-startup", "--python", path.join(root, "blender", "build_assets.py"), "--", raw], { stdio: "inherit" });
 
 await MeshoptEncoder.ready;
-const decode = async (buffer) => {
-  const { data, info } = await sharp(buffer).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
-  return { data: new Uint8Array(data), width: info.width, height: info.height };
-};
-const io = new NodeIO().registerExtensions([EXTMeshoptCompression, KHRMeshQuantization, KHRTextureBasisu]).registerDependencies({ "meshopt.encoder": MeshoptEncoder });
+const io = new NodeIO().registerExtensions([EXTMeshoptCompression, KHRMeshQuantization, EXTTextureWebP]).registerDependencies({ "meshopt.encoder": MeshoptEncoder });
 
 for (const file of (await readdir(raw)).filter((name) => name.endsWith(".glb"))) {
   const document = await io.read(path.join(raw, file));
@@ -32,7 +27,7 @@ for (const file of (await readdir(raw)).filter((name) => name.endsWith(".glb")))
     dedup(),
     weld(),
     prune(),
-    ktx2({ isUASTC: false, qualityLevel: 160, compressionLevel: 2, generateMipmap: true, imageDecoder: decode }),
+    textureCompress({ encoder: sharp, targetFormat: "webp", quality: 82 }),
     meshopt({ encoder: MeshoptEncoder, level: "medium" }),
   );
   const target = path.join(out, file);

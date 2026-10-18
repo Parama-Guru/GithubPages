@@ -22,7 +22,7 @@ import {
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import { acceleratedRaycast, computeBoundsTree, disposeBoundsTree } from "three-mesh-bvh";
 import type { RouteId, ZoneKey } from "@/routes/routes";
-import { configureLoaders, preloadAssets, type AssetName } from "./assets";
+import { preloadAssets, type AssetName } from "./assets";
 import { batch, type Frame, type LightSpec, type Pickable, type Zone } from "./kit";
 import { createMaterials, disposeMaterials, skyMaterial } from "./materials";
 import { clamp01, lerpPose, smootherstep, type Pose } from "./math";
@@ -117,7 +117,6 @@ export class World {
     this.renderer.setClearColor("#05080c");
     this.renderer.toneMappingExposure = 1.05;
     this.renderer.info.autoReset = false;
-    configureLoaders(this.renderer);
     this.scene.background = new Color("#05080c");
     this.scene.fog = new FogExp2("#070b12", 0.014);
     const pmrem = new PMREMGenerator(this.renderer);
@@ -478,6 +477,8 @@ export class World {
     canvas.dataset.motion = String(this.motion);
     canvas.dataset.exposure = exposure.toFixed(2);
     canvas.dataset.focus = this.focus.toFixed(2);
+    const subject = new Vector3(...pose.target).project(this.camera);
+    canvas.dataset.subject = `${Math.round(((subject.x + 1) / 2) * window.innerWidth)},${Math.round(((1 - subject.y) / 2) * window.innerHeight)}`;
   }
 
   private animatePresent(now: number): void {

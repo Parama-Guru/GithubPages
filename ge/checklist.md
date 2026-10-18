@@ -1,6 +1,6 @@
 # 3D website — research, plan and checklist
 
-Status: built and verified on localhost (`GithubPages/ge/`, source in `ge/source/`). Not committed or pushed — waiting for the owner's command.
+Status: built, verified and published at https://parama-guru.github.io/GithubPages/ge/ (source in `ge/source/`).
 
 This document is company-neutral: it describes how to build a full 3D,
 scroll-and-click-driven website for an electrical contracting company. Company
@@ -219,19 +219,19 @@ Rules for every chapter:
 - [x] **Blender scene file** with one collection per zone, real-world scale
       (1 unit = 1 m), named objects for everything that animates or is
       clickable (`door_left`, `door_right`, `panel_03_door` …).
-- [ ] **Camera path authored in Blender** as a curve with keyframed target
+- [x] **Camera path authored in Blender** as a curve with keyframed target
       empties per chapter; exported as JSON (points, targets, FOV per
       chapter). Done = path imported and drawn as a debug line in the browser.
-      _Open: the path is authored in code (`src/world/path.ts`) and unit-tested, not exported from Blender._
+      _Done: `blender/camera_path.blend` holds the keys and targets as empties; `npm run camera` exports `src/world/camera-path.json` (lossless round trip verified)._
 - [ ] **Light baking**: ambient occlusion and static lighting baked to
       texture atlases per zone, so the browser needs few real-time lights.
-      _Open: lighting is real-time (6-light pool, light-pool decals, contact shadows); nothing is baked yet._
+      _Partly: ambient occlusion is baked in Blender (Cycles) for the switchgear, transformer and insulator; rooms get code-generated corner occlusion and light pools. Full static lighting of the rooms is not baked because the rooms are built in code._
 - [ ] **Export to glTF/GLB** per zone, with animations for doors and panels.
-      _Open: equipment is exported per model (switchgear, transformer, insulator, tower); rooms are built in code; door/panel motion is driven in code on named nodes, not glTF animations._
-- [ ] **Optimise** with `gltf-transform`: meshopt geometry compression, KTX2
+      _Partly: equipment and doors are glTF with authored animations (switchgear door + breaker, entrance doors) driven by the scroll/click state; rooms are procedural in code, not glTF._
+- [x] **Optimise** with `gltf-transform`: meshopt geometry compression, KTX2
       (UASTC for normal maps, ETC1S for colour), texture sizes ≤ 1024 px
       (2048 only for hero surfaces). Done = each zone file ≤ 600 KB.
-      _Open: meshopt is done (24–216 KB per model); KTX2 is not used because all textures are generated in code._
+      _Done with a measured change: KTX2 was implemented, but its transcoder (≈570 KB) cost more than the ≈180 KB of textures it compressed, so model textures are WebP (EXT_texture_webp) + meshopt. Models 15–246 KB._
 - [x] **Self-hosted decoders** (meshopt, Basis/KTX2) copied into the build;
       no CDN request. Done = Network panel shows no external hosts.
 - [x] **Procedural fallback assets**: simple equipment built in code
@@ -245,11 +245,11 @@ Rules for every chapter:
 - [x] **One renderer, one canvas**, WebGL2, fixed full-screen behind the
       HTML; colour space sRGB, AgX tone mapping, DPR capped (1 on phones,
       1.5 desktop). Done = canvas visible, stats overlay in dev only.
-- [ ] **Zone manager**: each zone is a module with `build()`, `update(frame)`,
+- [x] **Zone manager**: each zone is a module with `build()`, `update(frame)`,
       `resize()`, `dispose()`; zones are dynamic-imported one zone ahead of
       the camera and disposed two zones behind. Done = memory stays flat
       while scrolling the whole site twice.
-      _Open: streaming and disposal are implemented; the memory-stays-flat test has not been run._
+      _Done: tested — geometry and texture counts stay flat over three full journeys._
 - [x] **World laid out along the camera path** (FR-style), so neighbouring
       zones are physically connected — doors, corridors, openings — and the
       camera never cuts.
@@ -262,14 +262,14 @@ Rules for every chapter:
       subject.
 - [x] **Energy-flow shader**: animated pulses along cables and busbars driven
       by the timeline (not by time alone), used when equipment "powers on".
-- [ ] **Focus pull**: depth-of-field pass animated between chapters
+- [x] **Focus pull**: depth-of-field pass animated between chapters
       (sharp → soft → sharp) to mark transitions and hide zone loading.
-      _Open: depth-of-field pulls run on route flights (high tier) only, not between chapters while scrolling._
+      _Done: depth-of-field pull while travelling between rooms and on page flights; sharp at every hold (tested)._
 - [x] **Selective bloom** only on emissive parts (signs, indicator lamps,
       energised conductors). No global glow.
-- [ ] **Context-loss handling**: on WebGL loss show the chapter's poster image
+- [x] **Context-loss handling**: on WebGL loss show the chapter's poster image
       and keep content usable; restore the same chapter on recovery.
-      _Open: losing WebGL falls back to the static posters; restoring the chapter on recovery is not implemented._
+      _Done: falls back to posters, then rebuilds the 3D world on the same page (tested)._
 
 ### D4. Scroll timeline (the "4th dimension")
 
@@ -288,9 +288,9 @@ Rules for every chapter:
       chapter's scroll length so text can be read without the scene moving.
 - [x] **Reverse play** is exact: scrolling up rewinds doors, panels and
       lights. Done = Playwright compares frames going forward and backward.
-- [ ] **Jump navigation**: header/menu links scroll smoothly to a chapter;
+- [x] **Jump navigation**: header/menu links scroll smoothly to a chapter;
       deep links (`/#chapter` or route) open at that chapter directly.
-      _Open: hash deep links are implemented but not covered by a test._
+      _Done: hash links on load and after navigation fly to the right room (tested; fixed a stale scroll-height bug)._
 - [x] **Scroll cue** ("Scroll to enter") on the hero only, hidden after
       first scroll.
 
@@ -298,24 +298,24 @@ Rules for every chapter:
 
 - [x] **Raycast picking** with three-mesh-bvh on named clickable objects;
       hover shows a subtle outline + cursor change + small HTML label.
-- [ ] **Door entry**: clicking the entrance doors plays a GSAP timeline —
+- [x] **Door entry**: clicking the entrance doors plays a GSAP timeline —
       handles turn, both doors swing on hinges, camera dollies through,
       exposure adapts — and lands exactly on the scroll position of chapter 2,
       so scroll and click never disagree.
-      _Open: click → doors open → camera walks into the lobby works and is tested; the exposure change from dusk to interior is not implemented._
-- [ ] **Panel open**: clicking a switchgear panel opens its door, racks out a
+      _Done: Blender door animation, walk-through, exposure adapts from dusk to interior (tested)._
+- [x] **Panel open**: clicking a switchgear panel opens its door, racks out a
       breaker, energises the busbar, and opens the details dialog. Closing
       the dialog reverses it.
-      _Open: door opens, breaker racks out, busbar glows and it reverses (tested); there is no details dialog._
-- [ ] **Project frame**: clicking a frame flies it forward and changes the
+      _Done: Blender door/breaker animation, busbar glow, details dialog; closing the dialog closes the panel (tested)._
+- [x] **Project frame**: clicking a frame flies it forward and changes the
       route to that project page (route transition, see D6).
-      _Open: clicking a project photo navigates to Projects; not covered by a test and there is no fly-forward of the frame._
+      _Done: clicked frames/lightboxes fly toward the camera, then the page changes (tested with a client lightbox)._
 - [x] **Accessible equivalents**: every clickable object has a matching HTML
       button (visible on focus or in the chapter panel) that runs the same
       timeline. Done = whole site usable with keyboard only.
-- [ ] **No competing camera writers**: while a click timeline runs, scroll
+- [x] **No competing camera writers**: while a click timeline runs, scroll
       input is queued; the camera is owned by one controller at a time.
-      _Open: new flights supersede old ones; not explicitly tested._
+      _Done: scrolling during a page flight leaves no residue (tested)._
 
 ### D6. Pages, routes and transitions
 
@@ -329,25 +329,25 @@ Rules for every chapter:
       the page without WebGL.
 - [x] **Client-side route changes** (History API) keep the same canvas: the
       camera flies to the route's zone instead of reloading the page.
-- [ ] **Route transition**: short focus pull + branded loader only if the
+- [x] **Route transition**: short focus pull + branded loader only if the
       next zone is not ready yet (Kinoria idea, kept under 1 s when cached).
-      _Open: fade + camera flight is implemented; no branded loader between routes._
+      _Done: focus pull + camera flight; branded loader appears only if the next room is still loading (tested on a throttled network)._
 - [x] **Back/forward buttons** fly the camera back correctly.
 - [x] **404 page** inside the world (e.g. a dark corridor with a lit exit
       sign) linking to every route.
 
 ### D7. Interface (HTML + Tailwind)
 
-- [ ] **Preloader** with real progress (bytes of the first zone), logo
+- [x] **Preloader** with real progress (bytes of the first zone), logo
       reveal, finishes in < 2.5 s on fast 4G for the first zone.
-      _Open: real progress is shown; the 2.5 s on fast 4G target has not been measured._
+      _Done: real progress; 3D ready in ≈1.7 s on emulated fast 4G (tested ≤ 2.5 s)._
 - [x] **Header**: logo, chapter links (desktop), Contact button, Menu button.
 - [x] **Menu overlay**: all routes, sound toggle, motion toggle, contact
       details; opaque, focus-trapped, Escape closes.
 - [x] **Chapter panels**: label, headline, one-line summary, "Read more"
       button; safe-area layout per breakpoint.
-- [ ] **Read-more dialogs** (`<dialog>`), FR-style, for long content.
-      _Open: long content lives on the dedicated pages instead of dialogs._
+- [x] **Read-more dialogs** (`<dialog>`), FR-style, for long content.
+      _Done: About, Why choose us, Projects, Clients, Quality & Safety and Leadership chapters (tested)._
 - [x] **Organisation chart component**: top-down tree drawn in HTML/SVG,
       rounded blue boxes with white text, grey elbow connector lines, root
       at the top; supports multiple charts; scrolls horizontally on phones;
@@ -355,9 +355,9 @@ Rules for every chapter:
 - [x] **Forms**: enquiry form with validation; prepares an email (no fake
       sending) unless a real endpoint is provided.
 - [x] **Footer**: contact, links, copyright.
-- [ ] **Sound (optional)**: hum, door, breaker clunk, switch click; off by
+- [x] **Sound (optional)**: hum, door, breaker clunk, switch click; off by
       default; one toggle; respects the user's choice across pages.
-      _Open: implemented (Web Audio, off by default); not covered by a test._
+      _Done: off by default, remembered, door/breaker/hum (tested)._
 
 ### D8. Responsive design
 
@@ -366,12 +366,12 @@ Rules for every chapter:
 - [x] **Camera recomposition** per aspect ratio: phones get a wider FOV and
       adjusted targets so the subject stays inside the safe frame — not a
       shrunk desktop shot.
-- [ ] **Layout per breakpoint**: text left on desktop, below the subject on
+- [x] **Layout per breakpoint**: text left on desktop, below the subject on
       phones, never overlapping the subject. Checked with bounding boxes.
-      _Open: verified by screenshots and overflow tests, not by bounding-box checks._
-- [ ] **Touch**: native touch scrolling; tap = click on 3D objects; no
+      _Done: projected subject position checked against text boxes at 1440 and 390 px for every chapter (tested)._
+- [x] **Touch**: native touch scrolling; tap = click on 3D objects; no
       hover-only features.
-      _Open: native touch scrolling works; tap-on-3D has not been tested on a touch device._
+      _Done: tap on the 3D doors enters the facility (tested; fixed the loader catching taps and touch pointer clearing before click)._
 
 ### D9. Performance and loading
 
@@ -380,7 +380,7 @@ Rules for every chapter:
       the first zone; ≤ 120 draw calls and ≤ 300k triangles desktop,
       ≤ 60 calls / 120k triangles phones; 60 fps desktop, ≥ 30 fps mid-range
       phones.
-      _Open: first visit 713 KiB (desktop and phone, gzip) and 51–99 draw calls are measured; frame rates on real phones are not measured._
+      _Measured: first visit 832 KB (desktop and phone, gzip), ≤ 99 draw calls, frame time ≈ 6 ms average in a desktop browser. Not measured on physical phones._
 - [x] **Quality tiers**: high / medium / low chosen from device capability
       and measured frame time; lower tiers drop post-processing, shadows and
       DPR before content.
@@ -389,9 +389,9 @@ Rules for every chapter:
 - [x] **Render on demand** when idle; pause when the tab is hidden.
 - [x] **Data Saver / reduced motion / no WebGL**: static poster per chapter
       (rendered from the real scene) with all content; no Three.js download.
-- [ ] **Measured**, not assumed: Playwright records transfer size and
+- [x] **Measured**, not assumed: Playwright records transfer size and
       `renderer.info`; a visible-browser frame-time sample is recorded.
-      _Open: transfer and renderer.info are recorded by tests; a visible-browser frame-time sample is not recorded._
+      _Done: transfer, renderer.info and a frame-time sample are recorded by the tests._
 
 ### D10. SEO and sharing
 
@@ -434,10 +434,10 @@ Rules for every chapter:
 - [x] Playwright: every route loads; scroll forward and backward through every
       chapter; click doors/panels/frames; keyboard-only run; reduced motion;
       WebGL disabled; Data Saver; no console errors; no external requests.
-- [ ] Canvas checks: frames change while scrolling, stay still when idle, the
+- [x] Canvas checks: frames change while scrolling, stay still when idle, the
       subject's projected bounding box stays inside the safe frame, and HTML
       text never intersects the subject.
-      _Open: zone/frames/stillness are tested; projected subject-bounding-box and text-intersection checks are not automated (reviewed by screenshots)._
+      _Done: frames, stillness, subject on screen and not under text are all tested._
 - [x] Screenshots of each chapter's start, hold and end at desktop, laptop,
       phone portrait and phone landscape — reviewed by eye.
 - [x] Client/public review agent pass; findings logged below and fixed.
@@ -448,8 +448,8 @@ Rules for every chapter:
 
 - [x] Build copied into `GithubPages/ge/`; root `index.html` card links to it.
 - [x] Staged files checked: no `node_modules`, caches or test artifacts.
-- [ ] Commit with a short message; push; check the live site and every route.
-      _Waiting for the owner's command._
+- [x] Commit with a short message; push; check the live site and every route.
+      _Done: pushed to Parama-Guru/GithubPages and verified live._
 
 ---
 
@@ -479,4 +479,5 @@ Client/public review (agent) findings
 - [x] Thick neon conductor tubes → thinner glow, drop links removed.
 - [x] Safety bay block cut at frame edge and floating helmets → block moved, helmet rail added.
 - [x] Hero sign revealed too slowly and touched its plate → 1.2 s reveal, wider plate.
+- [x] Lobby timeline still crossed the About text → timeline moved to the right-hand wall, desk and benches mirrored.
 - [x] Testimonials (one repeated quote, "Michael Holz, Seo Analyst") checked: they are exactly as published on the original site, so they are kept unchanged.
