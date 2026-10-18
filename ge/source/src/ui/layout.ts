@@ -1,3 +1,4 @@
+import { defaultTheme, themes } from "@/app/theme";
 import { company, newsletter } from "@/content";
 import { basePath, canonical, headerLinks, href, menuLinks, route, siteUrl, type Route, type RouteId } from "@/routes/routes";
 import { arrow, arrowUp, esc } from "./html";
@@ -49,12 +50,22 @@ function navLink(id: RouteId, current: Route) {
   return `<a href="${href(id)}"${active ? ' aria-current="page"' : ""}>${esc(route(id).label)}</a>`;
 }
 
+function themeOptions(name: string, labelled: boolean): string {
+  return themes
+    .map(
+      (theme) =>
+        `<label title="${esc(`${theme.label} — ${theme.description}`)}"><input type="radio" name="${name}" value="${theme.id}" data-theme-choice${theme.id === defaultTheme ? " checked" : ""}><span class="swatch swatch-${theme.id}" aria-hidden="true"></span><span${labelled ? "" : ' class="visually-hidden"'}>${esc(theme.label)}</span></label>`,
+    )
+    .join("");
+}
+
 export function renderHeader(current: Route): string {
   return `<header class="site-header" data-header>
     <a class="brand" href="${href("home")}" aria-label="${company.name} — home">
       <img src="${basePath}media/wganesh3.webp" width="799" height="103" alt="${company.name}">
     </a>
     <nav class="header-nav" aria-label="Main">${headerLinks.filter((id) => id !== "contact").map((id) => navLink(id, current)).join("")}</nav>
+    <fieldset class="theme-switch"><legend class="visually-hidden">Colour theme</legend>${themeOptions("theme", false)}</fieldset>
     <a class="header-contact" href="${href("contact")}"${current.id === "contact" ? ' aria-current="page"' : ""}>Contact${arrowUp}</a>
     <button class="menu-button" type="button" aria-haspopup="dialog" aria-controls="site-menu" data-menu-open><span>Menu</span><i></i><i></i></button>
   </header>`;
@@ -69,6 +80,7 @@ export function renderMenu(current: Route): string {
     <nav aria-label="All pages"><ol class="menu-links">${menuLinks
       .map((id, index) => `<li><a href="${href(id)}"${current.id === id ? ' aria-current="page"' : ""}><span>${String(index).padStart(2, "0")}</span>${esc(route(id).label)}${arrow}</a></li>`)
       .join("")}</ol></nav>
+    <fieldset class="menu-theme"><legend>Colour theme</legend>${themeOptions("theme-menu", true)}</fieldset>
     <div class="menu-prefs">
       <label><input type="checkbox" data-pref="pause"> Pause animation</label>
       <label><input type="checkbox" data-pref="motion"> Reduce motion</label>

@@ -481,3 +481,19 @@ Client/public review (agent) findings
 - [x] Hero sign revealed too slowly and touched its plate → 1.2 s reveal, wider plate.
 - [x] Lobby timeline still crossed the About text → timeline moved to the right-hand wall, desk and benches mirrored.
 - [x] Testimonials (one repeated quote, "Michael Holz, Seo Analyst") checked: they are exactly as published on the original site, so they are kept unchanged.
+
+Colour themes (owner request, 18 Oct 2026)
+- [x] Header colour-theme switch with three choices; the same choice is in the Menu with text labels.
+      Light is the default (first visit and without JavaScript), the choice is remembered (`ge-theme`)
+      and applied before first paint, and switching is live without reloading the 3D world.
+- [x] Light: white with the original website's blue `#004A99` (measured on ganeshelectricals.in);
+      the white logo stays on blue header, menu, footer and loader bands as on the original site.
+      The 3D scene becomes daylight: blue sky, light haze, brighter fill.
+- [x] Copper: the original 3D design (night and copper), unchanged values.
+- [x] Signal (new palette, researched): petrol teal of industrial switchgear branding (Siemens petrol
+      `#009999`) with ISO 7010 warning yellow (RAL 1003) as the accent — dark petrol surfaces, `#F5C400` accent.
+- [x] Tests: theme default, live switch, keyboard, menu sync, persistence across navigation and reload;
+      axe on every route in all three themes; overflow 320–2560 px; full suite green.
+- [ ] Fallback posters (reduced motion / no WebGL) and social images are still rendered from the Copper
+      scene; in Light they sit under a white veil. Re-render per theme if the owner wants exact matches.
+- [ ] Owner review of the three themes in the browser.

@@ -3,13 +3,21 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#06090d" />
+    <meta name="theme-color" content="#004a99" />
     <link rel="icon" href="/GithubPages/ge/favicon.png" type="image/png" />
     <link rel="apple-touch-icon" href="/GithubPages/ge/apple-touch-icon.png" />
     <script>
       (function () {
+        var root = document.documentElement;
+        var themes = { light: "#004a99", copper: "#06090d", signal: "#061b1e" };
+        var theme = "light";
         try {
-          var root = document.documentElement;
+          var stored = localStorage.getItem("ge-theme");
+          if (Object.prototype.hasOwnProperty.call(themes, stored)) theme = stored;
+        } catch (error) {}
+        root.dataset.theme = theme;
+        document.querySelector('meta[name="theme-color"]').content = themes[theme];
+        try {
           var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches || localStorage.getItem("ge-motion") === "reduce";
           var saving = navigator.connection && navigator.connection.saveData;
           if (!reduced && !saving && localStorage.getItem("ge-3d") !== "off") root.classList.add("has-3d");
@@ -33,9 +41,9 @@
     <meta name="twitter:description" content="The organisation chart of Ganesh Electricals: technical, projects, procurement, liasioning and civil teams under the founder and CEO.">
     <meta name="twitter:image" content="https://parama-guru.github.io/GithubPages/ge/og/organisation.jpg">
     <script type="application/ld+json" data-seo="organization">{"@context":"https://schema.org","@type":"Organization","name":"Ganesh Electricals","url":"https://parama-guru.github.io/GithubPages/ge/","logo":"https://parama-guru.github.io/GithubPages/ge/media/wganesh3.webp","foundingDate":"1997","email":"ganeshvar@yahoo.com","telephone":"+91-44-4284-0227","address":{"@type":"PostalAddress","streetAddress":"No 1, New Street, Shakthi Nagar, Porur","addressLocality":"Chennai","postalCode":"600116","addressCountry":"IN"}}</script>
-    <script type="application/ld+json" data-seo="breadcrumb">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://parama-guru.github.io/GithubPages/ge/"},{"@type":"ListItem","position":2,"name":"Organisation","item":"https://parama-guru.github.io/GithubPages/ge/organisation/"}]}</script>
-    <script type="module" crossorigin src="/GithubPages/ge/assets/index-DNNesxNd.js"></script>
-    <link rel="stylesheet" crossorigin href="/GithubPages/ge/assets/index-yWrYh5Fk.css">
+    <script type="application/ld+json" data-seo="breadcrumb">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://parama-guru.github.io/GithubPages/ge/"},{"@type":"ListItem","position":2,"name":"Organisation","item":"https://parama-guru.github.io/GithubPages/ge/organisation/"}]}</script>
+    <script type="module" crossorigin src="/GithubPages/ge/assets/index-6lWM8NjC.js"></script>
+    <link rel="stylesheet" crossorigin href="/GithubPages/ge/assets/index-ei9aTblp.css">
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
@@ -53,6 +61,7 @@
       <img src="/GithubPages/ge/media/wganesh3.webp" width="799" height="103" alt="Ganesh Electricals">
     </a>
     <nav class="header-nav" aria-label="Main"><a href="/GithubPages/ge/about/">About</a><a href="/GithubPages/ge/features/">Why choose us</a><a href="/GithubPages/ge/projects/">Projects</a><a href="/GithubPages/ge/clients/">Clients</a><a href="/GithubPages/ge/quality-safety/">Quality &amp; Safety</a></nav>
+    <fieldset class="theme-switch"><legend class="visually-hidden">Colour theme</legend><label title="Light — White with the blue of the original website"><input type="radio" name="theme" value="light" data-theme-choice checked><span class="swatch swatch-light" aria-hidden="true"></span><span class="visually-hidden">Light</span></label><label title="Copper — Night and copper"><input type="radio" name="theme" value="copper" data-theme-choice><span class="swatch swatch-copper" aria-hidden="true"></span><span class="visually-hidden">Copper</span></label><label title="Signal — Petrol teal with safety yellow"><input type="radio" name="theme" value="signal" data-theme-choice><span class="swatch swatch-signal" aria-hidden="true"></span><span class="visually-hidden">Signal</span></label></fieldset>
     <a class="header-contact" href="/GithubPages/ge/contact/">Contact<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></a>
     <button class="menu-button" type="button" aria-haspopup="dialog" aria-controls="site-menu" data-menu-open><span>Menu</span><i></i><i></i></button>
   </header>
@@ -78,6 +87,7 @@
       <button type="button" class="menu-close" data-menu-close>Close<span aria-hidden="true">×</span></button>
     </div>
     <nav aria-label="All pages"><ol class="menu-links"><li><a href="/GithubPages/ge/"><span>00</span>Home<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></a></li><li><a href="/GithubPages/ge/about/"><span>01</span>About<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></a></li><li><a href="/GithubPages/ge/features/"><span>02</span>Why choose us<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></a></li><li><a href="/GithubPages/ge/projects/"><span>03</span>Projects<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></a></li><li><a href="/GithubPages/ge/clients/"><span>04</span>Clients<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></a></li><li><a href="/GithubPages/ge/quality-safety/"><span>05</span>Quality &amp; Safety<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></a></li><li><a href="/GithubPages/ge/leadership/"><span>06</span>Leadership<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></a></li><li><a href="/GithubPages/ge/organisation/" aria-current="page"><span>07</span>Organisation<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></a></li><li><a href="/GithubPages/ge/downloads/"><span>08</span>Downloads<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></a></li><li><a href="/GithubPages/ge/contact/"><span>09</span>Contact<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></a></li></ol></nav>
+    <fieldset class="menu-theme"><legend>Colour theme</legend><label title="Light — White with the blue of the original website"><input type="radio" name="theme-menu" value="light" data-theme-choice checked><span class="swatch swatch-light" aria-hidden="true"></span><span>Light</span></label><label title="Copper — Night and copper"><input type="radio" name="theme-menu" value="copper" data-theme-choice><span class="swatch swatch-copper" aria-hidden="true"></span><span>Copper</span></label><label title="Signal — Petrol teal with safety yellow"><input type="radio" name="theme-menu" value="signal" data-theme-choice><span class="swatch swatch-signal" aria-hidden="true"></span><span>Signal</span></label></fieldset>
     <div class="menu-prefs">
       <label><input type="checkbox" data-pref="pause"> Pause animation</label>
       <label><input type="checkbox" data-pref="motion"> Reduce motion</label>

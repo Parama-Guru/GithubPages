@@ -17,6 +17,7 @@ import type { Tier } from "./zones/shared";
 export type Post = {
   render(delta: number, focus: number, distance: number): void;
   setExposure(value: number): void;
+  setLook(bloom: number, threshold: number, vignette: number): void;
   setSize(width: number, height: number): void;
   dispose(): void;
 };
@@ -43,6 +44,11 @@ export function createPost(renderer: WebGLRenderer, scene: Scene, camera: Perspe
     setExposure(value) {
       exposure.brightness = (value - 1) * 0.22;
       exposure.contrast = (value - 1) * -0.1;
+    },
+    setLook(intensity, threshold, darkness) {
+      bloom.intensity = intensity;
+      bloom.luminanceMaterial.threshold = threshold;
+      vignette.darkness = darkness;
     },
     setSize(width, height) {
       composer.setSize(width, height);
