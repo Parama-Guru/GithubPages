@@ -1,8 +1,9 @@
 # GenZ Matrimony — research, plan and checklist
 
-Status: **phase 1 built; publication authorized 18 Oct 2026** — landing page,
+Status: **phase 1 published for client review on 18 Oct 2026** — landing page,
 log-in and the full sign-up wizard run on a browser-only demo backend (see
-Part E). The owner approved publishing this client preview to GitHub Pages.
+Part E). The owner approved publishing this client preview to GitHub Pages;
+the live landing, root index link, log-in and sign-up routes are verified.
 Phase 2 (real database integration) remains pending client approval.
 
 This document describes **GenZ Matrimony** (`genzmatrimony.com`), a **fast,
@@ -676,7 +677,7 @@ animations are skipped and end states are shown immediately (verified ✅).
 - [x] **Root index card** added to `GithubPages/index.html` and a row to
       `GithubPages/README.md` with an accurate title. Done = only after owner
       approval.
-- [ ] **Commit and push only when the owner says so.** Done = staged list
+- [x] **Commit and push only when the owner says so.** Done = staged list
       contains only `matweb/` files plus the approved shared files; live URL
       verified in the browser after deployment.
       ✅ Vite 8.3 + React 19.3 + TS 7.0 strict, Prettier (ESLint dropped: TS strict + Prettier cover it). `npm run dev` / `npm run build` work.
@@ -736,8 +737,23 @@ build is copied to `matweb/` (`index.html`, `assets/`, `favicon.svg`) by
 - "Reset demo" action, consent shown in settings, photo privacy enforced on
   other users' views, public browse, plans checkout.
 - Phase 3 — matches, search, profile view, interests, chat, settings (D6).
-- Root index card + README row added for the client preview. Commit and push
-  authorized by the owner on 18 Oct 2026; verify the deployed landing page.
+- Client approval of the published preview before starting integration.
+
+### Client-preview publication — 18 Oct 2026
+
+- Published release: `586d0e3` in `Parama-Guru/GithubPages`, pushed to `main`.
+- Live preview: https://parama-guru.github.io/GithubPages/matweb/
+- Root index card and README listing added; browser navigation from the live
+  index to the landing page verified.
+- Production build, 19 unit tests and 16 desktop/mobile browser tests passed.
+- Copied release matches the build; entry assets exist. Public response is
+  HTTP 200 with the expected build entry.
+- Live log-in and sign-up routes render; no page errors or failed requests
+  observed during route checks. Mobile landing at 412 px has no horizontal overflow.
+- Development source stays local and ignored; no dependencies, caches or
+  test reports included. Existing shared skill/instruction changes remain local.
+- This release is a browser-only demo, not a live matchmaking service.
+  Database, real OTP and custom-domain configuration remain deferred.
 
 ### E4. Commands
 
