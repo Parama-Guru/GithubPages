@@ -8,11 +8,6 @@ export function phaseAt(time: number, start: number, duration: number): number {
   return clamp01((time - start) / duration);
 }
 
-export function smoothstep(value: number): number {
-  const t = clamp01(value);
-  return t * t * (3 - 2 * t);
-}
-
 export function smootherstep(value: number): number {
   const t = clamp01(value);
   return t * t * t * (t * (t * 6 - 15) + 10);

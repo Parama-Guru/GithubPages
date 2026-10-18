@@ -16,7 +16,10 @@
     "test:e2e": "playwright test",
     "media": "node tools/build-media.mjs",
     "posters": "node tools/render-posters.mjs",
-    "camera": "node tools/camera.mjs"
+    "camera": "node tools/camera.mjs",
+    "review:journey": "node tools/shots.mjs",
+    "review:pages": "node tools/page-shots.mjs",
+    "review:sheet": "node tools/sheet.mjs"
   },
   "dependencies": {
     "@fontsource-variable/big-shoulders-display": "5.3.0",

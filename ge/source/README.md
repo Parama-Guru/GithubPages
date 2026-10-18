@@ -18,6 +18,9 @@ npm run publish:local     # copy dist/ into GithubPages/ge/ (keeps source/ and c
 npm run test:unit         # Vitest: camera maths, routes, content integrity
 npm run test:e2e          # Playwright + axe: pages, 3D journey, clicks, navigation, fallbacks, budgets
 npm run lint
+npm run review:journey    # with `serve` running: screenshots of every chapter hold and transition into .cache/shots
+npm run review:pages      # with `serve` running: screenshots of every dedicated page into .cache/pages
+npm run review:sheet -- <dir> [filter] [file] [columns] [width]   # contact sheet of screenshots
 ```
 
 After changing the scene, run `build`, `serve`, `posters`, then `build` again so the posters are included.
