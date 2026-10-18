@@ -42,7 +42,7 @@ function load(name: AssetName, onLoaded?: () => void) {
   return pending;
 }
 
-export async function loadAsset(name: AssetName, onLoaded?: () => void): Promise<Group> {
+async function loadAsset(name: AssetName, onLoaded?: () => void): Promise<Group> {
   return (await load(name, onLoaded)).scene;
 }
 
@@ -55,7 +55,7 @@ export async function instance(name: AssetName): Promise<Group> {
   return copy;
 }
 
-export type Rig = { root: Group; scrub(progress: number): void; dispose(): void };
+type Rig = { root: Group; scrub(progress: number): void; dispose(): void };
 
 export async function animated(name: AssetName): Promise<Rig> {
   const { clips } = await load(name);

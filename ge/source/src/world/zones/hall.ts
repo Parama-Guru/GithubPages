@@ -23,7 +23,7 @@ function instancedRow(source: Group, transforms: Matrix4[]): Group {
   return row;
 }
 
-export const HERO_PANEL = new Vector3(-4.2, 0, -48.5);
+const HERO_PANEL = new Vector3(-4.2, 0, -48.5);
 
 export const buildHall: ZoneBuilder = async (context) => {
   const { m } = context;

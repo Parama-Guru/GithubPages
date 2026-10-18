@@ -4,7 +4,7 @@ export function esc(value: string): string {
   return value.replace(/[&<>"']/g, (char) => entities[char] ?? char);
 }
 
-export function asset(path: string): string {
+function asset(path: string): string {
   return `/GithubPages/ge/${path.replace(/^\//, "")}`;
 }
 

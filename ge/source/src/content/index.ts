@@ -75,7 +75,7 @@ export const clients = {
   })),
 };
 
-export type ProjectYear = { slug: string; years: string; tables: { heading: string; rows: string[][] }[] };
+type ProjectYear = { slug: string; years: string; tables: { heading: string; rows: string[][] }[] };
 
 export const projectYears: ProjectYear[] = [
   ["project1", "2013-2014", "2013–2014"],

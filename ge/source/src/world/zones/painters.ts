@@ -3,7 +3,7 @@ import { fonts } from "../textures";
 
 type Ctx = CanvasRenderingContext2D;
 
-export function roundRect(context: Ctx, x: number, y: number, w: number, h: number, r: number) {
+function roundRect(context: Ctx, x: number, y: number, w: number, h: number, r: number) {
   context.beginPath();
   context.moveTo(x + r, y);
   context.arcTo(x + w, y, x + w, y + h, r);
@@ -13,7 +13,7 @@ export function roundRect(context: Ctx, x: number, y: number, w: number, h: numb
   context.closePath();
 }
 
-export function wrap(context: Ctx, text: string, maxWidth: number): string[] {
+function wrap(context: Ctx, text: string, maxWidth: number): string[] {
   const words = text.split(/\s+/);
   const lines: string[] = [];
   let line = "";

@@ -158,7 +158,7 @@ export function image(url: string): Texture {
   return cached(`image-${url}`, () => finish(loader.load(url), false));
 }
 
-export type Label = { texture: CanvasTexture; aspect: number; redraw: (draw: (context: CanvasRenderingContext2D, width: number, height: number) => void) => void };
+type Label = { texture: CanvasTexture; aspect: number; redraw: (draw: (context: CanvasRenderingContext2D, width: number, height: number) => void) => void };
 
 export function label(key: string, width: number, height: number, draw: (context: CanvasRenderingContext2D, width: number, height: number) => void): Label {
   const existing = cache.get(`label-${key}`) as CanvasTexture | undefined;

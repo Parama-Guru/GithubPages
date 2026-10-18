@@ -61,7 +61,7 @@ const zoneAssets: Record<ZoneKey, AssetName[]> = {
 
 export type Target = { kind: "journey" } | { kind: "route"; id: Exclude<RouteId, "home"> };
 
-export type WorldOptions = {
+type WorldOptions = {
   canvas: HTMLCanvasElement;
   tier: Tier;
   motion: boolean;

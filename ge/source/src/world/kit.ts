@@ -2,7 +2,7 @@ import { BoxGeometry, BufferGeometry, CylinderGeometry, Group, Mesh, MeshBasicMa
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 import type { Materials } from "./materials";
 
-export type Vec = [number, number, number];
+type Vec = [number, number, number];
 
 export type LightSpec = { position: Vec; color: string; intensity: number; distance: number };
 
@@ -18,7 +18,7 @@ export type Zone = {
   dispose(): void;
 };
 
-export function scaleUv(geometry: BufferGeometry, u: number, v: number): BufferGeometry {
+function scaleUv(geometry: BufferGeometry, u: number, v: number): BufferGeometry {
   const uv = geometry.getAttribute("uv");
   if (!uv) return geometry;
   for (let i = 0; i < uv.count; i++) uv.setXY(i, uv.getX(i) * u, uv.getY(i) * v);
@@ -26,7 +26,7 @@ export function scaleUv(geometry: BufferGeometry, u: number, v: number): BufferG
   return geometry;
 }
 
-export function boxGeometry(w: number, h: number, d: number, tile = 2): BufferGeometry {
+function boxGeometry(w: number, h: number, d: number, tile = 2): BufferGeometry {
   const geometry = new BoxGeometry(w, h, d);
   const uv = geometry.getAttribute("uv");
   const normal = geometry.getAttribute("normal");
@@ -76,7 +76,7 @@ export function placed(geometry: BufferGeometry, position: Vec, rotation: Vec = 
   return geometry.applyMatrix4(holder.matrix);
 }
 
-export type Room = { width: number; height: number; near: number; far: number; floor?: Material; wall?: Material; ceiling?: Material; strips?: number; stripMaterial?: Material };
+type Room = { width: number; height: number; near: number; far: number; floor?: Material; wall?: Material; ceiling?: Material; strips?: number; stripMaterial?: Material };
 
 export function room(m: Materials, spec: Room): Group {
   const group = new Group();

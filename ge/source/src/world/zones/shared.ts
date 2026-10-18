@@ -4,7 +4,7 @@ import { disposeGroup, type Frame, type LightSpec, type Pickable, type Zone } fr
 
 export type Tier = "high" | "medium" | "low";
 
-export type ZoneContext = { m: Materials; tier: Tier };
+type ZoneContext = { m: Materials; tier: Tier };
 
 export type ZoneBuilder = (context: ZoneContext) => Promise<Zone>;
 

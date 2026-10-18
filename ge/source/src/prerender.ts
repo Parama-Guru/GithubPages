@@ -2,7 +2,7 @@ import { indexableRoutes, routes, type RouteId } from "@/routes/routes";
 import { renderFooter, renderHead, renderHeader, renderMenu } from "@/ui/layout";
 import { renderMain } from "@/ui/pages";
 
-export type RenderedRoute = { id: RouteId; path: string; head: string; header: string; main: string; footer: string; menu: string };
+type RenderedRoute = { id: RouteId; path: string; head: string; header: string; main: string; footer: string; menu: string };
 
 export function renderRoute(id: RouteId): RenderedRoute {
   const current = routes.find((entry) => entry.id === id);

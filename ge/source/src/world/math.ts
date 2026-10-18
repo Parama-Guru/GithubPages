@@ -17,7 +17,7 @@ export function lerp(a: number, b: number, t: number): number {
   return a + (b - a) * t;
 }
 
-export function lerpVec(a: Vec3, b: Vec3, t: number): Vec3 {
+function lerpVec(a: Vec3, b: Vec3, t: number): Vec3 {
   return [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)];
 }
 
@@ -31,7 +31,7 @@ function catmull(p0: number, p1: number, p2: number, p3: number, t: number): num
   return 0.5 * (2 * p1 + (-p0 + p2) * t + (2 * p0 - 5 * p1 + 4 * p2 - p3) * t2 + (-p0 + 3 * p1 - 3 * p2 + p3) * t3);
 }
 
-export function catmullVec(p0: Vec3, p1: Vec3, p2: Vec3, p3: Vec3, t: number): Vec3 {
+function catmullVec(p0: Vec3, p1: Vec3, p2: Vec3, p3: Vec3, t: number): Vec3 {
   return [catmull(p0[0], p1[0], p2[0], p3[0], t), catmull(p0[1], p1[1], p2[1], p3[1], t), catmull(p0[2], p1[2], p2[2], p3[2], t)];
 }
 

@@ -1,6 +1,6 @@
 import type { RouteId, ZoneKey } from "@/routes/routes";
 
-export type Chapter = {
+type Chapter = {
   id: string;
   zone: ZoneKey;
   label: string;

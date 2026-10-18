@@ -7,7 +7,7 @@ import { createZone, cue, type ZoneBuilder } from "./shared";
 
 const format = (value: number, final: string) => (final.includes(",") ? Math.round(value).toLocaleString("en-US") : String(Math.round(value)));
 
-export const VIDEO_WALL = { x: 6.9, y: 2.6, z: -25.2 };
+const VIDEO_WALL = { x: 6.9, y: 2.6, z: -25.2 };
 
 export const buildControl: ZoneBuilder = async (context) => {
   const { m } = context;

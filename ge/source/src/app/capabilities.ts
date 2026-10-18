@@ -1,6 +1,6 @@
 import type { Tier } from "@/world/zones/shared";
 
-export type Capabilities = { webgl: boolean; reduced: boolean; saveData: boolean; prefer3d: boolean; tier: Tier; has3d: boolean; sound: boolean };
+type Capabilities = { webgl: boolean; reduced: boolean; saveData: boolean; prefer3d: boolean; tier: Tier; has3d: boolean; sound: boolean };
 
 const store = {
   get(key: string): string | null {
