@@ -21,11 +21,13 @@ import {
 } from "three";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import { acceleratedRaycast, computeBoundsTree, disposeBoundsTree } from "three-mesh-bvh";
+import type { ThemeId } from "@/app/theme";
 import type { RouteId, ZoneKey } from "@/routes/routes";
 import { preloadAssets, type AssetName } from "./assets";
 import { batch, type Frame, type LightSpec, type Pickable, type Zone } from "./kit";
-import { createMaterials, disposeMaterials, skyMaterial } from "./materials";
+import { createMaterials, disposeMaterials, skyMaterial, type SkyMaterial } from "./materials";
 import { clamp01, lerpPose, smootherstep, type Pose } from "./math";
+import { palettes, type ScenePalette } from "./palette";
 import { evenRanges, exposureAt, sampleJourney, sampleRoute, travelAt, zoneAt, zoneOrder, type ChapterRange } from "./path";
 import { createPost, type Post } from "./post";
 import { disposeTextures, fontsReady } from "./textures";
@@ -65,6 +67,7 @@ type WorldOptions = {
   canvas: HTMLCanvasElement;
   tier: Tier;
   motion: boolean;
+  theme: ThemeId;
   onProgress?: (value: number) => void;
   onHover?: (label: string | null, x: number, y: number) => void;
   onPick?: (id: string) => void;
@@ -80,7 +83,10 @@ export class World {
   private readonly zones = new Map<ZoneKey, Zone>();
   private readonly building = new Map<ZoneKey, Promise<Zone>>();
   private readonly pool: PointLight[] = [];
-  private readonly sky: Mesh;
+  private readonly sky: Mesh<SphereGeometry, SkyMaterial>;
+  private readonly hemisphere: HemisphereLight;
+  private theme: ThemeId;
+  private palette: ScenePalette;
   private readonly raycaster = new Raycaster();
   private readonly pointer = new Vector2(2, 2);
   private readonly parallax = new Vector2();
@@ -112,18 +118,20 @@ export class World {
     this.options = options;
     this.tier = options.tier;
     this.motion = options.motion;
+    this.theme = options.theme;
+    this.palette = palettes[options.theme];
     this.renderer = new WebGLRenderer({ canvas: options.canvas, antialias: options.tier === "low", powerPreference: "high-performance", alpha: false, stencil: false });
     this.renderer.outputColorSpace = SRGBColorSpace;
-    this.renderer.setClearColor("#05080c");
     this.renderer.toneMappingExposure = 1.05;
     this.renderer.info.autoReset = false;
-    this.scene.background = new Color("#05080c");
+    this.scene.background = new Color();
     this.scene.fog = new FogExp2("#070b12", 0.014);
     const pmrem = new PMREMGenerator(this.renderer);
     this.scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
     pmrem.dispose();
     this.scene.environmentIntensity = 0.35;
-    this.scene.add(new HemisphereLight("#a9c3dd", "#1b140f", 0.55));
+    this.hemisphere = new HemisphereLight();
+    this.scene.add(this.hemisphere);
     for (let i = 0; i < LIGHTS; i++) {
       const light = new PointLight("#ffffff", 0, 10, 2);
       this.pool.push(light);
@@ -135,7 +143,30 @@ export class World {
     this.scene.add(this.sky);
     options.canvas.addEventListener("webglcontextlost", this.onContextLost);
     this.applyTier();
+    this.applyPalette();
     this.resize();
+  }
+
+  setTheme(theme: ThemeId): void {
+    this.theme = theme;
+    this.palette = palettes[theme];
+    this.applyPalette();
+    this.dirty = true;
+  }
+
+  private applyPalette(): void {
+    const palette = this.palette;
+    this.renderer.setClearColor(palette.background);
+    (this.scene.background as Color).set(palette.background);
+    const uniforms = this.sky.material.uniforms;
+    uniforms.uTop.value.set(palette.skyTop);
+    uniforms.uHorizon.value.set(palette.skyHorizon);
+    uniforms.uGlow.value.set(palette.skyGlow);
+    uniforms.uStars.value = palette.stars;
+    this.hemisphere.color.set(palette.hemiSky);
+    this.hemisphere.groundColor.set(palette.hemiGround);
+    this.hemisphere.intensity = palette.hemi;
+    this.post?.setLook(palette.bloom, palette.bloomThreshold, palette.vignette);
   }
 
   async load(initial: Target): Promise<void> {
@@ -290,6 +321,7 @@ export class World {
   private applyTier(): void {
     this.post?.dispose();
     this.post = this.tier === "low" ? null : createPost(this.renderer, this.scene, this.camera, this.tier);
+    this.post?.setLook(this.palette.bloom, this.palette.bloomThreshold, this.palette.vignette);
     this.renderer.toneMapping = this.post ? NoToneMapping : AgXToneMapping;
     if (!this.post && this.tier === "low") this.renderer.toneMapping = ACESFilmicToneMapping;
     this.resize();
@@ -409,7 +441,7 @@ export class World {
       }
       light.position.set(...spec.position);
       light.color.set(spec.color);
-      light.intensity = spec.intensity;
+      light.intensity = spec.intensity * this.palette.lights;
       light.distance = spec.distance;
     });
   }
@@ -418,9 +450,9 @@ export class World {
     const outside = exterior.has(zone);
     this.sky.visible = outside || this.camera.position.z > -3 || this.camera.position.z < -104;
     const fog = this.scene.fog as FogExp2;
-    fog.density = outside ? 0.016 : 0.022;
-    fog.color.set(outside ? "#141c28" : "#070b12");
-    this.scene.environmentIntensity = outside ? 0.24 : 0.56;
+    fog.density = (outside ? 0.016 : 0.022) * this.palette.fogScale;
+    fog.color.set(outside ? this.palette.fogOutside : this.palette.fogInside);
+    this.scene.environmentIntensity = (outside ? 0.24 : 0.56) * this.palette.environment;
   }
 
   private compile(): void {
@@ -457,8 +489,9 @@ export class World {
     } else this.focus = this.target.kind === "journey" ? travelAt(this.ranges, this.journey) * 0.75 : 0;
     this.animatePresent(now);
     const exposure = exposureAt(this.camera.position.z);
-    if (this.post) this.post.setExposure(exposure);
-    else this.renderer.toneMappingExposure = 1.05 * exposure;
+    const output = exposure * this.palette.exposure;
+    if (this.post) this.post.setExposure(output);
+    else this.renderer.toneMappingExposure = 1.05 * output;
     const distance = new Vector3(...pose.target).distanceTo(this.camera.position);
     this.renderer.info.reset();
     if (this.post) this.post.render(delta, this.focus, distance);
@@ -469,6 +502,7 @@ export class World {
     if (this.frameTimes.length > 90) this.frameTimes.shift();
     const canvas = this.options.canvas;
     canvas.dataset.zone = zone;
+    canvas.dataset.theme = this.theme;
     canvas.dataset.calls = String(this.renderer.info.render.calls);
     canvas.dataset.triangles = String(this.renderer.info.render.triangles);
     canvas.dataset.frames = String(Number(canvas.dataset.frames ?? 0) + 1);

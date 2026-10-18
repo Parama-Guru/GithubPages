@@ -3,13 +3,21 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#06090d" />
+    <meta name="theme-color" content="#004a99" />
     <link rel="icon" href="/GithubPages/ge/favicon.png" type="image/png" />
     <link rel="apple-touch-icon" href="/GithubPages/ge/apple-touch-icon.png" />
     <script>
       (function () {
+        var root = document.documentElement;
+        var themes = { light: "#004a99", copper: "#06090d", signal: "#061b1e" };
+        var theme = "light";
         try {
-          var root = document.documentElement;
+          var stored = localStorage.getItem("ge-theme");
+          if (Object.prototype.hasOwnProperty.call(themes, stored)) theme = stored;
+        } catch (error) {}
+        root.dataset.theme = theme;
+        document.querySelector('meta[name="theme-color"]').content = themes[theme];
+        try {
           var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches || localStorage.getItem("ge-motion") === "reduce";
           var saving = navigator.connection && navigator.connection.saveData;
           if (!reduced && !saving && localStorage.getItem("ge-3d") !== "off") root.classList.add("has-3d");

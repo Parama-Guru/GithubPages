@@ -65,20 +65,24 @@ export function energyMaterial(color = "#7fd4ff", scale = 6) {
 }
 
 export function skyMaterial() {
-  return new ShaderMaterial({
+  const uniforms = {
+    uTop: { value: new Color("#060b16") },
+    uHorizon: { value: new Color("#1b2433") },
+    uGlow: { value: new Color("#9a5636") },
+    uGlowDirection: { value: new Vector3(0.9, 0.04, 0.6) },
+    uStars: { value: 1 },
+  };
+  const material = new ShaderMaterial({
     vertexShader: skyVert,
     fragmentShader: skyFrag,
-    uniforms: {
-      uTop: { value: new Color("#060b16") },
-      uHorizon: { value: new Color("#1b2433") },
-      uGlow: { value: new Color("#9a5636") },
-      uGlowDirection: { value: new Vector3(0.9, 0.04, 0.6) },
-      uStars: { value: 1 },
-    },
+    uniforms,
     side: 1,
     depthWrite: false,
   });
+  return material as ShaderMaterial & { uniforms: typeof uniforms };
 }
+
+export type SkyMaterial = ReturnType<typeof skyMaterial>;
 
 export function disposeMaterials(materials: Materials): void {
   for (const material of Object.values(materials)) material.dispose();

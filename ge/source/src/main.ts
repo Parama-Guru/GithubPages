@@ -14,6 +14,7 @@ import { chapterScroll, initJourney, type Controller } from "./app/journey";
 import { createMotion, gsap, scrollTo, ScrollTrigger } from "./app/motion";
 import { initPage } from "./app/page";
 import { play, quiet, setSound } from "./app/sound";
+import { applyTheme, isTheme, storedTheme, type ThemeId } from "./app/theme";
 
 const html = document.documentElement;
 const caps = detect();
@@ -177,6 +178,8 @@ function internal(anchor: HTMLAnchorElement): URL | null {
 }
 
 function syncPrefs(): void {
+  const theme = storedTheme();
+  for (const input of document.querySelectorAll<HTMLInputElement>("[data-theme-choice]")) input.checked = input.value === theme;
   for (const input of document.querySelectorAll<HTMLInputElement>("[data-pref]")) {
     const name = input.dataset.pref;
     if (name === "motion") input.checked = caps.reduced;
@@ -184,6 +187,12 @@ function syncPrefs(): void {
     if (name === "sound") input.checked = preferences.sound();
     if (name === "pause") input.checked = preferences.paused();
   }
+}
+
+function setTheme(theme: ThemeId): void {
+  applyTheme(theme);
+  world?.setTheme(theme);
+  syncPrefs();
 }
 
 function uiTarget(target: EventTarget | null): boolean {
@@ -239,6 +248,11 @@ function bindShell(): void {
     true,
   );
   document.addEventListener("change", (event) => {
+    const choice = (event.target as HTMLElement).closest<HTMLInputElement>("[data-theme-choice]");
+    if (choice) {
+      if (isTheme(choice.value)) setTheme(choice.value);
+      return;
+    }
     const input = (event.target as HTMLElement).closest<HTMLInputElement>("[data-pref]");
     if (!input) return;
     const name = input.dataset.pref as "motion" | "3d" | "sound" | "pause";
@@ -332,6 +346,7 @@ async function bootWorld(quiet = false): Promise<void> {
       canvas,
       tier: caps.tier,
       motion: !caps.reduced && !preferences.paused(),
+      theme: storedTheme(),
       onHover,
       onProgress: (progress) => {
         if (bar) bar.style.width = `${Math.round(progress * 100)}%`;
@@ -367,7 +382,8 @@ async function bootWorld(quiet = false): Promise<void> {
 async function renderPoster(name: string): Promise<void> {
   html.classList.add("is-poster", "has-3d");
   const { World } = await import("@/world/world");
-  world = new World({ canvas, tier: (params.get("tier") as "high" | "medium" | "low" | null) ?? "high", motion: false });
+  const posterTheme = params.get("theme");
+  world = new World({ canvas, tier: (params.get("tier") as "high" | "medium" | "low" | null) ?? "high", motion: false, theme: isTheme(posterTheme) ? posterTheme : "copper" });
   stage.dataset.world = "ready";
   const progress = Number(params.get("p") ?? "0");
   const target: Target = name === "journey" ? { kind: "journey" } : { kind: "route", id: name as Exclude<RouteId, "home"> };

@@ -149,6 +149,35 @@ test.describe("navigation", () => {
     await expect(page.getByRole("heading", { level: 1 })).toContainText("Ganesh");
   });
 
+  test("colour themes switch live, persist and default to light", async ({ page }) => {
+    await page.goto("");
+    await ready(page);
+    const html = page.locator("html");
+    await expect(html).toHaveAttribute("data-theme", "light");
+    expect(await page.locator(".site-header").evaluate((header) => getComputedStyle(header).backgroundImage)).toContain("rgb(0, 74, 153)");
+    await expect(page.locator(".theme-switch").getByLabel("Light")).toBeChecked();
+    await page.evaluate(() => document.querySelector<HTMLCanvasElement>("[data-canvas]")?.setAttribute("data-marker", "same"));
+    await page.locator(".theme-switch").getByLabel("Signal").check();
+    await expect(html).toHaveAttribute("data-theme", "signal");
+    await expect.poll(async () => (await canvasData(page)).theme).toBe("signal");
+    await expect(page.locator("[data-canvas]")).toHaveAttribute("data-marker", "same");
+    await page.locator(".theme-switch").getByLabel("Copper").focus();
+    await page.keyboard.press("ArrowLeft");
+    await expect(html).toHaveAttribute("data-theme", "light");
+    await page.getByRole("button", { name: "Menu" }).click();
+    await expect(page.locator(".menu-theme").getByLabel("Light")).toBeChecked();
+    await page.locator(".menu-theme").getByLabel("Copper").click();
+    await expect(html).toHaveAttribute("data-theme", "copper");
+    await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute("content", "#06090d");
+    await page.locator("#site-menu").getByRole("link", { name: /Projects/ }).click();
+    await expect(page).toHaveURL(/\/projects\/$/);
+    await expect(page.locator(".theme-switch").getByLabel("Copper")).toBeChecked();
+    await page.reload();
+    await ready(page);
+    await expect(html).toHaveAttribute("data-theme", "copper");
+    expect((await canvasData(page)).theme).toBe("copper");
+  });
+
   test("menu works with the keyboard", async ({ page }) => {
     await page.goto("about/");
     await ready(page);
@@ -248,17 +277,20 @@ test.describe("fallbacks and accessibility", () => {
     await context.close();
   });
 
-  test("has no serious accessibility violations", async ({ browser }) => {
-    const context = await browser.newContext({ reducedMotion: "reduce" });
-    const page = await context.newPage();
-    for (const entry of routes) {
-      await page.goto(href(entry.id).replace("/GithubPages/ge/", ""));
-      await ready(page);
-      const result = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze();
-      const serious = result.violations.filter((violation) => ["serious", "critical"].includes(violation.impact ?? ""));
-      expect(serious.map((violation) => `${entry.id}: ${violation.id} ${violation.nodes.map((node) => node.target.join(" ")).join(", ")}`)).toEqual([]);
+  test("has no serious accessibility violations in any theme", async ({ browser }) => {
+    for (const theme of ["light", "copper", "signal"]) {
+      const context = await browser.newContext({ reducedMotion: "reduce" });
+      await context.addInitScript((value) => localStorage.setItem("ge-theme", value), theme);
+      const page = await context.newPage();
+      for (const entry of routes) {
+        await page.goto(href(entry.id).replace("/GithubPages/ge/", ""));
+        await ready(page);
+        const result = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze();
+        const serious = result.violations.filter((violation) => ["serious", "critical"].includes(violation.impact ?? ""));
+        expect(serious.map((violation) => `${theme} ${entry.id}: ${violation.id} ${violation.nodes.map((node) => node.target.join(" ")).join(", ")}`)).toEqual([]);
+      }
+      await context.close();
     }
-    await context.close();
   });
 
   test("first visit stays within the transfer budget", async ({ browser }) => {
