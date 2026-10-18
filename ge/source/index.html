@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#06090d" />
+    <link rel="icon" href="/GithubPages/ge/favicon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/GithubPages/ge/apple-touch-icon.png" />
+    <script>
+      (function () {
+        try {
+          var root = document.documentElement;
+          var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches || localStorage.getItem("ge-motion") === "reduce";
+          var saving = navigator.connection && navigator.connection.saveData;
+          if (!reduced && !saving && localStorage.getItem("ge-3d") !== "off") root.classList.add("has-3d");
+        } catch (error) {}
+      })();
+    </script>
+    <!--app-head-->
+    <script type="module" src="/src/main.ts"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="world" data-world="static" aria-hidden="true">
+      <canvas class="world-canvas" data-canvas></canvas>
+      <div class="world-veil"></div>
+    </div>
+    <div class="loader" data-loader aria-hidden="true">
+      <div class="loader-mark"><img src="/GithubPages/ge/media/emblem.webp" width="120" height="120" alt="" /></div>
+      <div class="loader-meter"><span data-loader-bar></span></div>
+      <p class="loader-text"><span>Energising</span><span data-loader-value>0%</span></p>
+    </div>
+    <!--app-header-->
+    <main id="main" tabindex="-1"><!--app-main--></main>
+    <!--app-footer-->
+    <!--app-menu-->
+    <div class="hover-label" data-hover-label aria-hidden="true"></div>
+    <div class="route-curtain" data-curtain aria-hidden="true"></div>
+  </body>
+</html>
