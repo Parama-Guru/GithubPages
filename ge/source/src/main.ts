@@ -383,7 +383,7 @@ async function renderPoster(name: string): Promise<void> {
   html.classList.add("is-poster", "has-3d");
   const { World } = await import("@/world/world");
   const posterTheme = params.get("theme");
-  world = new World({ canvas, tier: (params.get("tier") as "high" | "medium" | "low" | null) ?? "high", motion: false, theme: isTheme(posterTheme) ? posterTheme : "copper" });
+  world = new World({ canvas, tier: (params.get("tier") as "high" | "medium" | "low" | null) ?? "high", motion: false, theme: isTheme(posterTheme) ? posterTheme : "light" });
   stage.dataset.world = "ready";
   const progress = Number(params.get("p") ?? "0");
   const target: Target = name === "journey" ? { kind: "journey" } : { kind: "route", id: name as Exclude<RouteId, "home"> };

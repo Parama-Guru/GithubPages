@@ -1,6 +1,7 @@
 import { AnimationMixer, type AnimationClip, type Group, type Mesh, type MeshStandardMaterial, type Object3D } from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "three/addons/libs/meshopt_decoder.module.js";
+import { looks, type Finish, type Look } from "./look";
 
 export type AssetName = "switchgear" | "transformer" | "insulator" | "tower" | "entrance";
 
@@ -8,6 +9,20 @@ const loader = new GLTFLoader();
 loader.setMeshoptDecoder(MeshoptDecoder);
 
 const scenes = new Map<AssetName, Promise<{ scene: Group; clips: AnimationClip[] }>>();
+const finishes = new Map<string, Set<MeshStandardMaterial>>();
+let modelLook: Look["models"] = looks.copper.models;
+
+function finish(material: MeshStandardMaterial, value: Finish | undefined): void {
+  if (!value) return;
+  material.color.set(value.color);
+  if (value.metalness !== undefined) material.metalness = value.metalness;
+  if (value.roughness !== undefined) material.roughness = value.roughness;
+}
+
+export function applyModelLook(look: Look): void {
+  modelLook = look.models;
+  for (const [name, materials] of finishes) for (const material of materials) finish(material, modelLook[name]);
+}
 
 
 function prepare(scene: Group): void {
@@ -21,9 +36,11 @@ function prepare(scene: Group): void {
       material.toneMapped = false;
     }
     material.envMapIntensity = 1.1;
-    if (material.name === "PanelEnamel") {
-      material.color.setRGB(0.3, 0.33, 0.35);
-      material.roughness = 0.58;
+    if (material.name) {
+      const group = finishes.get(material.name) ?? new Set<MeshStandardMaterial>();
+      group.add(material);
+      finishes.set(material.name, group);
+      finish(material, modelLook[material.name]);
     }
     if (material.transparent) material.depthWrite = false;
   });

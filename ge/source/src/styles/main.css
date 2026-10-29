@@ -736,10 +736,19 @@ main {
   z-index: 0;
 }
 .chapter-poster img {
+  display: none;
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: 70% 50%;
+}
+:root:not([data-theme]) .chapter-poster img[data-poster-theme="light"],
+html[data-theme="light"] .chapter-poster img[data-poster-theme="light"],
+html[data-theme="copper"] .chapter-poster img[data-poster-theme="copper"],
+html[data-theme="signal"] .chapter-poster img[data-poster-theme="signal"] {
+  display: block;
 }
 .chapter-poster::after {
   content: "";

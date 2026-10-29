@@ -1,0 +1,458 @@
+{
+  "copper": {
+    "surfaces": {
+      "floor": {
+        "color": "#8b939a"
+      },
+      "floorDark": {
+        "color": "#5b6268"
+      },
+      "wall": {
+        "color": "#626c75"
+      },
+      "wallDark": {
+        "color": "#2b3138"
+      },
+      "ceiling": {
+        "color": "#1a1f25"
+      },
+      "cladding": {
+        "color": "#2a3138"
+      },
+      "concrete": {
+        "color": "#7d8287"
+      },
+      "asphalt": {
+        "color": "#9aa0a6"
+      },
+      "gravel": {
+        "color": "#a29d96"
+      },
+      "copper": {
+        "color": "#d68f57",
+        "metalness": 1,
+        "roughness": 0.32
+      },
+      "steel": {
+        "color": "#a6aeb5"
+      },
+      "darkMetal": {
+        "color": "#171b1f"
+      },
+      "black": {
+        "color": "#0b0d0f"
+      },
+      "amber": {
+        "color": "#f2b33c"
+      },
+      "hazard": {
+        "color": "#f2b33c"
+      },
+      "enamel": {
+        "color": "#b8c0c6"
+      },
+      "navy": {
+        "color": "#1c2c3d"
+      },
+      "wood": {
+        "color": "#6d4c34"
+      },
+      "fabric": {
+        "color": "#262b31"
+      },
+      "glass": {
+        "color": "#a8d4e6"
+      },
+      "glassWarm": {
+        "color": "#20180f",
+        "emissive": "#ff9a4a",
+        "emissiveIntensity": 0.42
+      }
+    },
+    "glows": {
+      "lightStrip": [
+        "#f4f7ff",
+        3.2
+      ],
+      "lightWarm": [
+        "#ffcf96",
+        2.6
+      ],
+      "lightCool": [
+        "#9fdcff",
+        2.4
+      ]
+    },
+    "pools": {
+      "warm": "#ffd6a0",
+      "cool": "#aadcff",
+      "strength": 0.9
+    },
+    "lightTint": null,
+    "energy": {
+      "warm": "#ffd08a",
+      "cool": "#8fd8ff"
+    },
+    "ink": {
+      "panel": "#0b1016",
+      "sign": "#0c1117",
+      "accent": "#e3a56b",
+      "accentStrong": "#f2c08f",
+      "text": "#eef2f4",
+      "muted": "#aab6c0",
+      "dim": "#8796a2",
+      "screenTop": "#081a26",
+      "screenBottom": "#04101a",
+      "screenLine": "#8fd8ff",
+      "screenValue": "#ffd6aa",
+      "safety": "#f2b33c",
+      "logoGlow": "#ffd2a0"
+    },
+    "models": {
+      "PanelEnamel": {
+        "color": "#959ba0",
+        "roughness": 0.58
+      },
+      "PanelDark": {
+        "color": "#6f7981"
+      },
+      "Steel": {
+        "color": "#c4c7cb"
+      },
+      "Rubber": {
+        "color": "#303035"
+      },
+      "Copper": {
+        "color": "#efb386"
+      },
+      "Porcelain": {
+        "color": "#c49981"
+      },
+      "GlassInsulator": {
+        "color": "#adddda"
+      },
+      "TankPaint": {
+        "color": "#9ba8a6"
+      },
+      "Galvanised": {
+        "color": "#ced1d4"
+      },
+      "WarningYellow": {
+        "color": "#f9d745"
+      },
+      "DoorGlass": {
+        "color": "#d4ebf3"
+      }
+    }
+  },
+  "light": {
+    "surfaces": {
+      "floor": {
+        "color": "#d2d8de",
+        "tone": 190
+      },
+      "floorDark": {
+        "color": "#c3cad1",
+        "tone": 190
+      },
+      "wall": {
+        "color": "#e3e8ed",
+        "tone": 205
+      },
+      "wallDark": {
+        "color": "#c9d1d9",
+        "tone": 190
+      },
+      "ceiling": {
+        "color": "#e9edf1"
+      },
+      "cladding": {
+        "color": "#d8dfe6",
+        "tone": 215
+      },
+      "concrete": {
+        "color": "#cdd1d5",
+        "tone": 200
+      },
+      "asphalt": {
+        "color": "#8e959c"
+      },
+      "gravel": {
+        "color": "#bdb8b0"
+      },
+      "copper": {
+        "color": "#004a99",
+        "metalness": 0.45,
+        "roughness": 0.36
+      },
+      "steel": {
+        "color": "#cfd5db"
+      },
+      "darkMetal": {
+        "color": "#163a63"
+      },
+      "black": {
+        "color": "#2c3440"
+      },
+      "amber": {
+        "color": "#f2b33c"
+      },
+      "hazard": {
+        "color": "#f2b33c"
+      },
+      "enamel": {
+        "color": "#f3f5f7"
+      },
+      "navy": {
+        "color": "#004a99"
+      },
+      "wood": {
+        "color": "#b48d66"
+      },
+      "fabric": {
+        "color": "#7d8a98"
+      },
+      "glass": {
+        "color": "#cfe3f5"
+      },
+      "glassWarm": {
+        "color": "#cfe0ef",
+        "emissive": "#9ec6ee",
+        "emissiveIntensity": 0.25
+      }
+    },
+    "glows": {
+      "lightStrip": [
+        "#ffffff",
+        1.6
+      ],
+      "lightWarm": [
+        "#fff6e6",
+        1.5
+      ],
+      "lightCool": [
+        "#dcedff",
+        1.5
+      ]
+    },
+    "pools": {
+      "warm": "#ffffff",
+      "cool": "#e8f3ff",
+      "strength": 0.28
+    },
+    "lightTint": {
+      "warm": "#fff7ec",
+      "cool": "#eef6ff"
+    },
+    "energy": {
+      "warm": "#1f6fd6",
+      "cool": "#2e8bff"
+    },
+    "ink": {
+      "panel": "#ffffff",
+      "sign": "#ffffff",
+      "accent": "#004a99",
+      "accentStrong": "#004a99",
+      "text": "#0d2440",
+      "muted": "#3f5470",
+      "dim": "#56697f",
+      "screenTop": "#f5f9fd",
+      "screenBottom": "#e4edf7",
+      "screenLine": "#004a99",
+      "screenValue": "#004a99",
+      "safety": "#e0a21a",
+      "logoGlow": "#ffffff"
+    },
+    "models": {
+      "PanelEnamel": {
+        "color": "#d9dfe5",
+        "roughness": 0.5
+      },
+      "PanelDark": {
+        "color": "#9aa6b2"
+      },
+      "Steel": {
+        "color": "#dde2e7"
+      },
+      "Rubber": {
+        "color": "#3a4350"
+      },
+      "Copper": {
+        "color": "#efb386"
+      },
+      "Porcelain": {
+        "color": "#d9d4cc"
+      },
+      "GlassInsulator": {
+        "color": "#cfe6f7"
+      },
+      "TankPaint": {
+        "color": "#cfd6dc"
+      },
+      "Galvanised": {
+        "color": "#e1e5e9"
+      },
+      "WarningYellow": {
+        "color": "#f2b33c"
+      },
+      "DoorGlass": {
+        "color": "#e4f1fb"
+      }
+    }
+  },
+  "signal": {
+    "surfaces": {
+      "floor": {
+        "color": "#6f8784",
+        "tone": 170
+      },
+      "floorDark": {
+        "color": "#4a605e",
+        "tone": 150
+      },
+      "wall": {
+        "color": "#3f5f5f",
+        "tone": 190
+      },
+      "wallDark": {
+        "color": "#1c3436",
+        "tone": 170
+      },
+      "ceiling": {
+        "color": "#0f2224"
+      },
+      "cladding": {
+        "color": "#1d3e40",
+        "tone": 180
+      },
+      "concrete": {
+        "color": "#728380",
+        "tone": 170
+      },
+      "asphalt": {
+        "color": "#8a9694"
+      },
+      "gravel": {
+        "color": "#9d9d8f"
+      },
+      "copper": {
+        "color": "#f5c400",
+        "metalness": 0.25,
+        "roughness": 0.42
+      },
+      "steel": {
+        "color": "#a9bbb8"
+      },
+      "darkMetal": {
+        "color": "#0f2527"
+      },
+      "black": {
+        "color": "#071315"
+      },
+      "amber": {
+        "color": "#f5c400"
+      },
+      "hazard": {
+        "color": "#f5c400"
+      },
+      "enamel": {
+        "color": "#a3bcb9"
+      },
+      "navy": {
+        "color": "#0d4f52"
+      },
+      "wood": {
+        "color": "#5f5434"
+      },
+      "fabric": {
+        "color": "#1d3638"
+      },
+      "glass": {
+        "color": "#a2e2da"
+      },
+      "glassWarm": {
+        "color": "#0e2a27",
+        "emissive": "#2fc4b2",
+        "emissiveIntensity": 0.4
+      }
+    },
+    "glows": {
+      "lightStrip": [
+        "#e8fffb",
+        3
+      ],
+      "lightWarm": [
+        "#ffe27a",
+        2.4
+      ],
+      "lightCool": [
+        "#6ff0dc",
+        2.2
+      ]
+    },
+    "pools": {
+      "warm": "#ffe27a",
+      "cool": "#7ff0e0",
+      "strength": 0.85
+    },
+    "lightTint": {
+      "warm": "#ffe9a8",
+      "cool": "#aefff2"
+    },
+    "energy": {
+      "warm": "#f5c400",
+      "cool": "#3ff0d8"
+    },
+    "ink": {
+      "panel": "#06191c",
+      "sign": "#061b1e",
+      "accent": "#f5c400",
+      "accentStrong": "#ffd84a",
+      "text": "#eef6f4",
+      "muted": "#a9c3c0",
+      "dim": "#86a3a0",
+      "screenTop": "#052327",
+      "screenBottom": "#031416",
+      "screenLine": "#3ff0d8",
+      "screenValue": "#ffd84a",
+      "safety": "#f5c400",
+      "logoGlow": "#ffe27a"
+    },
+    "models": {
+      "PanelEnamel": {
+        "color": "#2c7072",
+        "roughness": 0.5
+      },
+      "PanelDark": {
+        "color": "#173b3d"
+      },
+      "Steel": {
+        "color": "#b5c6c3"
+      },
+      "Rubber": {
+        "color": "#0c1a1b"
+      },
+      "Copper": {
+        "color": "#efb386"
+      },
+      "Porcelain": {
+        "color": "#b88f78"
+      },
+      "GlassInsulator": {
+        "color": "#9fe6dc"
+      },
+      "TankPaint": {
+        "color": "#3f6e6a"
+      },
+      "Galvanised": {
+        "color": "#c3cfcd"
+      },
+      "WarningYellow": {
+        "color": "#f5c400"
+      },
+      "DoorGlass": {
+        "color": "#c4efe9"
+      }
+    }
+  }
+}

@@ -3,7 +3,19 @@ import energyFrag from "./shaders/energy.frag";
 import energyVert from "./shaders/energy.vert";
 import skyFrag from "./shaders/sky.frag";
 import skyVert from "./shaders/sky.vert";
+import type { Look } from "./look";
+import type { Texture } from "three";
 import { asphalt, concrete, cornerShade, floorTiles, gravel, radial, wallPanels } from "./textures";
+
+const toned: Record<string, (tone: number) => Texture> = {
+  floor: floorTiles,
+  floorDark: floorTiles,
+  wall: wallPanels,
+  wallDark: wallPanels,
+  cladding: wallPanels,
+  concrete: (tone) => concrete(tone),
+};
+const baseTone: Record<string, number> = { floor: 44, floorDark: 34, wall: 36, wallDark: 26, cladding: 30, concrete: 70 };
 
 export type Materials = ReturnType<typeof createMaterials>;
 
@@ -45,23 +57,60 @@ export function createMaterials() {
     lightRed: glow("#ff3b2a", 3),
     lightGreen: glow("#3dff8a", 3),
     screen: glow("#0e2433", 1),
-    pool: new MeshBasicMaterial({ map: radial("rgba(255,214,160,0.9)"), transparent: true, blending: AdditiveBlending, depthWrite: false, toneMapped: false }),
-    poolCool: new MeshBasicMaterial({ map: radial("rgba(170,220,255,0.75)"), transparent: true, blending: AdditiveBlending, depthWrite: false, toneMapped: false }),
+    pool: new MeshBasicMaterial({ map: radial("rgba(255,255,255,1)"), color: "#ffd6a0", transparent: true, blending: AdditiveBlending, depthWrite: false, toneMapped: false }),
+    poolCool: new MeshBasicMaterial({ map: radial("rgba(255,255,255,1)"), color: "#aadcff", transparent: true, blending: AdditiveBlending, depthWrite: false, toneMapped: false }),
     corner: new MeshBasicMaterial({ map: cornerShade(), transparent: true, depthWrite: false, side: DoubleSide, color: "#ffffff" }),
     shadow: new MeshBasicMaterial({ map: radial("rgba(0,0,0,0.85)"), transparent: true, depthWrite: false, color: "#000000" }),
   };
 }
 
-export function energyMaterial(color = "#7fd4ff", scale = 6) {
-  return new ShaderMaterial({
+export type EnergyRole = "warm" | "cool";
+
+const energies = new Map<ShaderMaterial, EnergyRole>();
+let energyColors: Look["energy"] = { warm: "#ffd08a", cool: "#8fd8ff" };
+
+export function applyLook(materials: Materials, look: Look): void {
+  for (const [key, finish] of Object.entries(look.surfaces)) {
+    const material = (materials as unknown as Record<string, MeshStandardMaterial | MeshBasicMaterial>)[key];
+    if (!material) continue;
+    material.color.set(finish.color);
+    const texture = toned[key];
+    if (texture) {
+      const map = texture(finish.tone ?? baseTone[key] ?? 40);
+      if (material.map !== map) {
+        material.map = map;
+        material.needsUpdate = true;
+      }
+    }
+    if (material instanceof MeshStandardMaterial) {
+      if (finish.metalness !== undefined) material.metalness = finish.metalness;
+      if (finish.roughness !== undefined) material.roughness = finish.roughness;
+      if (finish.emissive) material.emissive.set(finish.emissive);
+      if (finish.emissiveIntensity !== undefined) material.emissiveIntensity = finish.emissiveIntensity;
+    }
+  }
+  for (const [key, [color, intensity]] of Object.entries(look.glows)) {
+    (materials as unknown as Record<string, MeshBasicMaterial>)[key]?.color.set(color).multiplyScalar(intensity);
+  }
+  materials.pool.color.set(look.pools.warm).multiplyScalar(look.pools.strength);
+  materials.poolCool.color.set(look.pools.cool).multiplyScalar(look.pools.strength);
+  energyColors = look.energy;
+  for (const [material, role] of energies) (material.uniforms.uColor!.value as Color).set(energyColors[role]);
+}
+
+export function energyMaterial(role: EnergyRole = "cool", scale = 6) {
+  const material = new ShaderMaterial({
     vertexShader: energyVert,
     fragmentShader: energyFrag,
-    uniforms: { uTime: { value: 0 }, uPower: { value: 0 }, uScale: { value: scale }, uColor: { value: new Color(color) } },
+    uniforms: { uTime: { value: 0 }, uPower: { value: 0 }, uScale: { value: scale }, uColor: { value: new Color(energyColors[role]) } },
     transparent: true,
     blending: AdditiveBlending,
     depthWrite: false,
     toneMapped: false,
   });
+  energies.set(material, role);
+  material.addEventListener("dispose", () => energies.delete(material));
+  return material;
 }
 
 export function skyMaterial() {

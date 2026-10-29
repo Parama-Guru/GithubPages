@@ -2,6 +2,7 @@ import { BoxGeometry, BufferGeometry, CylinderGeometry, Group, MeshBasicMaterial
 import { box, merged, partition, placed, plane, pool, room } from "../kit";
 import { label } from "../textures";
 import { hazard } from "./painters";
+import { ink } from "../ink";
 import { createZone, cue, type ZoneBuilder } from "./shared";
 
 export const buildSafety: ZoneBuilder = async (context) => {
@@ -55,13 +56,13 @@ export const buildSafety: ZoneBuilder = async (context) => {
   g.add(box(m.steel, [0.08, 0.05, 5.2], [4.84, 2.4, -88.25]));
 
   const board = label("quality-board", 1024, 600, (ctx, w, h) => {
-    ctx.fillStyle = "#0b1016";
+    ctx.fillStyle = ink.panel;
     ctx.fillRect(0, 0, w, h);
     ctx.font = '800 96px "Big Shoulders Display Variable", sans-serif';
     ["Quality Policy", "Quality Standards", "EHS Policy"].forEach((title, index) => {
-      ctx.fillStyle = index === 2 ? "#f2b33c" : "#eef2f4";
+      ctx.fillStyle = index === 2 ? ink.safety : ink.text;
       ctx.fillText(title.toUpperCase(), 60, 160 + index * 160);
-      ctx.fillStyle = "#e3a56b";
+      ctx.fillStyle = ink.accent;
       ctx.fillRect(60, 180 + index * 160, 120, 4);
     });
   });

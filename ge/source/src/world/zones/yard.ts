@@ -13,7 +13,7 @@ function span(from: Vector3, to: Vector3, sag: number, radius: number): TubeGeom
 
 export const buildYard: ZoneBuilder = async (context) => {
   const { m } = context;
-  const energy = energyMaterial("#8fd8ff", 4);
+  const energy = energyMaterial("cool", 4);
   const zone = createZone(context, (frame) => {
     energy.uniforms.uPower!.value = cue(-frame.camera.z, 108, 116) * 0.6;
     energy.uniforms.uTime!.value = frame.time;

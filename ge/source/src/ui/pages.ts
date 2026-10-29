@@ -1,3 +1,4 @@
+import { themes } from "@/app/theme";
 import { clients, company, downloads, leadership, projectImages, projectYears, quality, timeline, whyUs } from "@/content";
 import { href, route, routes, type RouteId } from "@/routes/routes";
 import { chapterNumber, chapters } from "@/timeline/chapters";
@@ -165,7 +166,7 @@ function home() {
           <div class="chapter-panel">${(chapterBodies[chapter.id] ?? (() => ""))(index)
             .replace(/<h([12]) class="([^"]+)"/, `<h$1 id="${chapter.id}-title" class="$2"`)
             .replace('<div class="actions">', details[chapter.id] ? `<div class="actions">${more(chapter.id)}` : '<div class="actions">')}</div>
-          <picture class="chapter-poster" aria-hidden="true"><img src="/GithubPages/ge/posters/${chapter.id}.webp" width="1280" height="800" alt="" loading="lazy" decoding="async"></picture>
+          <div class="chapter-poster" aria-hidden="true">${themes.map((theme) => `<img data-poster-theme="${theme.id}" src="/GithubPages/ge/posters/${theme.id}/${chapter.id}.webp" width="1280" height="800" alt="" loading="lazy" decoding="async">`).join("")}</div>
         </section>`,
       )
       .join("")}

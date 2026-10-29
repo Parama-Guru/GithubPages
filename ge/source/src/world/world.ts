@@ -23,14 +23,16 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import { acceleratedRaycast, computeBoundsTree, disposeBoundsTree } from "three-mesh-bvh";
 import type { ThemeId } from "@/app/theme";
 import type { RouteId, ZoneKey } from "@/routes/routes";
-import { preloadAssets, type AssetName } from "./assets";
+import { applyModelLook, preloadAssets, type AssetName } from "./assets";
+import { setInk } from "./ink";
+import { looks } from "./look";
 import { batch, type Frame, type LightSpec, type Pickable, type Zone } from "./kit";
-import { createMaterials, disposeMaterials, skyMaterial, type SkyMaterial } from "./materials";
+import { applyLook, createMaterials, disposeMaterials, skyMaterial, type SkyMaterial } from "./materials";
 import { clamp01, lerpPose, smootherstep, type Pose } from "./math";
 import { palettes, type ScenePalette } from "./palette";
 import { evenRanges, exposureAt, sampleJourney, sampleRoute, travelAt, zoneAt, zoneOrder, type ChapterRange } from "./path";
 import { createPost, type Post } from "./post";
-import { disposeTextures, fontsReady } from "./textures";
+import { disposeTextures, fontsReady, repaintLabels } from "./textures";
 import type { Tier, ZoneBuilder } from "./zones/shared";
 
 BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
@@ -112,6 +114,8 @@ export class World {
   private disposed = false;
   private focus = 0;
   private lastZone: ZoneKey = "approach";
+  private tints: { warm: Color; cool: Color } | null = null;
+  private readonly lightColor = new Color();
   private present: { object: Object3D; from: Vector3; to: Vector3; start: number; duration: number; restore: boolean; done: () => void } | null = null;
 
   constructor(options: WorldOptions) {
@@ -167,6 +171,13 @@ export class World {
     this.hemisphere.groundColor.set(palette.hemiGround);
     this.hemisphere.intensity = palette.hemi;
     this.post?.setLook(palette.bloom, palette.bloomThreshold, palette.vignette);
+    const look = looks[this.theme];
+    applyLook(this.materials, look);
+    applyModelLook(look);
+    setInk(look.ink);
+    repaintLabels();
+    this.tints = look.lightTint ? { warm: new Color(look.lightTint.warm), cool: new Color(look.lightTint.cool) } : null;
+    this.options.canvas.dataset.look = `${look.surfaces.copper?.color ?? ""}|${look.ink.accent}|${look.models.PanelEnamel?.color ?? ""}`;
   }
 
   async load(initial: Target): Promise<void> {
@@ -441,6 +452,10 @@ export class World {
       }
       light.position.set(...spec.position);
       light.color.set(spec.color);
+      if (this.tints) {
+        this.lightColor.set(spec.color);
+        light.color.lerp(this.lightColor.r >= this.lightColor.b ? this.tints.warm : this.tints.cool, 0.8);
+      }
       light.intensity = spec.intensity * this.palette.lights;
       light.distance = spec.distance;
     });

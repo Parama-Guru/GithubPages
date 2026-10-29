@@ -3,6 +3,7 @@ import { whyUs } from "@/content";
 import { box, merged, partition, placed, plane, pool, room } from "../kit";
 import { label } from "../textures";
 import { diagram, statScreen } from "./painters";
+import { ink, tone } from "../ink";
 import { createZone, cue, type ZoneBuilder } from "./shared";
 
 const format = (value: number, final: string) => (final.includes(",") ? Math.round(value).toLocaleString("en-US") : String(Math.round(value)));
@@ -19,11 +20,11 @@ export const buildControl: ZoneBuilder = async (context) => {
   }));
   const line = label("diagram", 900, 440, diagram(0));
   const principles = label("principles", 900, 440, (ctx, w, h) => {
-    ctx.fillStyle = "#04101a";
+    ctx.fillStyle = ink.screenBottom;
     ctx.fillRect(0, 0, w, h);
     ctx.font = '800 92px "Big Shoulders Display Variable", sans-serif';
     whyUs.principles.forEach((item, index) => {
-      ctx.fillStyle = index === 1 ? "#f2c08f" : "#eef2f4";
+      ctx.fillStyle = index === 1 ? ink.accentStrong : ink.text;
       ctx.fillText(item.title.toUpperCase(), 40, 130 + index * 120);
     });
   });
@@ -78,21 +79,21 @@ export const buildControl: ZoneBuilder = async (context) => {
     monitors.push(placed(new BoxGeometry(0.04, 0.5, 0.9), [x + 0.3, 1.08, z], [0, -angle, 0.12]));
   }
   const consoleScreen = label("console", 512, 288, (ctx, w, h) => {
-    ctx.fillStyle = "#06121c";
+    ctx.fillStyle = ink.screenBottom;
     ctx.fillRect(0, 0, w, h);
-    ctx.strokeStyle = "rgba(143,216,255,0.16)";
+    ctx.strokeStyle = tone(ink.screenLine, 0.16);
     for (let x = 0; x < w; x += 32) {
       ctx.beginPath();
       ctx.moveTo(x, 0);
       ctx.lineTo(x, h);
       ctx.stroke();
     }
-    ctx.strokeStyle = "rgba(143,216,255,0.8)";
+    ctx.strokeStyle = tone(ink.screenLine, 0.8);
     ctx.lineWidth = 4;
     ctx.beginPath();
     [0.7, 0.55, 0.62, 0.4, 0.46, 0.3, 0.36, 0.22].forEach((y, index) => ctx.lineTo(30 + index * 64, h * y));
     ctx.stroke();
-    ctx.fillStyle = "rgba(242,192,143,0.85)";
+    ctx.fillStyle = tone(ink.accentStrong, 0.85);
     for (let i = 0; i < 6; i++) ctx.fillRect(30 + i * 76, h - 40, 44, -(18 + ((i * 37) % 60)));
   });
   const consoleMaterial = zone.own(new MeshBasicMaterial({ map: consoleScreen.texture, toneMapped: false }));

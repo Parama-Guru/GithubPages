@@ -494,6 +494,15 @@ Colour themes (owner request, 18 Oct 2026)
       `#009999`) with ISO 7010 warning yellow (RAL 1003) as the accent — dark petrol surfaces, `#F5C400` accent.
 - [x] Tests: theme default, live switch, keyboard, menu sync, persistence across navigation and reload;
       axe on every route in all three themes; overflow 320–2560 px; full suite green.
-- [ ] Fallback posters (reduced motion / no WebGL) and social images are still rendered from the Copper
-      scene; in Light they sit under a white veil. Re-render per theme if the owner wants exact matches.
+- [x] Fallback posters (reduced motion / no WebGL) are rendered per theme (3 × 8 WebP, 422 KB total, only the
+      active theme's images load); social images are rendered from the Light scene.
+- [x] Whole-scene themes (owner correction, 29 Oct 2026): the switch now recolours everything, not only the sky
+      and lighting. One file, `source/src/world/themes.json`, defines per theme: room surfaces and their texture
+      tone, trims (copper → brand blue in Light, safety yellow in Signal), light strips and floor light pools,
+      point-light tints, energy flow, every sign / plaque / screen drawn on canvas, and all Blender model materials.
+- [x] Blender reads the same `themes.json` (`GE_THEME` selects the theme); `npm run assets:themes` builds and
+      renders the switchgear and transformer in all three themes as a check. The site loads one set of models
+      and recolours their named materials live, so the download size does not triple.
+- [x] Tests: every theme defines every token and every Blender material (unit); a live switch changes the
+      model colours, the scene's average colour and the look signature; posters follow the theme (browser).
 - [ ] Owner review of the three themes in the browser.

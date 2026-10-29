@@ -4,6 +4,7 @@ Run: blender --background --factory-startup --python blender/build_assets.py -- 
 Every model is built from code so it can be regenerated and reviewed.
 """
 
+import json
 import math
 import os
 import sys
@@ -192,28 +193,42 @@ def timeline(name, end):
     scene.render.fps = 50
 
 
+THEMES = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src", "world", "themes.json"), encoding="utf-8"))
+MODEL = THEMES[os.environ.get("GE_THEME", "copper")]["models"]
+
+
+def linear(hex_color):
+    value = int(hex_color.lstrip("#"), 16)
+    channels = ((value >> 16) & 255, (value >> 8) & 255, value & 255)
+    return tuple((c / 255) / 12.92 if c / 255 <= 0.04045 else (((c / 255) + 0.055) / 1.055) ** 2.4 for c in channels)
+
+
+def themed(name, metallic, roughness, emission=None, strength=0.0):
+    finish = MODEL.get(name, {})
+    return material(name, linear(finish["color"]), metallic, finish.get("roughness", roughness), emission, strength)
+
+
 def palette():
     return {
-        "enamel": material("PanelEnamel", (0.62, 0.66, 0.68), 0.15, 0.42),
-        "enamel_dark": material("PanelDark", (0.16, 0.19, 0.22), 0.3, 0.5),
-        "steel": material("Steel", (0.55, 0.57, 0.6), 0.9, 0.32),
-        "black": material("Rubber", (0.03, 0.03, 0.035), 0.0, 0.7),
-        "copper": material("Copper", (0.86, 0.45, 0.24), 1.0, 0.28),
-        "porcelain": material("Porcelain", (0.55, 0.32, 0.22), 0.0, 0.18),
-        "glass": material("GlassInsulator", (0.42, 0.72, 0.7), 0.0, 0.08),
-        "tank": material("TankPaint", (0.33, 0.39, 0.38), 0.25, 0.45),
-        "galvanised": material("Galvanised", (0.62, 0.64, 0.66), 0.85, 0.45),
+        "enamel": themed("PanelEnamel", 0.15, 0.42),
+        "enamel_dark": themed("PanelDark", 0.3, 0.5),
+        "steel": themed("Steel", 0.9, 0.32),
+        "black": themed("Rubber", 0.0, 0.7),
+        "copper": themed("Copper", 1.0, 0.28),
+        "porcelain": themed("Porcelain", 0.0, 0.18),
+        "glass": themed("GlassInsulator", 0.0, 0.08),
+        "tank": themed("TankPaint", 0.25, 0.45),
+        "galvanised": themed("Galvanised", 0.85, 0.45),
         "lamp_red": material("LampRed", (0.5, 0.05, 0.03), 0.0, 0.3, (1.0, 0.12, 0.05), 6.0),
         "lamp_green": material("LampGreen", (0.05, 0.4, 0.12), 0.0, 0.3, (0.15, 1.0, 0.35), 6.0),
         "lamp_amber": material("LampAmber", (0.5, 0.3, 0.02), 0.0, 0.3, (1.0, 0.6, 0.08), 6.0),
         "display": material("MeterGlass", (0.02, 0.05, 0.06), 0.0, 0.1, (0.2, 0.75, 1.0), 2.5),
-        "warning": material("WarningYellow", (0.95, 0.68, 0.06), 0.0, 0.5),
+        "warning": themed("WarningYellow", 0.0, 0.5),
         "pane": glass_material(),
     }
 
-
 def glass_material():
-    mat = material("DoorGlass", (0.66, 0.83, 0.9), 0.0, 0.04)
+    mat = material("DoorGlass", linear(MODEL["DoorGlass"]["color"]), 0.0, 0.04)
     bsdf = mat.node_tree.nodes["Principled BSDF"]
     bsdf.inputs["Alpha"].default_value = 0.18
     for attribute, value in (("surface_render_method", "BLENDED"), ("blend_method", "BLEND")):
