@@ -804,6 +804,12 @@ html.has-3d .scroll-cue {
 html.is-scrolled .scroll-cue {
   opacity: 0;
 }
+.scroll-cue span {
+  padding: 8px 12px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  color: var(--text);
+}
 .scroll-cue i {
   width: 1px;
   height: 42px;

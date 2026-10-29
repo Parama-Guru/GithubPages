@@ -481,9 +481,9 @@ export class World {
     if (this.transition && now - this.transition.start >= this.transition.duration) this.transition = null;
     const settling = Math.abs(this.parallax.x - this.parallaxTarget.x) + Math.abs(this.parallax.y - this.parallaxTarget.y) > 0.002;
     const ambient = this.motion && document.visibilityState === "visible";
+    if (ambient) this.clock += delta;
     const due = this.dirty || transitioning || settling || this.present !== null || (ambient && Math.round(now / 33) !== Math.round((now - delta * 1000) / 33));
     if (!due) return;
-    if (ambient) this.clock += delta;
     this.parallax.lerp(this.parallaxTarget, 1 - Math.exp(-delta * 3));
     this.renderOnce(now, delta, transitioning);
   }
