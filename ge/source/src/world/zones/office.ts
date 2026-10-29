@@ -5,6 +5,7 @@ import { animated } from "../assets";
 import { box, framed, merged, placed, plane, pool, room } from "../kit";
 import { image, label } from "../textures";
 import { orgBoard } from "./painters";
+import { ink } from "../ink";
 import { createZone, cue, type ZoneBuilder } from "./shared";
 
 export const buildOffice: ZoneBuilder = async (context) => {
@@ -71,12 +72,12 @@ export const buildOffice: ZoneBuilder = async (context) => {
   }
   spines.forEach((parts, index) => g.add(merged(colours[index] ?? m.navy, parts)));
   const plate = label("downloads-plate", 900, 180, (ctx, w, h) => {
-    ctx.fillStyle = "#0c1117";
+    ctx.fillStyle = ink.sign;
     ctx.fillRect(0, 0, w, h);
-    ctx.fillStyle = "#e3a56b";
+    ctx.fillStyle = ink.accent;
     ctx.font = '500 34px "IBM Plex Mono", monospace';
     ctx.fillText("BROCHURES", 30, 60);
-    ctx.fillStyle = "#eef2f4";
+    ctx.fillStyle = ink.text;
     ctx.font = '600 30px "IBM Plex Sans", sans-serif';
     ctx.fillText(downloads.documents.join("  ·  "), 30, 130);
   });

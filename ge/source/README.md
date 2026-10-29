@@ -9,6 +9,7 @@ Content comes only from the original site (`src/content/site.json`, `src/content
 npm ci                    # install (Node 24)
 npm run dev               # http://127.0.0.1:5173/GithubPages/ge/
 npm run assets            # regenerate Blender models with baked AO and animations (Blender 4.5 LTS; set BLENDER=path\to\blender.exe)
+npm run assets:themes     # build and render the Blender models in all three colour themes into .cache/theme-preview
 npm run camera            # export the camera path from blender/camera_path.blend to src/world/camera-path.json
 npm run media             # favicon, touch icon and loader emblem from the original logo
 npm run build             # typecheck + client build + prerender every page into dist/
@@ -55,9 +56,11 @@ The header switch (and the Menu) offers three themes; **Light** is the default.
 | Signal | Petrol teal with ISO 7010 safety yellow | same |
 
 `src/app/theme.ts` lists the themes and stores the choice in `localStorage` (`ge-theme`); the inline script in
-`index.html` applies it before first paint. `World.setTheme()` recolours the sky, fog, lights and post-processing live.
-To add a theme, add a token block in `main.css`, a scene palette in `palette.ts`, an entry in `theme.ts` and the
-inline script, and a `.swatch-<id>` style. Fallback posters are rendered from the Copper scene (`?poster=…&theme=` selects another).
+`index.html` applies it before first paint. `World.setTheme()` recolours the whole 3D scene live: sky, fog, lights and
+post-processing (`palette.ts`), plus room surfaces, trims, light strips, energy flow, canvas signs and screens, and the
+Blender model materials from `src/world/themes.json`. Blender reads the same file (`GE_THEME`).
+To add a theme, add a token block in `main.css`, a scene palette in `palette.ts`, a look in `themes.json`, an entry in
+`theme.ts` and the inline script, and a `.swatch-<id>` style, then run `npm run posters` (one poster set per theme).
 
 ## Known limitations
 

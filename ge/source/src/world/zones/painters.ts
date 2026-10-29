@@ -1,4 +1,5 @@
 import { organisation, type OrgNode } from "@/content/organisation";
+import { ink, tone } from "../ink";
 import { fonts } from "../textures";
 
 type Ctx = CanvasRenderingContext2D;
@@ -30,18 +31,18 @@ function wrap(context: Ctx, text: string, maxWidth: number): string[] {
 
 export function plaque(year: string, title: string, body: string, lit: number) {
   return (context: Ctx, w: number, h: number) => {
-    context.fillStyle = "#0b1016";
+    context.fillStyle = ink.panel;
     context.fillRect(0, 0, w, h);
-    context.strokeStyle = `rgba(227,165,107,${0.25 + lit * 0.6})`;
+    context.strokeStyle = tone(ink.accent, 0.25 + lit * 0.6);
     context.lineWidth = 4;
     context.strokeRect(6, 6, w - 12, h - 12);
-    context.fillStyle = `rgba(242,192,143,${0.35 + lit * 0.65})`;
+    context.fillStyle = tone(ink.accentStrong, 0.35 + lit * 0.65);
     context.font = fonts.display(150);
     context.fillText(year, 40, 170);
-    context.fillStyle = `rgba(238,242,244,${0.4 + lit * 0.6})`;
+    context.fillStyle = tone(ink.text, 0.4 + lit * 0.6);
     context.font = fonts.sans(40, 600);
     context.fillText(title, 44, 250);
-    context.fillStyle = `rgba(170,182,192,${0.4 + lit * 0.6})`;
+    context.fillStyle = tone(ink.muted, 0.4 + lit * 0.6);
     context.font = fonts.sans(30, 400);
     wrap(context, body, w - 90).forEach((line, index) => context.fillText(line, 44, 305 + index * 40));
   };
@@ -50,11 +51,11 @@ export function plaque(year: string, title: string, body: string, lit: number) {
 export function statScreen(value: string, caption: string, lit: number) {
   return (context: Ctx, w: number, h: number) => {
     const gradient = context.createLinearGradient(0, 0, 0, h);
-    gradient.addColorStop(0, "#081a26");
-    gradient.addColorStop(1, "#04101a");
+    gradient.addColorStop(0, ink.screenTop);
+    gradient.addColorStop(1, ink.screenBottom);
     context.fillStyle = gradient;
     context.fillRect(0, 0, w, h);
-    context.strokeStyle = "rgba(143,216,255,0.18)";
+    context.strokeStyle = tone(ink.screenLine, 0.16);
     context.lineWidth = 1;
     for (let y = 0; y < h; y += 6) {
       context.beginPath();
@@ -62,10 +63,10 @@ export function statScreen(value: string, caption: string, lit: number) {
       context.lineTo(w, y);
       context.stroke();
     }
-    context.fillStyle = `rgba(143,216,255,${0.4 + lit * 0.6})`;
+    context.fillStyle = tone(ink.screenLine, 0.45 + lit * 0.55);
     context.font = fonts.mono(26);
     context.fillText(caption.toUpperCase(), 40, 64);
-    context.fillStyle = `rgba(255,214,170,${0.5 + lit * 0.5})`;
+    context.fillStyle = tone(ink.screenValue, 0.5 + lit * 0.5);
     context.font = fonts.display(230);
     context.fillText(value, 34, h - 54);
   };
@@ -73,9 +74,9 @@ export function statScreen(value: string, caption: string, lit: number) {
 
 export function diagram(progress: number) {
   return (context: Ctx, w: number, h: number) => {
-    context.fillStyle = "#04101a";
+    context.fillStyle = ink.screenBottom;
     context.fillRect(0, 0, w, h);
-    context.strokeStyle = "rgba(143,216,255,0.9)";
+    context.strokeStyle = tone(ink.screenLine, 0.9);
     context.lineWidth = 5;
     context.lineCap = "round";
     const segments: [number, number, number, number][] = [
@@ -104,7 +105,7 @@ export function diagram(progress: number) {
       context.lineTo(x1 + (x2 - x1) * t, y1 + (y2 - y1) * t);
       context.stroke();
     });
-    context.fillStyle = "rgba(255,214,170,0.95)";
+    context.fillStyle = tone(ink.screenValue, 0.95);
     for (const x of [140, 340, 540, 740]) {
       if (drawn > 6) {
         context.beginPath();
@@ -117,15 +118,15 @@ export function diagram(progress: number) {
 
 export function sign(text: string, sub = "") {
   return (context: Ctx, w: number, h: number) => {
-    context.fillStyle = "#0c1117";
+    context.fillStyle = ink.sign;
     context.fillRect(0, 0, w, h);
-    context.fillStyle = "#e3a56b";
+    context.fillStyle = ink.accent;
     context.fillRect(0, 0, 14, h);
-    context.fillStyle = "#eef2f4";
+    context.fillStyle = ink.text;
     context.font = fonts.display(h * 0.62);
     context.fillText(text, 44, h * 0.72);
     if (sub) {
-      context.fillStyle = "#8796a2";
+      context.fillStyle = ink.dim;
       context.font = fonts.mono(h * 0.16);
       context.fillText(sub, w - context.measureText(sub).width - 30, h * 0.72);
     }
@@ -136,7 +137,7 @@ export function hazard() {
   return (context: Ctx, w: number, h: number) => {
     context.fillStyle = "#f4f2ea";
     context.fillRect(0, 0, w, h);
-    context.fillStyle = "#f2b33c";
+    context.fillStyle = ink.safety;
     context.strokeStyle = "#111";
     context.lineWidth = 16;
     context.beginPath();

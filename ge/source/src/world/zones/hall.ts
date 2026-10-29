@@ -27,8 +27,8 @@ const HERO_PANEL = new Vector3(-4.2, 0, -48.5);
 
 export const buildHall: ZoneBuilder = async (context) => {
   const { m } = context;
-  const energy = energyMaterial("#8fd8ff", 14);
-  const heroEnergy = energyMaterial("#ffd08a", 3);
+  const energy = energyMaterial("cool", 14);
+  const heroEnergy = energyMaterial("warm", 3);
   const rig = await animated("switchgear");
   const hero = rig.root;
 

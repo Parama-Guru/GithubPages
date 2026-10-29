@@ -9,7 +9,8 @@ const chapters = ["welcome", "about", "why-us", "projects", "clients", "quality"
 const holds = [0.36, 0.32, 0.32, 0.32, 0.32, 0.32, 0.32, 0.6].map((local, index) => (index + local) / chapters.length);
 const routes = ["about", "features", "projects", "clients", "quality-safety", "leadership", "organisation", "downloads", "contact"];
 
-await mkdir(path.join(root, "public", "posters"), { recursive: true });
+const themes = ["light", "copper", "signal"];
+for (const theme of themes) await mkdir(path.join(root, "public", "posters", theme), { recursive: true });
 await mkdir(path.join(root, "public", "og"), { recursive: true });
 const browser = await chromium.launch({ channel: process.platform === "win32" ? "msedge" : undefined, args: ["--ignore-gpu-blocklist", "--enable-gpu"] });
 
@@ -23,20 +24,22 @@ async function capture(query, width, height) {
   return buffer;
 }
 
-for (const [index, chapter] of chapters.entries()) {
-  const buffer = await capture(`poster=journey&p=${holds[index]}`, 1280, 800);
-  await sharp(buffer).webp({ quality: 74 }).toFile(path.join(root, "public", "posters", `${chapter}.webp`));
-  if (index === 0) await sharp(buffer).resize(1200, 630, { fit: "cover", position: "right" }).jpeg({ quality: 80, mozjpeg: true }).toFile(path.join(root, "public", "og", "home.jpg"));
-  console.log(`poster ${chapter}`);
+for (const theme of themes) {
+  for (const [index, chapter] of chapters.entries()) {
+    const buffer = await capture(`poster=journey&p=${holds[index]}&theme=${theme}`, 1280, 800);
+    await sharp(buffer).webp({ quality: 72 }).toFile(path.join(root, "public", "posters", theme, `${chapter}.webp`));
+    if (index === 0 && theme === "light") await sharp(buffer).resize(1200, 630, { fit: "cover", position: "right" }).jpeg({ quality: 80, mozjpeg: true }).toFile(path.join(root, "public", "og", "home.jpg"));
+  }
+  console.log(`posters ${theme}`);
 }
 
 for (const id of routes) {
-  const buffer = await capture(`poster=${id}&p=0`, 1200, 630);
+  const buffer = await capture(`poster=${id}&p=0&theme=light`, 1200, 630);
   await sharp(buffer).jpeg({ quality: 80, mozjpeg: true }).toFile(path.join(root, "public", "og", `${id}.jpg`));
   console.log(`og ${id}`);
 }
 for (const year of ["2013-2014", "2014-2016", "2016-2017", "2017-2018"]) {
-  const buffer = await capture(`poster=projects-${year}&p=0`, 1200, 630);
+  const buffer = await capture(`poster=projects-${year}&p=0&theme=light`, 1200, 630);
   await sharp(buffer).jpeg({ quality: 80, mozjpeg: true }).toFile(path.join(root, "public", "og", `projects-${year}.jpg`));
   console.log(`og projects-${year}`);
 }

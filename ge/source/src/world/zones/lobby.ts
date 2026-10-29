@@ -9,7 +9,7 @@ import { createZone, cue, glowMaterial, type ZoneBuilder } from "./shared";
 export const buildLobby: ZoneBuilder = async (context) => {
   const { m } = context;
   const plaques = timeline.map((item, index) => ({ item, label: label(`plaque-${index}`, 640, 440, plaque(item.year, item.title, item.body, 0)), lit: -1 }));
-  const energy = energyMaterial("#ffc58a", 5);
+  const energy = energyMaterial("warm", 5);
 
   const zone = createZone(context, (frame) => {
     const reveal = cue(-frame.camera.z, -0.5, 3.4);

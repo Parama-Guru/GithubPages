@@ -4,6 +4,7 @@ import { company } from "@/content";
 import { animated, instance } from "../assets";
 import { box, contactShadow, cylinder, merged, placed, plane, pool } from "../kit";
 import { label } from "../textures";
+import { ink, tone } from "../ink";
 import { createZone, cue, glowMaterial, type ZoneBuilder } from "./shared";
 
 function wire(from: Vector3, to: Vector3, sag: number, radius = 0.025): BufferGeometry {
@@ -32,7 +33,7 @@ export const buildApproach: ZoneBuilder = async (context) => {
       ctx.beginPath();
       ctx.rect(0, 0, w * step, h);
       ctx.clip();
-      ctx.shadowColor = "rgba(255,210,160,0.9)";
+      ctx.shadowColor = tone(ink.logoGlow, 0.9);
       ctx.shadowBlur = 18;
       ctx.drawImage(logo, 0, 0, w, h);
       ctx.restore();

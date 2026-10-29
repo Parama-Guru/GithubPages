@@ -160,21 +160,33 @@ export function image(url: string): Texture {
 
 type Label = { texture: CanvasTexture; aspect: number; redraw: (draw: (context: CanvasRenderingContext2D, width: number, height: number) => void) => void };
 
-export function label(key: string, width: number, height: number, draw: (context: CanvasRenderingContext2D, width: number, height: number) => void): Label {
+type Paint = (context: CanvasRenderingContext2D, width: number, height: number) => void;
+const painted = new Map<string, () => void>();
+
+export function label(key: string, width: number, height: number, draw: Paint): Label {
   const existing = cache.get(`label-${key}`) as CanvasTexture | undefined;
   const element = existing ? (existing.image as HTMLCanvasElement) : canvas(width, height).element;
   const context = element.getContext("2d") as CanvasRenderingContext2D;
   const texture = existing ?? (finish(new CanvasTexture(element), false) as CanvasTexture);
   if (!existing) cache.set(`label-${key}`, texture);
-  const redraw = (paint: typeof draw) => {
+  let last = draw;
+  const paint = () => {
     context.clearRect(0, 0, width, height);
-    paint(context, width, height);
+    last(context, width, height);
     texture.needsUpdate = true;
   };
-  redraw(draw);
+  const redraw = (next: Paint) => {
+    last = next;
+    paint();
+  };
+  painted.set(key, paint);
+  paint();
   return { texture, aspect: width / height, redraw };
 }
 
+export function repaintLabels(): void {
+  for (const paint of painted.values()) paint();
+}
 export const fonts = {
   display: (size: number, weight = 800) => `${weight} ${size}px "Big Shoulders Display Variable", "Arial Narrow", sans-serif`,
   sans: (size: number, weight = 500) => `${weight} ${size}px "IBM Plex Sans", "Segoe UI", sans-serif`,
@@ -186,6 +198,7 @@ export async function fontsReady(): Promise<void> {
 }
 
 export function disposeTextures(): void {
+  painted.clear();
   for (const texture of cache.values()) texture.dispose();
   cache.clear();
 }
