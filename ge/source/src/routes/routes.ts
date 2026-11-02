@@ -5,10 +5,11 @@ export type RouteId =
   | "about"
   | "features"
   | "projects"
-  | "projects-2013-2014"
-  | "projects-2014-2016"
-  | "projects-2016-2017"
-  | "projects-2017-2018"
+  | "projects-ongoing"
+  | "projects-2023-2026"
+  | "projects-2019-2022"
+  | "projects-2012-2018"
+  | "execution"
   | "clients"
   | "quality-safety"
   | "leadership"
@@ -37,7 +38,7 @@ export const routes: Route[] = [
     zone: "approach",
     label: "Home",
     title: "Ganesh Electricals — EHV and MV/LV electrical contractor, Chennai",
-    description: "Ganesh Electricals, established in 1997 in Chennai, provides EHV and MV/LV electrical installations for industrial projects.",
+    description: "Ganesh Electricals, established in 1997 in Chennai, executes 230 kV and 110 kV substations and turnkey industrial electrical installations.",
   },
   {
     id: "about",
@@ -46,16 +47,25 @@ export const routes: Route[] = [
     label: "About",
     title: "About Ganesh Electricals",
     description:
-      "About Ganesh Electricals, an ESA grade electrical contractor in Tamil Nadu established in 1997, executing E.H.V and M.V/L.V installations, with the company timeline.",
+      "About Ganesh Electricals, established in 1997: ESA licence 283, CRISIL MSE 2 rating, credentials, achievements and milestones of a turnkey electrical contractor.",
   },
   {
     id: "features",
     path: "features/",
     zone: "control",
-    label: "Why choose us",
-    title: "Why Choose Us — Ganesh Electricals",
+    label: "How we serve",
+    title: "How We Serve Our Clients — Ganesh Electricals",
     description:
-      "Why choose Ganesh Electricals: customer-centric electrical design, quality and safety, and cost-effective solutions, with company statistics.",
+      "How Ganesh Electricals serves its clients: meeting requirements, quality and on-time delivery, client protocol, statutory and safety norms, and zero accidents.",
+  },
+  {
+    id: "execution",
+    path: "execution/",
+    zone: "control",
+    label: "How we work",
+    title: "How We Work — Ganesh Electricals",
+    description:
+      "How Ganesh Electricals executes projects: local issue handling, TNEB liaisoning in 211 days, manpower deployment of 95 people per project and specialist equipment.",
   },
   {
     id: "projects",
@@ -63,23 +73,23 @@ export const routes: Route[] = [
     zone: "hall",
     label: "Projects",
     title: "Projects — Ganesh Electricals",
-    description: "Substation, LT panel, EHV, industrial electrification and power projects by Ganesh Electricals, listed by year from 2013 to 2018.",
+    description: "230 kV and 110 kV substation and industrial electrification projects by Ganesh Electricals: on-going projects and projects executed since 2012.",
   },
   ...(
     [
-      ["2013-2014", "2013–2014", "including switchyard works, electrical installations, client names and localities."],
-      ["2014-2016", "2014–2016", "for 2014–2015 and 2015–2016, including HT/LT electrical installations and cable laying."],
-      ["2016-2017", "2016–2017", "with original electrical installation scopes, client names and localities."],
-      ["2017-2018", "2017–2018", "including expansion, HT/LT installation and LT panel supply."],
+      ["ongoing", "On-going", "On-going projects", "with sector and order value, including 110 kV switchyards and industrial installations."],
+      ["2023-2026", "2023–2026", "Projects 2023–2026", "executed from 2023 to 2026, including 110 kV switchyards and HT/LT electrical installations."],
+      ["2019-2022", "2019–2022", "Projects 2019–2022", "executed from 2019 to 2022, including substations, HT/LT installations and panels."],
+      ["2012-2018", "2012–2018", "Projects 2012–2018", "executed from 2012 to 2018, including switchyard works, HT/LT installations and cable laying."],
     ] as const
   ).map(
-    ([slug, years, detail]): Route => ({
+    ([slug, years, label, detail]): Route => ({
       id: `projects-${slug}` as RouteId,
       path: `projects/${slug}/`,
       zone: "hall",
-      label: `Projects ${years}`,
-      title: `Projects ${years} — Ganesh Electricals`,
-      description: `Ganesh Electricals' published projects ${detail.startsWith("for") ? detail : `for ${years}, ${detail}`}`,
+      label,
+      title: `${label} — Ganesh Electricals`,
+      description: `Ganesh Electricals' ${slug === "ongoing" ? "on-going projects" : `projects ${years}`}: client names, scopes and locations ${detail}`,
       parent: "projects",
     }),
   ),
@@ -89,7 +99,7 @@ export const routes: Route[] = [
     zone: "gallery",
     label: "Clients",
     title: "Our Clients — Ganesh Electricals",
-    description: "Clients of Ganesh Electricals, including many Fortune-500 companies, with client logos and testimonials.",
+    description: "Clients of Ganesh Electricals by voltage level — 230 kV, 110 kV, 33 kV and 11 kV — German clients, garments, leather and pharmaceutical industries.",
   },
   {
     id: "quality-safety",
@@ -97,7 +107,7 @@ export const routes: Route[] = [
     zone: "safety",
     label: "Quality & Safety",
     title: "Quality & Safety — Ganesh Electricals",
-    description: "Ganesh Electricals' quality policy, quality standards and environmental, health and safety commitments.",
+    description: "Ganesh Electricals' quality policy and standards, supplier evaluation, site reports, electrical inspections and EHS standards.",
   },
   {
     id: "leadership",
@@ -106,7 +116,7 @@ export const routes: Route[] = [
     label: "Leadership",
     title: "Leadership — Ganesh Electricals",
     description:
-      "The founding story of Ganesh Electricals and Mr. B. Kumareson, with the company's mission for quality, safety and industrial electrification.",
+      "Mr. B. Kumareson, Proprietor of Ganesh Electricals, the key personnel and their roles, responsibilities and authorities.",
   },
   {
     id: "organisation",
@@ -114,7 +124,7 @@ export const routes: Route[] = [
     zone: "office",
     label: "Organisation",
     title: "Organisation Chart — Ganesh Electricals",
-    description: "The organisation chart of Ganesh Electricals: technical, projects, procurement, liasioning and civil teams under the founder and CEO.",
+    description: "The organisation chart of Ganesh Electricals: liasioning, design, quality, projects, procurement, civil and administration teams under the Proprietor.",
   },
   {
     id: "downloads",
@@ -122,7 +132,7 @@ export const routes: Route[] = [
     zone: "office",
     label: "Downloads",
     title: "Downloads — Ganesh Electricals",
-    description: "Company profile, news and outreach brochures of Ganesh Electricals. Contact the office to request the brochures.",
+    description: "The Ganesh Electricals company profile and credentials, available on request by email.",
   },
   {
     id: "contact",
@@ -130,7 +140,7 @@ export const routes: Route[] = [
     zone: "yard",
     label: "Contact",
     title: "Contact Us — Ganesh Electricals",
-    description: "Contact Ganesh Electricals at No 1, New Street, Porur, Chennai: telephone 044-4284 0227, email and an enquiry form.",
+    description: "Contact Ganesh Electricals at No.1, New Street, Shakthi Nagar, Porur, Chennai 600 116: telephone 044-4284 0227, email and an enquiry form.",
   },
   {
     id: "not-found",
@@ -143,7 +153,7 @@ export const routes: Route[] = [
 ];
 
 export const headerLinks: RouteId[] = ["about", "features", "projects", "clients", "quality-safety", "contact"];
-export const menuLinks: RouteId[] = ["home", "about", "features", "projects", "clients", "quality-safety", "leadership", "organisation", "downloads", "contact"];
+export const menuLinks: RouteId[] = ["home", "about", "features", "execution", "projects", "clients", "quality-safety", "leadership", "organisation", "downloads", "contact"];
 
 export function route(id: RouteId): Route {
   const found = routes.find((entry) => entry.id === id);

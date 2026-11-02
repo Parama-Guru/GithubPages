@@ -76,7 +76,7 @@ export const buildOffice: ZoneBuilder = async (context) => {
     ctx.fillRect(0, 0, w, h);
     ctx.fillStyle = ink.accent;
     ctx.font = '500 34px "IBM Plex Mono", monospace';
-    ctx.fillText("BROCHURES", 30, 60);
+    ctx.fillText("DOCUMENTS", 30, 60);
     ctx.fillStyle = ink.text;
     ctx.font = '600 30px "IBM Plex Sans", sans-serif';
     ctx.fillText(downloads.documents.join("  ·  "), 30, 130);

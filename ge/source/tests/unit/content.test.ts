@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { clients, projectYears, quality, timeline, whyUs } from "@/content";
-import { countNodes, organisation, type OrgNode } from "@/content/organisation";
+import { clients, company, credentials, execution, leadership, projectGroups, projectTotals, quality, timeline, whyUs } from "@/content";
+import { countNodes, depth, organisation, type OrgNode } from "@/content/organisation";
 import { href, matchRoute, routes } from "@/routes/routes";
 import { renderHead } from "@/ui/layout";
 import { renderMain } from "@/ui/pages";
@@ -43,46 +43,51 @@ describe("routes", () => {
   });
 });
 
-describe("original content", () => {
-  it("keeps all 45 project rows", () => {
-    const rows = projectYears.flatMap((year) => year.tables).reduce((sum, table) => sum + table.rows.length - 1, 0);
-    expect(rows).toBe(45);
-  });
-  it("keeps the published statistics, timeline, logos and testimonials", () => {
-    expect(whyUs.statistics.map((stat) => stat.value)).toEqual(["274", "421", "40,000", "18"]);
-    expect(timeline.map((item) => item.year)).toEqual(["2019", "2007", "2001", "1997"]);
-    expect(clients.logos).toHaveLength(12);
-    expect(clients.testimonials).toHaveLength(3);
-    expect(quality.ehs.commitments).toHaveLength(9);
-  });
-  it("reproduces the organisation chart exactly", () => {
-    expect(countNodes(organisation)).toBe(25);
-    expect(labels(organisation)).toEqual([
-      "Mr.B.Kumareson Founder/CEO",
-      "Mr. Vijaysaradhi Technical",
-      "Mr.Mothilal Design Engineer",
-      "Mr.Senthil QA",
-      "Mr. Muthukumar Projects",
-      "Project Coordinator",
-      "Site Engineer",
-      "Safety Engineer",
-      "Supervisors (3)",
-      "Technicians (4)",
-      "Electricians (5)",
-      "Fab Engineer",
-      "Welders (3)",
-      "Helpers (10)",
-      "Project Control",
-      "Documentaion/Drawing",
-      "Quality Engineer",
-      "Account Supervisor",
-      "Mr. Elumalai Procurement",
-      "Contract",
-      "Logistics",
-      "Liasioning",
-      "Mr. Anandnarayan Liasioning TNEB",
-      "Mr. Saravanan Liasioning CEIG",
-      "Mr. Subash Civil",
+describe("company profile content", () => {
+  it("keeps every project row from the profile", () => {
+    expect(projectGroups.map((group) => [group.slug, group.count])).toEqual([
+      ["ongoing", 10],
+      ["2023-2026", 36],
+      ["2019-2022", 26],
+      ["2012-2018", 60],
     ]);
+    expect(projectTotals).toEqual({ executed: 122, ongoing: 10 });
+  });
+  it("uses the profile statistics, milestones, credentials and contacts", () => {
+    expect(whyUs.statistics.map((stat) => stat.value)).toEqual(["230", "122", "10", "95"]);
+    expect(whyUs.principles).toHaveLength(6);
+    expect(timeline.map((item) => item.year)).toEqual(["2025", "2019", "2008", "1997"]);
+    expect(execution.manpowerTotal).toBe(95);
+    expect(credentials.map((item) => item.title)).toContain("ESA License");
+    expect(company.emails).toEqual(["enquiry@ganeshelectricals.in", "kumareson@ganeshvar.com"]);
+    expect(clients.logos).toHaveLength(12);
+    expect(quality.ehs.commitments).toHaveLength(9);
+    expect(quality.ehsStandards).toHaveLength(24);
+    expect(leadership.personnel).toHaveLength(8);
+  });
+  it("publishes no personal mobile numbers or retired contacts", () => {
+    const html = routes.map((entry) => renderMain(entry.id)).join("");
+    expect(html).not.toMatch(/(?<![\d+])(?:\+91[\s-]?)?[6-9]\d{4}[\s-]?\d{5}(?!\d)/);
+    expect(html).not.toContain("ganeshvar@yahoo.com");
+    expect(html).not.toContain("33AFTPK");
+  });
+  it("reproduces the profile organisation chart", () => {
+    expect(countNodes(organisation)).toBe(43);
+    expect(depth(organisation)).toBe(8);
+    expect(labels(organisation).slice(0, 12)).toEqual([
+      "Mr.B.Kumareson Proprietor",
+      "Mr.C.Jagan Liasioning TNEB",
+      "Mr.G.Saravanan Liasioning CEIG",
+      "Mr.S.Krishnan Technical Manager",
+      "Mr.P.Pravinkumar Design Engineer",
+      "Draftsman (2 Nos)",
+      "Mr.K.Senthil Quality",
+      "Mr.R.Sethuraman Head Business Development",
+      "Mr.Mahaveer Head Finance",
+      "Mr.B.Muthukumar Head Projects/Technical",
+      "Factory Team",
+      "Quality Engineer",
+    ]);
+    expect(organisation.children).toHaveLength(11);
   });
 });

@@ -1,3 +1,4 @@
+import { company } from "@/content";
 import type { World } from "@/world/world";
 import { splitHeading, type Controller } from "./journey";
 import { gsap, ScrollTrigger, type Motion, type SplitText } from "./motion";
@@ -18,7 +19,7 @@ function enquiry(root: HTMLElement): () => void {
       return;
     }
     const body = [`Name: ${value("name")}`, `Email: ${value("email")}`, `Phone: ${value("phone")}`, `Company: ${value("company")}`, "", value("message")].join("\n");
-    const href = `mailto:ganeshvar@yahoo.com?subject=${encodeURIComponent(`Enquiry from ${value("name")}`)}&body=${encodeURIComponent(body)}`;
+    const href = `mailto:${company.emails[0]}?subject=${encodeURIComponent(`Enquiry from ${value("name")}`)}&body=${encodeURIComponent(body)}`;
     if (status) status.innerHTML = `Your email is ready. <a class="text-link" href="${href}">Open it in your mail app</a>`;
     window.location.href = href;
   };
@@ -62,7 +63,7 @@ export function initPage(root: HTMLElement, motion: Motion, world: World | null)
     const heroItems = root.querySelectorAll<HTMLElement>(".page-hero > :not(.page-title)");
     tweens.push(gsap.from(heroItems, { y: 22, opacity: 0, stagger: 0.07, duration: 0.8, ease: "power3.out", delay: 0.35 }));
     for (const sheet of root.querySelectorAll<HTMLElement>(".sheet")) {
-      const items = sheet.querySelectorAll<HTMLElement>(".timeline > li, .principles > article, .gallery > li, .year-cards > li, .logo-grid > li, .testimonials > figure, .documents > li, .commitments > li, .stats > div");
+      const items = sheet.querySelectorAll<HTMLElement>(".timeline > li, .principles > article, .gallery > li, .year-cards > li, .logo-grid > li, .cards > article, .awards > figure, .documents > li, .commitments > li, .stats > div");
       const reveal = gsap.timeline({ scrollTrigger: { trigger: sheet, start: "top 94%", once: true } });
       reveal.from(sheet, { y: 50, opacity: 0, duration: 0.8, ease: "power3.out" });
       if (items.length) reveal.from(items, { y: 24, opacity: 0, stagger: 0.04, duration: 0.6, ease: "power3.out" }, 0.12);

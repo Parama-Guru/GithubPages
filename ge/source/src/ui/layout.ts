@@ -16,7 +16,7 @@ export function renderHead(current: Route): string {
     foundingDate: "1997",
     email: company.emails[0],
     telephone: "+91-44-4284-0227",
-    address: { "@type": "PostalAddress", streetAddress: "No 1, New Street, Shakthi Nagar, Porur", addressLocality: "Chennai", postalCode: "600116", addressCountry: "IN" },
+    address: { "@type": "PostalAddress", streetAddress: "No.1, 1st Floor, New Street, Shakthi Nagar, Porur", addressLocality: "Chennai", postalCode: "600116", addressCountry: "IN" },
   };
   const breadcrumb = crumbs.length
     ? {

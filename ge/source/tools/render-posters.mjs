@@ -7,7 +7,22 @@ const root = path.resolve(import.meta.dirname, "..");
 const base = process.argv[2] ?? "http://127.0.0.1:4173/GithubPages/ge/";
 const chapters = ["welcome", "about", "why-us", "projects", "clients", "quality", "leadership", "contact"];
 const holds = [0.36, 0.32, 0.32, 0.32, 0.32, 0.32, 0.32, 0.6].map((local, index) => (index + local) / chapters.length);
-const routes = ["about", "features", "projects", "clients", "quality-safety", "leadership", "organisation", "downloads", "contact"];
+const routes = [
+  "about",
+  "features",
+  "execution",
+  "projects",
+  "projects-ongoing",
+  "projects-2023-2026",
+  "projects-2019-2022",
+  "projects-2012-2018",
+  "clients",
+  "quality-safety",
+  "leadership",
+  "organisation",
+  "downloads",
+  "contact",
+];
 
 const themes = ["light", "copper", "signal"];
 for (const theme of themes) await mkdir(path.join(root, "public", "posters", theme), { recursive: true });
@@ -37,10 +52,5 @@ for (const id of routes) {
   const buffer = await capture(`poster=${id}&p=0&theme=light`, 1200, 630);
   await sharp(buffer).jpeg({ quality: 80, mozjpeg: true }).toFile(path.join(root, "public", "og", `${id}.jpg`));
   console.log(`og ${id}`);
-}
-for (const year of ["2013-2014", "2014-2016", "2016-2017", "2017-2018"]) {
-  const buffer = await capture(`poster=projects-${year}&p=0&theme=light`, 1200, 630);
-  await sharp(buffer).jpeg({ quality: 80, mozjpeg: true }).toFile(path.join(root, "public", "og", `projects-${year}.jpg`));
-  console.log(`og projects-${year}`);
 }
 await browser.close();

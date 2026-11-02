@@ -10,7 +10,7 @@ type Chapter = {
 export const chapters: Chapter[] = [
   { id: "welcome", zone: "approach", label: "Arrival", route: "home" },
   { id: "about", zone: "lobby", label: "About", route: "about" },
-  { id: "why-us", zone: "control", label: "Why choose us", route: "features" },
+  { id: "why-us", zone: "control", label: "How we serve", route: "features" },
   { id: "projects", zone: "hall", label: "Projects", route: "projects" },
   { id: "clients", zone: "gallery", label: "Clients", route: "clients" },
   { id: "quality", zone: "safety", label: "Quality & Safety", route: "quality-safety" },

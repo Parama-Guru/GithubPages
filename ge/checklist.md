@@ -506,3 +506,27 @@ Colour themes (owner request, 18 Oct 2026)
 - [x] Tests: every theme defines every token and every Blender material (unit); a live switch changes the
       model colours, the scene's average colour and the look signature; posters follow the theme (browser).
 - [ ] Owner review of the three themes in the browser.
+
+Company profile update (owner request, 2 Nov 2026 — `Ganesh electricals-Profile.pptx` is the authoritative content)
+- [x] Deck read in VS Code (Office Viewer extension) and in full: 79 slides rendered, text, tables and media extracted;
+      findings and decisions in `content-brief.md`.
+- [x] All deck content curated into `source/src/content/profile.json`; every page reads from it.
+- [x] Statistics, milestones, contact emails and address replaced with the deck's (decisions 1, 3, 7).
+- [x] Organisation chart replaced with the slide 6 chart in the same core team / project team layout (43 positions),
+      on the page and on the 3D office board; vertical tree on phones.
+- [x] About: introduction, purpose, capability, credentials, achievements with the slide 78 photos.
+- [x] How we serve (six statements) and the new How we work page (local issues, TNEB 211 days, manpower 95, equipment).
+- [x] Projects: featured substation projects (text only) and four lists — On-going 10 · 2023–2026 36 · 2019–2022 26 ·
+      2012–2018 60 (122 executed). Old project addresses redirect; 3D hall signs show the new groups.
+- [x] Clients by voltage level, German clients, sectors and industrial areas (logos kept).
+- [x] Quality & Safety: policy, standards, supplier evaluation, site reports, 13 electrical inspections, EHS policy and
+      24 EHS standards groups, signed by the Proprietor.
+- [x] Leadership: founder, key personnel table (role emails, no mobiles), roles, responsibilities and authorities.
+- [x] Testimonials removed (decision 6); unused portraits and old social images deleted.
+- [x] Control-room screens show the deck figures and the six "how we serve" lines; camera key for the new page added
+      in Blender (`camera_path.blend` reseeded).
+- [x] Posters (3 themes × 8) and 15 social images re-rendered.
+- [x] Three colour themes re-checked: `npm run assets:themes` renders the Blender models distinctly in Light, Copper
+      and Signal; the site recolours the whole scene (rooms, signs, screens, lights and models) live.
+- [x] Tests: 23 unit (incl. 122/10 project rows, 43-position chart, no mobile numbers or retired email) and 52 browser
+      tests green (axe in all three themes, overflow 320–2560 px, framing, themes, no-JS, redirects).
