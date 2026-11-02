@@ -15,17 +15,17 @@ export const buildControl: ZoneBuilder = async (context) => {
   const stats = whyUs.statistics.map((stat, index) => ({
     stat,
     target: Number(stat.value.replace(/,/g, "")),
-    label: label(`stat-${index}`, 720, 420, statScreen("0", stat.label, 0)),
+    label: label(`stat-${index}`, 720, 420, statScreen("0", stat.short, 0)),
     shown: "",
   }));
   const line = label("diagram", 900, 440, diagram(0));
   const principles = label("principles", 900, 440, (ctx, w, h) => {
     ctx.fillStyle = ink.screenBottom;
     ctx.fillRect(0, 0, w, h);
-    ctx.font = '800 92px "Big Shoulders Display Variable", sans-serif';
+    ctx.font = '800 58px "Big Shoulders Display Variable", sans-serif';
     whyUs.principles.forEach((item, index) => {
-      ctx.fillStyle = index === 1 ? ink.accentStrong : ink.text;
-      ctx.fillText(item.title.toUpperCase(), 40, 130 + index * 120);
+      ctx.fillStyle = index === whyUs.principles.length - 1 ? ink.accentStrong : ink.text;
+      ctx.fillText(`${String(index + 1).padStart(2, "0")}  ${item.short.toUpperCase()}`, 40, 76 + index * 68);
     });
   });
   let drawnDiagram = -1;
@@ -37,7 +37,7 @@ export const buildControl: ZoneBuilder = async (context) => {
       const text = t >= 1 ? entry.stat.value : format(entry.target * t, entry.stat.value);
       if (text !== entry.shown) {
         entry.shown = text;
-        entry.label.redraw(statScreen(text, entry.stat.label, t));
+        entry.label.redraw(statScreen(text, entry.stat.short, t));
       }
     });
     const progress = Math.round(reveal * 30) / 30;

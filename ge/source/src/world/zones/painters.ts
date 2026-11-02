@@ -1,4 +1,4 @@
-import { organisation, type OrgNode } from "@/content/organisation";
+import { organisation, orgSections, type OrgNode } from "@/content/organisation";
 import { ink, tone } from "../ink";
 import { fonts } from "../textures";
 
@@ -160,55 +160,76 @@ export function hazard() {
   };
 }
 
-type Placed = { node: OrgNode; x: number; y: number; w: number; depth: number };
+type Placed = { node: OrgNode; x: number; y: number; w: number; parent: number; outline: boolean };
+
+const BOX = 56;
+const ROW = 92;
 
 function layout(context: Ctx) {
   const placed: Placed[] = [];
   const gap = 14;
-  const rowHeight = 92;
-  const widthOf = (node: OrgNode) => {
-    context.font = '400 22px "Segoe UI", Arial, sans-serif';
-    return Math.max(context.measureText(node.name ?? "").width, context.measureText(node.role).width) + 28;
-  };
+  const teamGap = 60;
+  context.font = '400 22px "Segoe UI", Arial, sans-serif';
+  const widthOf = (node: OrgNode) => Math.max(context.measureText(node.name ?? "").width, context.measureText(node.role).width) + 28;
   const span = (node: OrgNode): number => {
-    const own = widthOf(node);
     const children = node.children ?? [];
-    if (!children.length) return own;
-    return Math.max(own, children.reduce((sum, child) => sum + span(child), 0) + gap * (children.length - 1));
+    const own = widthOf(node);
+    return children.length ? Math.max(own, children.reduce((sum, child) => sum + span(child), 0) + gap * (children.length - 1)) : own;
   };
-  const place = (node: OrgNode, left: number, depth: number) => {
+  const place = (node: OrgNode, left: number, top: number, parent: number, outline: boolean) => {
     const total = span(node);
     const w = widthOf(node);
-    placed.push({ node, x: left + total / 2 - w / 2, y: 30 + depth * rowHeight, w, depth });
-    let cursor = left + (total - ((node.children ?? []).reduce((sum, child) => sum + span(child), 0) + gap * Math.max(0, (node.children ?? []).length - 1))) / 2;
-    for (const child of node.children ?? []) {
-      place(child, cursor, depth + 1);
+    const index = placed.length;
+    placed.push({ node, x: left + total / 2 - w / 2, y: top, w, parent, outline: outline || Boolean(node.group) });
+    const children = node.children ?? [];
+    let cursor = left + (total - (children.reduce((sum, child) => sum + span(child), 0) + gap * Math.max(0, children.length - 1))) / 2;
+    for (const child of children) {
+      place(child, cursor, top + ROW, index, false);
       cursor += span(child) + gap;
     }
   };
-  place(organisation, 0, 0);
-  return { placed, width: span(organisation) };
+  const { core, teams } = orgSections(organisation);
+  const coreWidth = span(core);
+  const teamsWidth = teams.reduce((sum, team) => sum + span(team), 0) + teamGap * (teams.length - 1);
+  const width = Math.max(coreWidth, teamsWidth);
+  place(core, (width - coreWidth) / 2, 60, -1, false);
+  const teamsTop = Math.max(...placed.map((item) => item.y)) + BOX + 90;
+  let cursor = (width - teamsWidth) / 2;
+  for (const team of teams) {
+    place(team, cursor, teamsTop, -1, true);
+    cursor += span(team) + teamGap;
+  }
+  return { placed, width, teamsTop, height: Math.max(...placed.map((item) => item.y)) + BOX + 10 };
 }
 
 export function orgBoard(progress: number) {
   return (context: Ctx, w: number, h: number) => {
     context.fillStyle = "#ffffff";
     context.fillRect(0, 0, w, h);
-    const { placed, width } = layout(context);
-    const scale = Math.min((w - 60) / width, (h - 40) / (30 + 6 * 92 + 60));
+    const { placed, width, height, teamsTop } = layout(context);
+    const scale = Math.min((w - 60) / width, (h - 30) / height);
     context.save();
-    context.translate((w - width * scale) / 2, 20);
+    context.translate((w - width * scale) / 2, 15);
     context.scale(scale, scale);
     const visible = Math.floor(progress * placed.length + 0.001);
     const centre = (item: Placed) => item.x + item.w / 2;
-    context.strokeStyle = "#cfcfcf";
+    context.fillStyle = "#2f77b3";
+    context.font = '500 20px "IBM Plex Mono", monospace';
+    context.fillText("CORE TEAM", 0, 26);
+    context.fillText("PROJECT TEAM", 0, teamsTop - 34);
+    context.strokeStyle = "#e3e7ec";
     context.lineWidth = 3;
-    placed.slice(0, visible).forEach((item) => {
-      const children = placed.filter((other) => item.node.children?.includes(other.node) && placed.indexOf(other) < visible);
+    context.beginPath();
+    context.moveTo(0, teamsTop - 60);
+    context.lineTo(width, teamsTop - 60);
+    context.stroke();
+    context.strokeStyle = "#cfcfcf";
+    placed.slice(0, visible).forEach((item, index) => {
+      const children = placed.filter((other, otherIndex) => other.parent === index && otherIndex < visible);
       if (!children.length) return;
-      const mid = item.y + 56 + 18;
+      const mid = item.y + BOX + 18;
       context.beginPath();
-      context.moveTo(centre(item), item.y + 56);
+      context.moveTo(centre(item), item.y + BOX);
       context.lineTo(centre(item), mid);
       const xs = children.map(centre);
       context.moveTo(Math.min(...xs, centre(item)), mid);
@@ -219,23 +240,32 @@ export function orgBoard(progress: number) {
       }
       context.stroke();
     });
+    context.font = '400 22px "Segoe UI", Arial, sans-serif';
+    context.textAlign = "center";
     placed.slice(0, visible).forEach((item) => {
-      context.fillStyle = "#2f77b3";
-      roundRect(context, item.x, item.y, item.w, 56, 8);
-      context.fill();
-      context.fillStyle = "#ffffff";
-      context.font = '400 22px "Segoe UI", Arial, sans-serif';
-      context.textAlign = "center";
+      roundRect(context, item.x, item.y, item.w, BOX, 8);
+      if (item.outline) {
+        context.fillStyle = "#ffffff";
+        context.fill();
+        context.strokeStyle = "#2f77b3";
+        context.setLineDash(item.node.group === "team" ? [8, 6] : []);
+        context.stroke();
+        context.setLineDash([]);
+        context.fillStyle = "#2f77b3";
+      } else {
+        context.fillStyle = "#2f77b3";
+        context.fill();
+        context.fillStyle = "#ffffff";
+      }
       if (item.node.name) {
         context.fillText(item.node.name, centre(item), item.y + 24);
         context.fillText(item.node.role, centre(item), item.y + 48);
       } else context.fillText(item.node.role, centre(item), item.y + 36);
-      context.textAlign = "left";
     });
+    context.textAlign = "left";
     context.restore();
   };
 }
-
 export function letterbox(image: HTMLImageElement | null) {
   return (context: Ctx, w: number, h: number) => {
     context.fillStyle = "#f3f4f1";

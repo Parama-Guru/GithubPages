@@ -140,9 +140,9 @@ test.describe("navigation", () => {
     await expect(page.locator("link[rel=canonical]")).toHaveAttribute("href", "https://parama-guru.github.io/GithubPages/ge/projects/");
     await expect(page.locator("[data-canvas]")).toHaveAttribute("data-marker", "same");
     await expect.poll(async () => (await canvasData(page)).zone, { timeout: 10_000 }).toBe("hall");
-    await page.getByRole("link", { name: "2016–2017" }).first().click();
-    await expect(page).toHaveURL(/projects\/2016-2017\/$/);
-    await expect(page.locator("tbody tr")).toHaveCount(8);
+    await page.getByRole("link", { name: "2019–2022" }).first().click();
+    await expect(page).toHaveURL(/projects\/2019-2022\/$/);
+    await expect(page.locator("tbody tr")).toHaveCount(26);
     await page.goBack();
     await expect(page).toHaveURL(/\/projects\/$/);
     await page.goBack();
@@ -190,12 +190,14 @@ test.describe("navigation", () => {
     await expect(menu).toBeFocused();
   });
 
-  test("organisation chart follows the published format", async ({ page }) => {
+  test("organisation chart follows the company profile format", async ({ page }) => {
     await page.goto("organisation/");
-    await expect(page.locator(".org-box")).toHaveCount(25);
-    await expect(page.locator(".org-box").first()).toHaveText(/Mr\.B\.Kumareson\s*Founder\/CEO/);
+    await expect(page.locator(".org-core .org-box")).toHaveCount(13);
+    await expect(page.locator(".org-project .org-box")).toHaveCount(34);
+    await expect(page.locator(".org-project .org-box-lead")).toHaveCount(4);
+    await expect(page.locator(".org-box").first()).toHaveText(/Mr\.B\.Kumareson\s*Proprietor/);
     await expect(page.locator(".org-box").first()).toHaveCSS("background-color", "rgb(47, 119, 179)");
-    await expect(page.locator(".org-chart > ul > li > ul > li")).toHaveCount(5);
+    await expect(page.locator(".org-core > .org-tree > li > ul > li")).toHaveCount(11);
   });
 
   test("enquiry form validates and prepares an email", async ({ page }) => {
@@ -206,7 +208,7 @@ test.describe("navigation", () => {
     await page.getByLabel("Email address").fill("test@example.com");
     await page.getByLabel("Tell us about your project").fill("Substation works");
     await page.getByRole("button", { name: "Prepare email" }).click();
-    await expect(page.locator(".form-status a")).toHaveAttribute("href", /^mailto:ganeshvar@yahoo\.com\?subject=Enquiry/);
+    await expect(page.locator(".form-status a")).toHaveAttribute("href", /^mailto:enquiry@ganeshelectricals\.in\?subject=Enquiry/);
   });
 });
 
@@ -256,9 +258,13 @@ test.describe("fallbacks and accessibility", () => {
   test("works without JavaScript", async ({ browser }) => {
     const context = await browser.newContext({ javaScriptEnabled: false });
     const page = await context.newPage();
-    await page.goto("projects/2013-2014/");
+    await page.goto("projects/2012-2018/");
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Projects");
-    await expect(page.locator("tbody tr")).toHaveCount(13);
+    await expect(page.locator("tbody tr")).toHaveCount(60);
+    await page.goto("projects/ongoing/");
+    await expect(page.locator("tbody tr")).toHaveCount(10);
+    await page.goto("projects/2013-2014/");
+    await expect(page).toHaveURL(/projects\/2012-2018\/$/);
     await expect(page.getByRole("link", { name: "Contact" }).first()).toBeVisible();
     await context.close();
   });

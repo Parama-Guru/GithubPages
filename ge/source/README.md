@@ -30,7 +30,7 @@ After changing the scene, run `build`, `serve`, `posters`, then `build` again so
 
 | Path | Purpose |
 |---|---|
-| `src/content/` | Original company content and the organisation chart |
+| `src/content/` | `profile.json` (company profile deck — the authoritative content), `site.json` (original site: logos, photos, policies), organisation chart |
 | `src/routes/routes.ts` | Clean URLs, titles, descriptions, zones |
 | `src/ui/` | HTML templates shared by the prerender and the client router |
 | `src/app/` | Motion (Lenis + GSAP), home journey, page controller, preferences, sound |

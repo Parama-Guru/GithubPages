@@ -64,7 +64,7 @@ test.describe("cinematic features", () => {
     await button.click();
     const dialog = page.getByRole("dialog", { name: "Ganesh Electricals" });
     await expect(dialog).toBeVisible();
-    await expect(dialog.getByRole("heading", { name: "Timeline" })).toBeVisible();
+    await expect(dialog.getByRole("heading", { name: "Milestones" })).toBeVisible();
     await page.keyboard.press("Escape");
     await expect(dialog).toBeHidden();
     await expect(button).toBeFocused();
@@ -78,7 +78,7 @@ test.describe("cinematic features", () => {
     await expect.poll(async () => (await data(page)).panel, { timeout: 8_000 }).toBe("1.00");
     const dialog = page.locator("#more-projects");
     await expect(dialog).toBeVisible();
-    await expect(dialog.getByRole("link", { name: /2013–2014/ })).toBeVisible();
+    await expect(dialog.getByRole("link", { name: /On-going/ })).toBeVisible();
     await dialog.getByRole("button", { name: "Close" }).click();
     await expect.poll(async () => (await data(page)).panel, { timeout: 8_000 }).toBe("0.00");
   });

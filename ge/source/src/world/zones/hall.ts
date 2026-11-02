@@ -1,5 +1,5 @@
 import { BoxGeometry, BufferGeometry, Group, InstancedMesh, Matrix4, Mesh, MeshBasicMaterial, Object3D, PlaneGeometry, Quaternion, Vector3 } from "three";
-import { projectImages, projectYears } from "@/content";
+import { projectGroups, projectImages } from "@/content";
 import { animated, instance } from "../assets";
 import { box, contactShadow, framed, merged, partition, placed, plane, pool, room } from "../kit";
 import { energyMaterial } from "../materials";
@@ -77,9 +77,9 @@ export const buildHall: ZoneBuilder = async (context) => {
   heroGlow.rotation.y = Math.PI / 2;
   g.add(heroGlow, pool(m, [-3.2, 0, HERO_PANEL.z], 3.2));
 
-  projectYears.forEach((year, index) => {
+  projectGroups.forEach((group, index) => {
     const z = -43 - index * 5;
-    const plate = label(`year-${year.slug}`, 900, 180, sign(year.years, "PROJECTS"));
+    const plate = label(`year-${group.slug}`, 900, 180, sign(group.label, "PROJECTS"));
     const material = zone.own(new MeshBasicMaterial({ map: plate.texture, toneMapped: false }));
     g.add(box(m.darkMetal, [0.02, 0.02, 0.02], [-3.6, 5.6, z]));
     g.add(plane(material, 2.6, 2.6 / plate.aspect, [-3.55, 4.6, z], [0, Math.PI / 2, 0]));
