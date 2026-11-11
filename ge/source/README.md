@@ -62,6 +62,15 @@ Blender model materials from `src/world/themes.json`. Blender reads the same fil
 To add a theme, add a token block in `main.css`, a scene palette in `palette.ts`, a look in `themes.json`, an entry in
 `theme.ts` and the inline script, and a `.swatch-<id>` style, then run `npm run posters` (one poster set per theme).
 
+## Loading on slow connections
+
+The prerendered page is usable immediately; the 3D world streams in behind it (`bootWorld()` in `src/main.ts`).
+Until the scene is ready, each home chapter shows its rendered poster and a 2 px line at the top shows progress;
+the canvas then cross-fades in. `World.load()` requests fonts, models, zone code and post-processing together.
+Post-processing (`src/world/post.ts`) is a separate chunk that the low tier (phones) never downloads, and
+`three-mesh-bvh` loads after the first frame. Data Saver, reduced motion, no WebGL and 2G connections
+(`effectiveType` `2g`/`slow-2g`, unless 3D is switched on in the menu) get the static poster site.
+
 ## Known limitations
 
 - GitHub Pages serves a custom 404 and `robots.txt` only from the repository root; `ge/404.html` is used for

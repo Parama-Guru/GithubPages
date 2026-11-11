@@ -19,7 +19,8 @@
         document.querySelector('meta[name="theme-color"]').content = themes[theme];
         try {
           var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches || localStorage.getItem("ge-motion") === "reduce";
-          var saving = navigator.connection && navigator.connection.saveData;
+          var connection = navigator.connection || {};
+          var saving = connection.saveData || (/(^|-)2g$/.test(connection.effectiveType || "") && localStorage.getItem("ge-3d") !== "on");
           if (!reduced && !saving && localStorage.getItem("ge-3d") !== "off") root.classList.add("has-3d");
         } catch (error) {}
       })();
@@ -34,9 +35,7 @@
       <div class="world-veil"></div>
     </div>
     <div class="loader" data-loader aria-hidden="true">
-      <div class="loader-mark"><img src="/GithubPages/ge/media/emblem.webp" width="120" height="120" alt="" /></div>
       <div class="loader-meter"><span data-loader-bar></span></div>
-      <p class="loader-text"><span>Energising</span><span data-loader-value>0%</span></p>
     </div>
     <!--app-header-->
     <main id="main" tabindex="-1"><!--app-main--></main>

@@ -19,7 +19,8 @@
         document.querySelector('meta[name="theme-color"]').content = themes[theme];
         try {
           var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches || localStorage.getItem("ge-motion") === "reduce";
-          var saving = navigator.connection && navigator.connection.saveData;
+          var connection = navigator.connection || {};
+          var saving = connection.saveData || (/(^|-)2g$/.test(connection.effectiveType || "") && localStorage.getItem("ge-3d") !== "on");
           if (!reduced && !saving && localStorage.getItem("ge-3d") !== "off") root.classList.add("has-3d");
         } catch (error) {}
       })();
@@ -41,9 +42,9 @@
     <meta name="twitter:description" content="Mr. B. Kumareson, Proprietor of Ganesh Electricals, the key personnel and their roles, responsibilities and authorities.">
     <meta name="twitter:image" content="https://parama-guru.github.io/GithubPages/ge/og/leadership.jpg">
     <script type="application/ld+json" data-seo="organization">{"@context":"https://schema.org","@type":"Organization","name":"Ganesh Electricals","url":"https://parama-guru.github.io/GithubPages/ge/","logo":"https://parama-guru.github.io/GithubPages/ge/media/wganesh3.webp","foundingDate":"1997","email":"enquiry@ganeshelectricals.in","telephone":"+91-44-4284-0227","address":{"@type":"PostalAddress","streetAddress":"No.1, 1st Floor, New Street, Shakthi Nagar, Porur","addressLocality":"Chennai","postalCode":"600116","addressCountry":"IN"}}</script>
-    <script type="application/ld+json" data-seo="breadcrumb">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://parama-guru.github.io/GithubPages/ge/"},{"@type":"ListItem","position":2,"name":"Leadership","item":"https://parama-guru.github.io/GithubPages/ge/leadership/"}]}</script>
-    <script type="module" crossorigin src="/GithubPages/ge/assets/index-ii26wfcI.js"></script>
-    <link rel="stylesheet" crossorigin href="/GithubPages/ge/assets/index-QgrkenAI.css">
+    <script type="application/ld+json" data-seo="breadcrumb">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://parama-guru.github.io/GithubPages/ge/"},{"@type":"ListItem","position":2,"name":"Leadership","item":"https://parama-guru.github.io/GithubPages/ge/leadership/"}]}</script>
+    <script type="module" crossorigin src="/GithubPages/ge/assets/index-Bcd5-6Bm.js"></script>
+    <link rel="stylesheet" crossorigin href="/GithubPages/ge/assets/index-CN6zB6mN.css">
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
@@ -52,9 +53,7 @@
       <div class="world-veil"></div>
     </div>
     <div class="loader" data-loader aria-hidden="true">
-      <div class="loader-mark"><img src="/GithubPages/ge/media/emblem.webp" width="120" height="120" alt="" /></div>
       <div class="loader-meter"><span data-loader-bar></span></div>
-      <p class="loader-text"><span>Energising</span><span data-loader-value>0%</span></p>
     </div>
     <header class="site-header" data-header>
     <a class="brand" href="/GithubPages/ge/" aria-label="Ganesh Electricals — home">

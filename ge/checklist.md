@@ -340,7 +340,9 @@ Rules for every chapter:
 
 - [x] **Preloader** with real progress (bytes of the first zone), logo
       reveal, finishes in < 2.5 s on fast 4G for the first zone.
-      _Done: real progress; 3D ready in ≈1.7 s on emulated fast 4G (tested ≤ 2.5 s)._
+      _Done: real progress; 3D ready in ≈1.7 s on emulated fast 4G (tested ≤ 2.5 s).
+      Since the slow-network pass the preloader no longer covers the page: a 2 px progress line shows real progress
+      while the prerendered content and the scene's rendered posters stay usable._
 - [x] **Header**: logo, chapter links (desktop), Contact button, Menu button.
 - [x] **Menu overlay**: all routes, sound toggle, motion toggle, contact
       details; opaque, focus-trapped, Escape closes.
@@ -389,6 +391,16 @@ Rules for every chapter:
 - [x] **Render on demand** when idle; pause when the tab is hidden.
 - [x] **Data Saver / reduced motion / no WebGL**: static poster per chapter
       (rendered from the real scene) with all content; no Three.js download.
+- [x] **Slow connections**: content is usable before the 3D arrives — the
+      page, menu and dialogs work at once, each chapter's rendered poster
+      stands in, and the live scene cross-fades in when ready. Fonts, models,
+      zone code and post-processing load in parallel; phones never download
+      post-processing; picking acceleration loads after the first frame;
+      later posters wait for a scroll; route changes wait at most 1.6 s for
+      the next room. 2G connections get the poster site unless 3D is switched
+      on in the menu.
+      _Measured on emulated networks (desktop, cache off, old → new): 3G usable 16.4 s → 3.5 s, 3D 16.2 s → 11.6 s;
+      Slow 4G usable 11.1 s → 1.9 s, 3D 10.8 s → 6.0 s; Slow 3G (phone tier) usable 28.9 s → 6.3 s, 3D 28.4 s → 23.4 s._
 - [x] **Measured**, not assumed: Playwright records transfer size and
       `renderer.info`; a visible-browser frame-time sample is recorded.
       _Done: transfer, renderer.info and a frame-time sample are recorded by the tests._

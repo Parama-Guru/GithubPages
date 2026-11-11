@@ -1,6 +1,7 @@
 import type { Tier } from "@/world/zones/shared";
 
-type Capabilities = { webgl: boolean; reduced: boolean; saveData: boolean; prefer3d: boolean; tier: Tier; has3d: boolean; sound: boolean };
+type Capabilities = { webgl: boolean; reduced: boolean; saveData: boolean; slow: boolean; prefer3d: boolean; tier: Tier; has3d: boolean; sound: boolean };
+type Connection = { saveData?: boolean; effectiveType?: string };
 
 const store = {
   get(key: string): string | null {
@@ -22,6 +23,7 @@ const store = {
 export const preferences = {
   reduced: () => store.get("ge-motion") === "reduce",
   prefer3d: () => store.get("ge-3d") !== "off",
+  chose3d: () => store.get("ge-3d") === "on",
   sound: () => store.get("ge-sound") === "on",
   paused: () => store.get("ge-pause") === "on",
   set(name: "motion" | "3d" | "sound" | "pause", value: boolean) {
@@ -53,11 +55,13 @@ export function detect(): Capabilities {
   }
   const webgl = Boolean(gl);
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches || preferences.reduced();
-  const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+  const connection = (navigator as Navigator & { connection?: Connection }).connection;
   const saveData = Boolean(connection?.saveData);
+  // 2G links skip the 3D download (as with Data Saver) unless the visitor switched 3D on in the menu.
+  const slow = /(^|-)2g$/.test(connection?.effectiveType ?? "") && !preferences.chose3d();
   const prefer3d = preferences.prefer3d();
   const forced = new URLSearchParams(location.search).get("tier") as Tier | null;
   const tier = forced ?? detectTier(gl);
   gl?.getExtension("WEBGL_lose_context")?.loseContext();
-  return { webgl, reduced, saveData, prefer3d, tier, has3d: webgl && !reduced && !saveData && prefer3d, sound: preferences.sound() };
+  return { webgl, reduced, saveData, slow, prefer3d, tier, has3d: webgl && !reduced && !saveData && !slow && prefer3d, sound: preferences.sound() };
 }

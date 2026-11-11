@@ -255,6 +255,44 @@ test.describe("fallbacks and accessibility", () => {
     await context.close();
   });
 
+  test("2G connections get the static site unless 3D is switched on", async ({ browser }) => {
+    const context = await browser.newContext();
+    await context.addInitScript(() => Object.defineProperty(navigator, "connection", { value: { effectiveType: "2g" }, configurable: true }));
+    const page = await context.newPage();
+    const scripts: string[] = [];
+    page.on("request", (request) => scripts.push(request.url()));
+    await page.goto("");
+    await ready(page);
+    await expect(page.locator(".world")).toHaveAttribute("data-world", "static");
+    expect(scripts.some((url) => /\/world-[\w-]+\.js$/.test(url))).toBe(false);
+    await page.evaluate(() => localStorage.setItem("ge-3d", "on"));
+    await page.reload();
+    await ready(page);
+    await expect(page.locator(".world")).toHaveAttribute("data-world", "ready");
+    await context.close();
+  });
+
+  test("content is usable while the 3D world streams in on a slow connection", async ({ browser }) => {
+    const context = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+    const page = await context.newPage();
+    const session = await context.newCDPSession(page);
+    await session.send("Network.enable");
+    await session.send("Network.emulateNetworkConditions", { offline: false, latency: 300, downloadThroughput: (750 * 1024) / 8, uploadThroughput: (250 * 1024) / 8 });
+    await page.goto("", { waitUntil: "commit" });
+    await page.waitForFunction(() => "__ge" in window, null, { timeout: 15_000 });
+    expect(await page.locator(".world").getAttribute("data-world")).toBe("loading");
+    expect((await page.locator(".loader").boundingBox())?.height ?? 0).toBeLessThanOrEqual(4);
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    await expect(page.locator(".chapter-poster img[data-poster-theme='light']").first()).toBeVisible();
+    await page.getByRole("button", { name: "Read more" }).first().click();
+    await expect(page.locator("dialog.detail[open]")).toBeVisible();
+    await page.locator("dialog.detail[open] [data-close-more]").first().click();
+    await expect(page.locator("dialog.detail[open]")).toHaveCount(0);
+    await expect(page.locator(".world")).toHaveAttribute("data-world", "ready", { timeout: 60_000 });
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    await context.close();
+  });
+
   test("works without JavaScript", async ({ browser }) => {
     const context = await browser.newContext({ javaScriptEnabled: false });
     const page = await context.newPage();
