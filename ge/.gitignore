@@ -1,0 +1,7 @@
+source/node_modules/
+source/dist/
+source/dist-ssr/
+source/test-results/
+source/playwright-report/
+source/.cache/
+source/blender/*.blend1

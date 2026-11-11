@@ -7,6 +7,7 @@ Static sites published with GitHub Pages.
 | Path | What it is |
 |---|---|
 | `/GithubPages/` | landing page |
+| `/GithubPages/matweb/` | [GenZ Matrimony client preview](https://parama-guru.github.io/GithubPages/matweb/) - animated bilingual landing, log-in and sign-up; browser-only demo, pending database integration approval |
 | `/GithubPages/ns/` | [Network Science presentation](https://parama-guru.github.io/GithubPages/ns/) - Semester 9, 2027; Signed Random Networks |
 | `/GithubPages/ir/` | [Information Retrieval presentation](https://parama-guru.github.io/GithubPages/ir/) - Semester 8, 2027; Query Expansion Techniques |
 | `/GithubPages/CCT/` | [CCT: Confusion-Calibrated Tutoring](https://parama-guru.github.io/GithubPages/CCT/) - NIT Hackathon, 2027 |
@@ -29,6 +30,21 @@ Served straight from the root of `main` by GitHub Pages, with `.nojekyll` disabl
 No backend, Node.js, package installation, or build step is needed for hosting or viewing the published files.
 The `.nojekyll` marker is retained intentionally: GitHub's branch-deployment workflow uses it to skip
 Jekyll processing for these already prepared static files.
+
+## GenZ Matrimony client preview
+
+Share [the landing page](https://parama-guru.github.io/GithubPages/matweb/) for
+client review. This is a front-end preview, not a live matchmaking service:
+stories are samples, verification codes appear on screen, and demo profiles are
+stored only in the visitor's browser. Do not enter real personal information.
+Database, real SMS/email verification and photo storage will be integrated after
+client approval. The custom domain `genzmatrimony.com` is planned, not configured
+by this deployment.
+
+The ready-built site is in [matweb/](matweb/). The editable development workspace
+is retained locally and excluded from this static publishing repository.
+Research, scope and verification results are recorded in
+[the checklist](matweb/checklist.md).
 
 The [Network Science presentation](ns/index.html) covers Signed Random Networks for Semester 9, 2027.
 Its 15 slides total 18 minutes, divided equally among three speakers, with interactive Three.js graphs,
