@@ -2,21 +2,7 @@ Yuva Tourism Club inauguration: third-party notices
 
 Team portraits and club information: supplied by the event organiser in photos/1.png through photos/17.png. Original artwork is unchanged; the presentation embeds optimized crops. The supplied artwork identifies the club social account. Confirm names, roles, image permissions, and account ownership before public distribution.
 
-Tamil Nadu heritage photographs: downloaded from Wikimedia Commons with verified individual licences, not copied from Google search-result screenshots. Source facts come from UNESCO, not from image captions. Each adapted photograph remains available under its original Creative Commons licence; the licences do not imply photographer endorsement of this club or presentation.
-
-File:Brihadisvara Temple during Maha Shivaratri-WUS03611 (edit).jpg
-Author: Rainer Halama; edited by UnpetitproleX
-Source: https://commons.wikimedia.org/wiki/File:Brihadisvara_Temple_during_Maha_Shivaratri-WUS03611_(edit).jpg
-Original image: https://upload.wikimedia.org/wikipedia/commons/d/dd/Brihadisvara_Temple_during_Maha_Shivaratri-WUS03611_%28edit%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original
-Licence: CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0)
-Changes: Resized, converted to WebP; displayed crops in presentation. Cropped adaptations remain under the original licence.
-
-File:Gangaikondacholapuram Temple 4.jpg
-Author: QiNi
-Source: https://commons.wikimedia.org/wiki/File:Gangaikondacholapuram_Temple_4.jpg
-Original image: https://upload.wikimedia.org/wikipedia/commons/9/9e/Gangaikondacholapuram_Temple_4.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original
-Licence: CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0)
-Changes: Resized, converted to WebP; displayed crops in presentation. Cropped adaptations remain under the original licence.
+Ceremony photographs: downloaded from Wikimedia Commons with verified individual licences. They illustrate the opening, welcome, and photo-session slides; they do not represent a confirmed club visit. Each adapted photograph remains available under its original Creative Commons licence; the licences do not imply photographer endorsement of this club or presentation.
 
 File:A different view of Airavatesvara Temple.jpg
 Author: Supraja kannan
@@ -32,13 +18,6 @@ Original image: https://upload.wikimedia.org/wikipedia/commons/6/6a/Shore_Temple
 Licence: CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0)
 Changes: Resized, converted to WebP; displayed crops in presentation. Cropped adaptations remain under the original licence.
 
-File:Descent of the Ganges 01.jpg
-Author: Bernard Gagnon
-Source: https://commons.wikimedia.org/wiki/File:Descent_of_the_Ganges_01.jpg
-Original image: https://upload.wikimedia.org/wikipedia/commons/6/69/Descent_of_the_Ganges_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original
-Licence: CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0)
-Changes: Resized, converted to WebP; displayed crops in presentation. Cropped adaptations remain under the original licence.
-
 File:Nilgiri Mountain Railway on Bridge, May 2010.JPG
 Author: Stephan Niewolik
 Source: https://commons.wikimedia.org/wiki/File:Nilgiri_Mountain_Railway_on_Bridge,_May_2010.JPG
@@ -46,9 +25,7 @@ Original image: https://upload.wikimedia.org/wikipedia/commons/d/d6/Nilgiri_Moun
 Licence: CC BY 3.0 (https://creativecommons.org/licenses/by/3.0)
 Changes: Resized, converted to WebP; displayed crops in presentation. Cropped adaptations remain under the original licence.
 
-Earth texture: https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg, from the Three.js example assets. Used for a globe with illustrative connections, not a political boundary map or a transport route map.
-
-Reference sources were reviewed on 18 September 2026. The OECD source describes APEC economies; it is cited for general AI opportunities and risks, not as evidence of adoption in India. The Coimbatore itinerary is an illustrative scenario, not an actual booking. No live travel data or AI service is used.
+Programme source: the organiser's updated agenda supplied on 24 September 2026. Times are interpreted as afternoon, 4:30 - 5:45 PM. The previously confirmed date and venue remain unchanged. Guest details and the approved annual activity calendar are not yet supplied. Guest-address content is not authored in this deck. No audio, recording, live travel service, or automated schedule advancement is included.
 
 Bundled software and font licence texts follow.
 
@@ -126,31 +103,6 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
-
-three
-=====
-The MIT License
-
-Copyright © 2010-2026 three.js authors
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
 
 
 lucide-react

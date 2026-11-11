@@ -2,19 +2,33 @@
 
 PSG College of Technology | 29 September 2026 | F201
 
-Open [index.html](index.html) directly in a modern browser. No installation, server, or internet connection is required. Images, fonts, scripts, styles, Three.js, and licence notices are embedded in this file. External reference and social links require internet access.
+Open [index.html](index.html) directly in a modern browser. No installation, server, or internet connection is required. Images, fonts, scripts, styles, and licence notices are embedded in this file. External credit and social links require internet access.
 
 ## Programme
 
-The 22-slide presentation contains the welcome address, faculty-address holding slide, club vision, two faculty-advisor placeholders, all 16 supplied office bearers, Tamil Nadu tourism and heritage, the influence of AI in tourism, conclusion, and vote of thanks. Paramaguru H precedes Rithika Sri R in the secretary introductions.
+The 15-slide deck follows the updated agenda supplied on 24 September 2026. Date and venue are retained from the earlier confirmation. The times are interpreted as afternoon; confirm this with the organisers.
 
-Prepared material is allocated 17 minutes, plus the untimed faculty address. Tamil Nadu heritage and AI in tourism are allocated exactly five minutes each. Faculty and student introductions share a three-minute allocation. The slide timings guide rehearsal, not automatic advance.
+| Time | Segment |
+|---|---|
+| 4:30 - 4:35 PM | Prayer song |
+| 4:35 - 4:45 PM | Welcome address |
+| 4:45 - 4:50 PM | Club introduction |
+| 4:50 - 5:00 PM | Introduction to the Chief Guest |
+| 5:00 - 5:20 PM | Guest address |
+| 5:20 - 5:30 PM | Introduction to office bearers |
+| 5:30 - 5:35 PM | Annual plan 2026-27 |
+| 5:35 - 5:40 PM | Vote of thanks |
+| 5:40 - 5:45 PM | Photo session |
 
-The heritage chapter covers the Great Living Chola Temples (Thanjavur, Gangaikondacholapuram, Darasuram), the Pallava monuments of Mamallapuram, the Nilgiri Mountain Railway, and responsible visiting. Historical claims cite UNESCO. Real photographs come from Wikimedia Commons with individual attribution and reuse licences; they are not Google search-result screenshots. The opening uses the Shore Temple and the closing uses a different Nilgiri railway photograph.
+Total: 75 minutes. Cover and agenda are pre-event displays and add no time. The office-bearer slot includes acknowledgement of the two faculty advisors, followed by all 16 student office bearers. Paramaguru H precedes Rithika Sri R. Internal team-slide allocations are rehearsal suggestions within the ten-minute slot.
 
-The AI chapter uses a separate Three.js decision-flow model: priorities, suggestions, source checks, and human decisions. The heritage globe locates Tamil Nadu sites, while the railway slide has a schematic route sequence. All three are illustrative, not geographic routing engines or live AI services.
+The two previous student topic talks and the separate faculty-address segment are removed. Their 3D scenes, interactive timelines, topic references, and speech handovers are not part of the distributed deck. Source assets remain local, but the event deck does not require WebGL.
 
-[speaker-notes.md](speaker-notes.md) contains the full speaking script, timings, handover cues, and references. The same notes are available from the book icon in the presentation.
+The Chief Guest delivers their own address: the deck provides a quiet holding slide and host transition cues, not a prepared speech or topic outline. The introduction uses no invented biography. Prayer song and photo session also have quiet holding slides; no recording, lyrics, camera capture, or automatic playback is included.
+
+[speaker-notes.md](speaker-notes.md) contains welcome, club-introduction, proposed annual-plan, and vote-of-thanks drafts, team cues, and the complete schedule. Rehearse these drafts against the allotted windows; timings include pauses, acknowledgements, transitions, and performances, not continuous scripted speech. The same notes are available from the book icon.
+
+The opening, welcome, and closing retain their existing licensed destination photographs as ceremony imagery, not new topic talks or confirmed club trips.
 
 ## Controls
 
@@ -25,35 +39,36 @@ The AI chapter uses a separate Three.js decision-flow model: priorities, suggest
 - Escape closes a dialog. Dialogs trap keyboard focus while open.
 - Sun/moon icon changes theme; the preference is stored when browser storage is available.
 - Fullscreen icon enters or exits fullscreen where supported.
-- Motion toggle pauses/enables motion. Globe, AI workflow, railway, and itinerary timelines have play/pause, replay, and seeking controls.
-- Drag the globe or AI model to adjust its view. Reduced-motion preferences show the final state by default. Missing WebGL uses a heritage photograph or an HTML AI workflow fallback.
+- Motion toggle pauses/enables visual transitions. Reduced-motion preferences remove motion automatically.
+- Prayer, guest introduction, guest address, and photo-session screens remain still regardless of the motion preference.
 
 Native scrollbars are hidden. On smaller screens, the slide area still scrolls using touch, wheel, or the focused slide's Up/Down keys while navigation remains accessible. No slide advances automatically.
 
 ## Pending Event Confirmation
 
-- Faculty speaker's name, designation, and speaking duration.
+- Chief Guest's name, designation, pronunciation, and approved introduction. The address is allocated 20 minutes and is delivered by the guest.
 - Both faculty advisors' names, departments, and portraits. The two profile slots deliberately say "to be confirmed" until supplied.
-- Topic assignment for the Secretary and the second office-bearer presenter.
+- Prayer-song performers and playback/live-performance arrangements, and the event's formal protocol.
+- Hosts for each segment and photo-session arrangements.
 - Final name spellings, designations, portrait permissions, and club social account.
 - Expansion of ERM, retained as supplied without an invented expansion.
 - The actual activity calendar. On-screen activity ideas are explicitly proposed and subject to faculty guidance, permissions, and planning.
 
-The itinerary demonstration is illustrative; it does not make bookings, call an AI service, or provide live travel information. Reference material includes Incredible India, UNESCO, OECD, and NIST. The OECD research is not presented as India-specific adoption evidence.
+The annual plan is an explicitly proposed direction, not an approved calendar. It covers learning discussions, carefully planned local exploration, and member participation. No specific dates, destinations, bookings, partnerships, or budgets are asserted.
 
 ## Verification
 
 Verified in Microsoft Edge/Chromium on Windows:
 
-- Content tests: two five-minute topics, 17-minute total, unique slide IDs, speaking notes, reference IDs, and navigation boundaries.
+- Content tests: all nine exact time slots, 75-minute total, per-slot allocation, ordering, unique slide IDs, script integrity, neutral guest cues, and navigation boundaries.
 - TypeScript strict typecheck and production build.
-- All 22 slides at 1920x1080, 1440x900, 1024x768, 390x844, 320x740, and 844x390, in light and dark themes.
+- All 15 slides at 1920x1080, 1440x900, 1024x768, 390x844, 320x740, and 844x390, in light and dark themes.
 - Offline direct-file loading with no HTTP asset requests; local font and image decoding.
 - Horizontal overflow, hidden-scrollbar regression, preserved wheel/keyboard scrolling, content/tool intersections, and desktop slide fit.
-- Keyboard navigation, boundary controls, overview, notes, focus containment, source dialogs, theme persistence, and fullscreen.
-- Distinct globe and AI canvas pixels, changing frames, dragging, pause, replay, seeking, reduced motion, and both WebGL fallbacks.
-- Two faculty slots, secretary ordering, landmark facts, photographic credit links, and distinct opening/closing backgrounds without stale background layers.
-- Mobile globe playback and dialogs in both themes.
+- Exact agenda navigation, keyboard controls, overview, full paragraph-by-paragraph notes, focus containment, theme persistence, and fullscreen.
+- Quiet holding states, no automatic guest-address advance after its slot, reduced motion, and no canvas/audio/video dependency.
+- Two faculty slots, secretary ordering, proposed-plan status, and distinct opening/closing backgrounds without stale layers.
+- Mobile agenda scrolling and long notes in both themes; removed topic deep links return safely to the opening.
 - Static hosting beneath `/GithubPages/ytc-inaguration/`.
 
 Safari, Firefox, and the actual projector have not been tested. The root index entry is covered by a browser test that checks event metadata and the presentation destination.
@@ -63,6 +78,8 @@ Safari, Firefox, and the actual projector have not been tested. The root index e
 Direct presentation URL: **https://parama-guru.github.io/GithubPages/ytc-inaguration/**
 
 The root index links to this presentation. Publication uses the repository's existing static GitHub Pages deployment from `main`, with no viewer setup or server-side build. Verify the live root entry and direct URL after each deployment.
+
+This agenda revision is a local review copy until an authorized commit and push. The existing public URL may still show the earlier programme.
 
 ## Local Development
 
