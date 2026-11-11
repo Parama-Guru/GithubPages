@@ -48,21 +48,24 @@ function fitChart(root: HTMLElement): () => void {
   return () => window.removeEventListener("resize", fit);
 }
 
-export function initPage(root: HTMLElement, motion: Motion, world: World | null): Controller {
+export function initPage(root: HTMLElement, motion: Motion, world: World | null, intro = true): Controller {
   const cleanups: (() => void)[] = [enquiry(root), fitChart(root)];
   const tweens: (gsap.core.Tween | gsap.core.Timeline)[] = [];
   const triggers: ScrollTrigger[] = [];
   let split: SplitText | null = null;
+  // Without an intro (the 3D world arriving under a page that is already shown), visible content stays put.
+  const settled = (element: Element) => !intro && element.getBoundingClientRect().top < window.innerHeight * 0.94;
 
   if (motion.enabled) {
     const heading = root.querySelector<HTMLElement>(".page-title");
-    if (heading) {
+    if (heading && intro) {
       split = splitHeading(heading);
       tweens.push(gsap.from(split.chars, { yPercent: 110, stagger: 0.02, duration: 1, ease: "expo.out", delay: 0.2 }));
     }
     const heroItems = root.querySelectorAll<HTMLElement>(".page-hero > :not(.page-title)");
-    tweens.push(gsap.from(heroItems, { y: 22, opacity: 0, stagger: 0.07, duration: 0.8, ease: "power3.out", delay: 0.35 }));
+    if (intro) tweens.push(gsap.from(heroItems, { y: 22, opacity: 0, stagger: 0.07, duration: 0.8, ease: "power3.out", delay: 0.35 }));
     for (const sheet of root.querySelectorAll<HTMLElement>(".sheet")) {
+      if (settled(sheet)) continue;
       const items = sheet.querySelectorAll<HTMLElement>(".timeline > li, .principles > article, .gallery > li, .year-cards > li, .logo-grid > li, .cards > article, .awards > figure, .documents > li, .commitments > li, .stats > div");
       const reveal = gsap.timeline({ scrollTrigger: { trigger: sheet, start: "top 94%", once: true } });
       reveal.from(sheet, { y: 50, opacity: 0, duration: 0.8, ease: "power3.out" });
@@ -72,6 +75,9 @@ export function initPage(root: HTMLElement, motion: Motion, world: World | null)
         const final = element.dataset.final ?? "";
         const target = Number(element.dataset.count);
         const state = { value: 0 };
+        cleanups.push(() => {
+          if (final) element.textContent = final;
+        });
         tweens.push(
           gsap.to(state, {
             value: target,
@@ -103,7 +109,7 @@ export function initPage(root: HTMLElement, motion: Motion, world: World | null)
       for (const cleanup of cleanups) cleanup();
       for (const tween of tweens) {
         tween.scrollTrigger?.kill();
-        tween.kill();
+        tween.revert();
       }
       for (const trigger of triggers) trigger.kill();
       split?.revert();
