@@ -25,7 +25,9 @@ export function splitHeading(element: HTMLElement): SplitText {
   return SplitText.create(element, { type: "lines,chars", mask: "lines", linesClass: "split-line", charsClass: "split-char" });
 }
 
-export function initJourney(root: HTMLElement, motion: Motion, world: World | null, onEnter: (y: number) => void): Controller {
+const inView = (element: Element, edge = 0.85) => element.getBoundingClientRect().top < window.innerHeight * edge;
+
+export function initJourney(root: HTMLElement, motion: Motion, world: World | null, onEnter: (y: number) => void, intro = true): Controller {
   const journey = root.querySelector<HTMLElement>("[data-journey]");
   const chapters = [...root.querySelectorAll<HTMLElement>(".chapter")];
   const splits: SplitText[] = [];
@@ -33,18 +35,29 @@ export function initJourney(root: HTMLElement, motion: Motion, world: World | nu
   const timelines: gsap.core.Timeline[] = [];
   if (!journey) return { destroy: () => undefined };
 
+  const enter = () => {
+    const second = chapters[1];
+    if (!second) return;
+    onEnter(world ? second.offsetTop + (second.offsetHeight - window.innerHeight) * 0.32 : second.offsetTop);
+  };
+  const buttons = [...root.querySelectorAll<HTMLButtonElement>("[data-action='enter']")];
+  for (const button of buttons) button.addEventListener("click", enter);
+
   if (!world || !motion.enabled) {
     if (motion.enabled) {
       for (const panel of root.querySelectorAll<HTMLElement>(".chapter-panel")) {
+        // Content that is already on screen stays put; animating it again would make it flash.
+        if (!intro && inView(panel)) continue;
         const tween = gsap.from(panel.children, { y: 26, opacity: 0, stagger: 0.06, duration: 0.8, ease: "power3.out", scrollTrigger: { trigger: panel, start: "top 85%", once: true } });
         timelines.push(tween as unknown as gsap.core.Timeline);
       }
     }
     return {
       destroy() {
+        for (const button of buttons) button.removeEventListener("click", enter);
         for (const timeline of timelines) {
           timeline.scrollTrigger?.kill();
-          timeline.kill();
+          timeline.revert();
         }
       },
     };
@@ -105,20 +118,13 @@ export function initJourney(root: HTMLElement, motion: Motion, world: World | nu
 
   const first = chapters[0]?.querySelector<HTMLElement>(".chapter-panel");
   const firstSplit = splits[0];
-  if (first && firstSplit) {
-    const intro = gsap.timeline({ delay: 0.25 });
-    intro.from(firstSplit.chars, { yPercent: 110, stagger: 0.025, duration: 1.1, ease: "expo.out" });
-    intro.from([...first.children].filter((child) => !child.matches("[data-split]")), { y: 24, opacity: 0, stagger: 0.08, duration: 0.9, ease: "power3.out" }, 0.35);
-    timelines.push(intro);
+  if (intro && first && firstSplit) {
+    const opening = gsap.timeline({ delay: 0.25 });
+    opening.from(firstSplit.chars, { yPercent: 110, stagger: 0.025, duration: 1.1, ease: "expo.out" });
+    opening.from([...first.children].filter((child) => !child.matches("[data-split]")), { y: 24, opacity: 0, stagger: 0.08, duration: 0.9, ease: "power3.out" }, 0.35);
+    timelines.push(opening);
   }
 
-  const enter = () => {
-    const second = chapters[1];
-    if (!second) return;
-    onEnter(second.offsetTop + (second.offsetHeight - window.innerHeight) * 0.32);
-  };
-  const buttons = [...root.querySelectorAll<HTMLButtonElement>("[data-action='enter']")];
-  for (const button of buttons) button.addEventListener("click", enter);
   ScrollTrigger.refresh();
 
   return {

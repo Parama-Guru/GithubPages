@@ -20,7 +20,6 @@ import {
   type Object3D,
 } from "three";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
-import { acceleratedRaycast, computeBoundsTree, disposeBoundsTree } from "three-mesh-bvh";
 import type { ThemeId } from "@/app/theme";
 import type { RouteId, ZoneKey } from "@/routes/routes";
 import { applyModelLook, preloadAssets, type AssetName } from "./assets";
@@ -31,13 +30,22 @@ import { applyLook, createMaterials, disposeMaterials, skyMaterial, type SkyMate
 import { clamp01, lerpPose, smootherstep, type Pose } from "./math";
 import { palettes, type ScenePalette } from "./palette";
 import { evenRanges, exposureAt, sampleJourney, sampleRoute, travelAt, zoneAt, zoneOrder, type ChapterRange } from "./path";
-import { createPost, type Post } from "./post";
+import type { Post } from "./post";
 import { disposeTextures, fontsReady, repaintLabels } from "./textures";
 import type { Tier, ZoneBuilder } from "./zones/shared";
 
-BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
-BufferGeometry.prototype.disposeBoundsTree = disposeBoundsTree;
-Mesh.prototype.raycast = acceleratedRaycast;
+// Post-processing is only used above the low tier and picking acceleration only after the first frame,
+// so both stay out of the critical download.
+let postModule: typeof import("./post") | null = null;
+const loadPost = () => import("./post").then((module) => (postModule = module));
+let bvhReady = false;
+const loadBvh = () =>
+  import("three-mesh-bvh").then(({ acceleratedRaycast, computeBoundsTree, disposeBoundsTree }) => {
+    BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
+    BufferGeometry.prototype.disposeBoundsTree = disposeBoundsTree;
+    Mesh.prototype.raycast = acceleratedRaycast;
+    bvhReady = true;
+  });
 
 const builders: Record<ZoneKey, () => Promise<ZoneBuilder>> = {
   approach: () => import("./zones/approach").then((module) => module.buildApproach),
@@ -190,15 +198,16 @@ export class World {
     let done = 0;
     const total = assets.length + needed.length + 1;
     const step = () => this.options.onProgress?.(++done / total);
-    await fontsReady();
-    step();
-    await preloadAssets(assets, step);
-    for (const key of needed) {
-      await this.ensure(key);
-      step();
-    }
+    // Request fonts, models, zone code and post-processing together instead of one after another.
+    const fonts = fontsReady().then(step);
+    const models = preloadAssets(assets, step);
+    const modules = needed.map((key) => builders[key]());
+    const post = this.tier === "low" ? null : loadPost().then(() => !this.disposed && this.applyTier());
+    await fonts;
+    await Promise.all([...needed.map((key) => this.ensure(key).then(step)), models, ...modules, post]);
     this.applyPose();
     this.compile();
+    void loadBvh().then(() => this.indexPickables()).catch(() => undefined);
   }
 
   start(): void {
@@ -331,7 +340,7 @@ export class World {
 
   private applyTier(): void {
     this.post?.dispose();
-    this.post = this.tier === "low" ? null : createPost(this.renderer, this.scene, this.camera, this.tier);
+    this.post = this.tier === "low" || !postModule ? null : postModule.createPost(this.renderer, this.scene, this.camera, this.tier);
     this.post?.setLook(this.palette.bloom, this.palette.bloomThreshold, this.palette.vignette);
     this.renderer.toneMapping = this.post ? NoToneMapping : AgXToneMapping;
     if (!this.post && this.tier === "low") this.renderer.toneMapping = ACESFilmicToneMapping;
@@ -387,15 +396,11 @@ export class World {
           const keep = new Set<Object3D>();
           for (const pickable of zone.pickables) pickable.object.traverse((object: Object3D) => keep.add(object));
           batch(zone.group, keep);
-          for (const pickable of zone.pickables)
-            pickable.object.traverse((object: Object3D) => {
-              const mesh = object as Mesh;
-              if (mesh.isMesh && !mesh.geometry.boundsTree) mesh.geometry.computeBoundsTree();
-            });
           this.zones.set(key, zone);
           this.scene.add(zone.group);
           this.building.delete(key);
           this.refreshPickables();
+          this.indexPickables();
           this.dirty = true;
           return zone;
         });
@@ -424,6 +429,16 @@ export class World {
 
   private refreshPickables(): void {
     this.pickables = [...this.zones.values()].filter((zone) => zone.group.visible).flatMap((zone) => zone.pickables);
+  }
+
+  private indexPickables(): void {
+    if (!bvhReady || this.disposed) return;
+    for (const zone of this.zones.values())
+      for (const pickable of zone.pickables)
+        pickable.object.traverse((object: Object3D) => {
+          const mesh = object as Mesh;
+          if (mesh.isMesh && !mesh.geometry.boundsTree) mesh.geometry.computeBoundsTree();
+        });
   }
 
   private intersect(): Pickable | null {

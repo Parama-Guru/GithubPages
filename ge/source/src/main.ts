@@ -95,9 +95,9 @@ function enterFacility(y: number): void {
   scrollTo(motion, y, 3.4);
 }
 
-function mount(next: Route): Controller {
+function mount(next: Route, intro = true): Controller {
   if (next.id === "home") {
-    const journey = initJourney(main, motion, world, enterFacility);
+    const journey = initJourney(main, motion, world, enterFacility, intro);
     const toggle = (event: Event) => {
       const target = event.target as HTMLElement;
       if (target.closest("[data-action='panel']")) setPanel(panel.value < 0.5);
@@ -122,7 +122,7 @@ function mount(next: Route): Controller {
       },
     };
   }
-  return initPage(main, motion, world);
+  return initPage(main, motion, world, intro);
 }
 
 const curtain = document.querySelector<HTMLElement>("[data-curtain]");
@@ -137,9 +137,10 @@ async function navigate(url: URL, push = true): Promise<void> {
   main.classList.add("is-leaving");
   if (panel.value > 0) setPanel(false);
   if (world) {
-    const preparing = world.prepare(targetFor(next));
+    const preparing = world.prepare(targetFor(next)).catch(() => undefined);
     const slow = window.setTimeout(() => curtain?.classList.add("is-visible"), 160);
-    await preparing.catch(() => undefined);
+    // On a slow link the page changes after a short wait while the room keeps streaming in behind it.
+    await Promise.race([preparing, new Promise((resolve) => setTimeout(resolve, 1600))]);
     window.clearTimeout(slow);
     curtain?.classList.remove("is-visible");
   }
@@ -183,7 +184,7 @@ function syncPrefs(): void {
   for (const input of document.querySelectorAll<HTMLInputElement>("[data-pref]")) {
     const name = input.dataset.pref;
     if (name === "motion") input.checked = caps.reduced;
-    if (name === "3d") input.checked = caps.has3d || (preferences.prefer3d() && caps.webgl && !caps.reduced && !caps.saveData);
+    if (name === "3d") input.checked = caps.has3d || (preferences.prefer3d() && caps.webgl && !caps.reduced && !caps.saveData && !caps.slow);
     if (name === "sound") input.checked = preferences.sound();
     if (name === "pause") input.checked = preferences.paused();
   }
@@ -310,17 +311,19 @@ function onHover(label: string | null, x: number, y: number): void {
 
 let bound = false;
 let recoveries = 0;
+let pending: World | null = null;
 
 function fallback(reason: string, recover = false): void {
   console.warn(`3D experience unavailable: ${reason}`);
-  world?.dispose();
+  (world ?? pending)?.dispose();
   world = null;
+  pending = null;
   stage.dataset.world = "static";
   stage.classList.remove("is-interactive");
-  html.classList.remove("has-3d", "is-loading");
+  html.classList.remove("has-3d", "is-streaming");
   html.classList.add("is-loaded");
   controller.destroy();
-  controller = mount(current);
+  controller = mount(current, false);
   ScrollTrigger.refresh();
   if (recover && recoveries < 2) {
     recoveries++;
@@ -328,37 +331,56 @@ function fallback(reason: string, recover = false): void {
     for (const key of Object.keys(fresh.dataset)) if (key !== "canvas") delete fresh.dataset[key];
     canvas.replaceWith(fresh);
     canvas = fresh;
-    window.setTimeout(() => void bootWorld(true), 1200);
+    window.setTimeout(() => void bootWorld(), 1200);
   }
 }
 
-async function bootWorld(quiet = false): Promise<void> {
-  html.classList.add("has-3d");
-  if (!quiet) html.classList.add("is-loading");
+// The prerendered page is usable straight away; the 3D world streams in behind it and takes over once ready.
+async function bootWorld(): Promise<void> {
+  html.classList.add("has-3d", "is-streaming");
+  html.classList.remove("is-loaded");
   stage.dataset.world = "loading";
   const bar = document.querySelector<HTMLElement>("[data-loader-bar]");
-  const value = document.querySelector<HTMLElement>("[data-loader-value]");
-  const started = performance.now();
-  const timeout = setTimeout(() => fallback("loading took too long"), 25000);
+  const browse = () => {
+    if (window.scrollY < window.innerHeight * 0.4) return;
+    html.classList.add("is-browsing");
+    window.removeEventListener("scroll", browse);
+  };
+  window.addEventListener("scroll", browse, { passive: true });
+  browse();
+  let stalled = 0;
+  const watch = () => {
+    window.clearTimeout(stalled);
+    stalled = window.setTimeout(() => fallback("loading stalled"), 40000);
+  };
+  watch();
+  let created: World | null = null;
   try {
     const { World } = await import("@/world/world");
-    const created = new World({
+    watch();
+    if (bar) bar.style.width = "25%";
+    created = new World({
       canvas,
       tier: caps.tier,
       motion: !caps.reduced && !preferences.paused(),
       theme: storedTheme(),
       onHover,
       onProgress: (progress) => {
-        if (bar) bar.style.width = `${Math.round(progress * 100)}%`;
-        if (value) value.textContent = `${Math.round(progress * 100)}%`;
+        watch();
+        if (bar) bar.style.width = `${Math.round(25 + progress * 75)}%`;
       },
     });
-    world = created;
+    pending = created;
     await created.load(targetFor(current));
-    clearTimeout(timeout);
-    if (world !== created) return;
-    const wait = quiet ? 0 : Math.max(0, 900 - (performance.now() - started));
-    await new Promise((resolve) => setTimeout(resolve, wait));
+    window.clearTimeout(stalled);
+    window.removeEventListener("scroll", browse);
+    if (pending !== created) return;
+    pending = null;
+    world = created;
+    created.setTheme(storedTheme());
+    created.setMotion(!caps.reduced && !preferences.paused());
+    created.setPanel(panel.value);
+    created.goTo(targetFor(current), 0);
     stage.dataset.world = "ready";
     stage.classList.add("is-interactive");
     created.start();
@@ -367,15 +389,15 @@ async function bootWorld(quiet = false): Promise<void> {
       bindPointer();
     }
     canvas.addEventListener("webglcontextlost", () => fallback("graphics context lost", true), { once: true });
+    html.classList.remove("is-streaming");
     html.classList.add("is-loaded");
-    setTimeout(() => html.classList.remove("is-loading"), 1000);
-    if (quiet) {
-      controller.destroy();
-      controller = mount(current);
-      ScrollTrigger.refresh();
-    }
+    controller.destroy();
+    controller = mount(current, false);
+    ScrollTrigger.refresh();
   } catch (error) {
-    clearTimeout(timeout);
+    window.clearTimeout(stalled);
+    window.removeEventListener("scroll", browse);
+    if (created && pending !== created) return;
     fallback(error instanceof Error ? error.message : String(error));
   }
 }
@@ -403,13 +425,14 @@ async function start(): Promise<void> {
     return;
   }
   bindShell();
-  if (caps.has3d) await bootWorld();
-  else {
+  if (!caps.has3d) {
     html.classList.remove("has-3d");
     stage.dataset.world = "static";
     html.classList.add("is-loaded");
   }
-  controller = mount(current);
+  // An entrance animation only reads as intended right after first paint; later it would hide text already being read.
+  controller = mount(current, !caps.has3d && performance.now() < 1500);
+  if (caps.has3d) void bootWorld();
   if (location.hash) requestAnimationFrame(() => jumpTo(location.hash.slice(1)));
   Object.assign(window, { __ge: { route: () => current.id, world: () => world, caps, label: (id: RouteId) => route(id).label } });
 }
