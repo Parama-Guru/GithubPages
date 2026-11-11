@@ -1,148 +1,191 @@
-# Yuva Tourism Club: Speaker Notes
+# Yuva Tourism Club: Event Script And Cues
 
 29 September 2026 | F201 | PSG College of Technology
 
-17 minutes of prepared material plus the faculty address. Tamil Nadu tourism and heritage and AI in tourism are allocated 5 minutes each. Rehearse and adjust delivery; faculty and team introductions share the existing 3-minute allocation.
+Updated agenda: 4:30 - 5:45 PM, 75 minutes. PM is inferred from the supplied agenda. Cover and agenda are pre-event displays with no added programme time. Allocations include performances, addresses, introductions, transitions, and photography; they are not an estimate of continuous scripted speech. Rehearse the drafts and follow the organisers' cues. Slides never auto-advance.
 
-Before the event: confirm both faculty advisors' names, departments and portraits; faculty speaker and designation; topic assignments; second speaker; and the activity programme. Paramaguru H is introduced before Rithika Sri R. The two advisor profiles are explicitly unconfirmed. ERM is retained exactly as supplied; its expansion is not confirmed.
+The Chief Guest delivers their own address. No speech or topic content is prepared on their behalf. The two previous topic talks and the separate faculty address are removed.
+
+Before the event: confirm the Chief Guest's name, designation, pronunciation and approved introduction; both faculty advisors' names, departments and portraits; the prayer-song arrangement; and the approved annual plan. Paramaguru H is introduced before Rithika Sri R. ERM is retained as supplied without an invented expansion. Annual-plan content remains explicitly proposed.
+
+## Programme
+
+| Time | Segment |
+|---|---|
+| 4:30 - 4:35 PM | Prayer song |
+| 4:35 - 4:45 PM | Welcome address |
+| 4:45 - 4:50 PM | Club introduction |
+| 4:50 - 5:00 PM | Introduction to the Chief Guest |
+| 5:00 - 5:20 PM | Guest address |
+| 5:20 - 5:30 PM | Introduction to office bearers |
+| 5:30 - 5:35 PM | Annual plan 2026-27 |
+| 5:35 - 5:40 PM | Vote of thanks |
+| 5:40 - 5:45 PM | Photo session |
+
+The 5:20 - 5:30 team slot includes 2 minutes for faculty advisors, 2 for secretaries, 1.5 for design, 2 for publicity and ambience, and 2.5 for photography and ERM. These internal allocations are rehearsal suggestions, not extra agenda items.
 
 ## 1. Yuva Tourism Club
 
-Ceremony | 20 seconds
+Opening | Pre-event display | No programme time added
 
-Good morning to our respected faculty members, office bearers, and fellow students. A warm welcome to the inauguration of the Yuva Tourism Club at PSG College of Technology for the academic year 2026 to 2027. Today marks the beginning of a shared journey of discovery, learning, and responsible travel. Pause briefly before advancing.
+PRE-EVENT HOLD. Display before the programme begins at 4:30 PM. The event date and venue remain 29 September 2026 and F201, as previously confirmed. The supplied agenda is interpreted as an afternoon programme. Check the prayer-song arrangement and microphones with the organisers. No music, lyrics, or recording has been supplied; nothing plays automatically. Move through the agenda preview to the prayer-song slide at the start.
 
-## 2. A warm welcome.
+## 2. Today's programme
 
-Ceremony | 60 seconds
+Opening | Pre-event display | No programme time added
 
-It is a pleasure to welcome each of you to this occasion. Tourism begins with curiosity: curiosity about a place, its people, and the stories that make it distinct. A student club gives that curiosity a shared direction. It creates space to learn beyond the classroom, appreciate different cultures, and understand the responsibilities that come with visiting a place. We thank our faculty for their guidance, our office bearers for coming together to lead this initiative, and every student here for being part of its beginning. Our aim is not simply to see more places, but to understand them better. With that spirit, let us begin the inaugural programme of the Yuva Tourism Club.
+PRE-EVENT OVERVIEW. These nine slots reproduce the updated agenda in order. The overview is not an additional timed speech. Prayer song, welcome address, club introduction, introduction to the Chief Guest, guest address, introduction to office bearers, annual plan, vote of thanks, and photo session fill the 75-minute programme. Use the agenda links to move to the correct holding or content slide. There are no separate student topic talks or faculty address in this programme.
 
-## 3. Today's programme
+## 3. Prayer song
 
-Ceremony | 40 seconds
+Opening | 4:30 - 4:35 PM | 300 seconds allocated to this slide
 
-We will begin with the faculty address, followed by our club vision and introductions to our faculty advisors and office bearers. We will then spend ten minutes on two connected themes. The first explores Tamil Nadu tourism and heritage through Chola temples, the monuments of Mamallapuram, and the Nilgiri Mountain Railway. The second considers how artificial intelligence is influencing the way people discover, plan, and experience travel. We will conclude with our shared responsibilities and a vote of thanks.
+HOST CUE, 4:30 - 4:35 PM. Good afternoon. We will begin the inaugural programme with the prayer song. May I invite the designated performers to lead us. Follow the institution's established protocol for the gathering; do not assume a particular song, language, or requirement to stand. Keep this quiet holding slide displayed throughout the performance. No lyrics, audio, or timed playback are included. After the song: Thank you. We will now proceed with the welcome address.
 
-## 4. Faculty address
+## 4. A warm welcome.
 
-Ceremony | Untimed faculty address
+Opening | 4:35 - 4:45 PM | 600 seconds allocated to this slide
 
-Invite the faculty member using their confirmed name and designation. These details have not yet been provided, so do not announce an invented name. Keep this slide on screen throughout the address. The faculty address has no allocated duration and is excluded from the 17-minute deck total. When the address concludes: Thank you for your guidance and encouragement. We will now introduce our club and its office bearers.
+WELCOME ADDRESS DRAFT, 4:35 - 4:45 PM. The ten minutes are the programme allocation, not an automatic speaking timer. Rehearse this draft, include only confirmed formal acknowledgements, and allow natural pauses. Do not stretch a short introduction with invented names or achievements.
+
+Good afternoon to our respected Chief Guest, our faculty advisors, members of the faculty, office bearers, and fellow students. On behalf of the Yuva Tourism Club at PSG College of Technology, it is my pleasure to welcome you to our inauguration for the academic year 2026 to 2027.
+
+We are grateful that you have joined us for this beginning. An inauguration is more than an introduction to a team or a list of activities. It is an opportunity to say what we hope to learn together, how we want to work, and what responsibilities we are ready to accept. Today, we begin with a shared interest in places, people, and the experiences that help us understand the world more thoughtfully.
+
+We extend a warm welcome to our Chief Guest. Thank you for accepting our invitation and for making time to be with our student community. We look forward to hearing your address and learning from the perspective you bring. The formal introduction will follow the club introduction, so I will leave that to the designated host rather than anticipate your remarks.
+
+We also offer a special welcome to our faculty advisors. Your guidance gives student enthusiasm a clear and responsible direction. A club needs ideas, but it also needs thoughtful planning, attention to safety, and respect for the people involved. We are grateful for your willingness to mentor us as we learn to balance ambition with care. To the faculty members present, thank you for encouraging learning that extends beyond the classroom.
+
+To our office bearers, welcome, and thank you for taking up the work of the year ahead. A title is the beginning of a responsibility. The real contribution lies in listening to members, communicating clearly, preparing carefully, and supporting one another when work needs to be done. The audience will meet the team later in the programme. Today is also a reminder that each role matters because it contributes to a shared purpose.
+
+To every student here, this club is an invitation to participate. You do not need an extensive travel history to be curious about a place. You can contribute through a question, a well-researched story, a photograph shared with permission, a practical suggestion, or the willingness to help organise an activity. Some of the most valuable discoveries begin close to home, when we look more carefully at a place we thought we already knew.
+
+Tourism can be a source of enjoyment, but it can also be a way to learn. A visit can introduce us to an unfamiliar tradition, a local craft, a different landscape, or a perspective beyond our own. To gain that understanding, we must do more than arrive and take a photograph. We need to listen, ask informed questions, and recognise that the places we visit are part of other people's daily lives.
+
+That is why curiosity and responsibility belong together. A memorable experience should not come at the cost of a community's comfort, a site's preservation, or another person's dignity. Respect for local customs, attention to rules, and consideration for fellow participants are not secondary details. They are part of what makes exploration worthwhile. These values will guide the way we discuss and develop our club's activities.
+
+The year ahead should also be a year of collaboration. Members may bring different interests: history, culture, nature, photography, planning, or storytelling. Those differences can help us build a richer club experience when we approach them with openness. We hope to create space for questions and contributions, and to make participation welcoming to students who are just beginning to explore these interests.
+
+In a few moments, we will introduce the club and its purpose. We will then formally welcome our Chief Guest for the address. After that, we will introduce our faculty advisors and office bearers, present the proposed annual direction, and conclude with the vote of thanks and photo session. The activity proposals will be developed with the necessary guidance and approvals; today is the beginning of that work, not a promise of an unconfirmed calendar.
+
+Thank you once again for being part of this occasion. May this inauguration mark the start of a year in which we explore with curiosity, organise with care, and learn from one another. With that spirit, I welcome you all to the Yuva Tourism Club inauguration. Thank you.
+
+HANDOVER: We will now introduce the purpose and vision of our club.
 
 ## 5. Curiosity, with purpose.
 
-Our club | 60 seconds
+Our club | 4:45 - 4:50 PM | 300 seconds allocated to this slide
 
-Our proposed direction rests on three ideas: explore, understand, and contribute. Explore means approaching places with curiosity. Understand means learning their histories, traditions, and present-day realities. Contribute means recognising that a visitor has responsibilities towards the people and environments that welcome them. Possible activities include student-led destination talks, local heritage walks, and responsible-travel awareness initiatives. These are proposed directions, not an announced calendar. Dates, permissions, logistics, and faculty approval must come before any commitment. As a club, we can start by listening to members and identifying activities that are useful, inclusive, and practical. A meaningful year is built not by the number of trips alone, but by the quality of what we learn together.
+CLUB INTRODUCTION, 4:45 - 4:50 PM. This is a statement of the club's proposed purpose, not a claim about completed events or established partnerships.
 
-## 6. The guidance behind our journey.
+The Yuva Tourism Club brings together students who are interested in discovering places, understanding their stories, and learning to travel responsibly. Our direction rests on three simple ideas: explore, understand, and contribute.
 
-Our club | 40 seconds
+Explore means keeping an open mind. It begins with the willingness to notice something unfamiliar and learn more about it. That may happen during a carefully planned visit, but it can also happen through a discussion, a local story, or research into a place near us. The value lies in curiosity, not in how far we travel.
 
-Introduce the two faculty advisors using their confirmed names and departments. These have not yet been supplied, and the two spaces on screen are intentionally marked as awaiting confirmation. Do not read the placeholder labels as names. Thank our faculty advisors for guiding the club, supporting student initiative, and helping us turn ideas into responsible, practical activities. Their mentorship will be important as we plan, learn, and work together through the year. Invite a brief acknowledgement before introducing the student office bearers.
+Understand means looking beyond the first impression. A destination is shaped by its history, environment, culture, and people. When we learn that context, our experience becomes more meaningful. We want to encourage members to ask good questions, distinguish reliable information from assumptions, and listen respectfully to people who know a place through everyday life.
 
-## 7. Meet our secretaries.
+Contribute means recognising that visitors and organisers have responsibilities. We should respect local customs, care for shared spaces, follow safety requirements, and consider the needs of others. In a student club, contribution also means helping with preparation, documentation, communication, and teamwork. Thoughtful exploration depends on work that may not always be visible on the day of an event.
 
-Our club | 40 seconds
+Our faculty advisors provide guidance as we develop this direction. Our office bearers will help coordinate the work, and our members will help shape it through participation and feedback. We want ideas to be discussed openly and turned into realistic proposals rather than announced before the necessary preparation is complete.
 
-Introduce the secretaries by the names and roles displayed. Acknowledge each person with a short pause so the audience can recognise them. The secretary role is presented as a responsibility to coordinate, communicate, and help the team work together. Do not add personal achievements, departments, or biographies that have not been confirmed. Invite a brief round of applause before moving to the next group.
+The club can offer several ways to take part. A member might research a destination, contribute to a discussion, document an approved activity, or help the team think through accessibility and visitor etiquette. There is space for people with different interests and different levels of experience. Participation should not depend on already knowing everything about tourism.
 
-## 8. Working together.
+We will present the proposed annual plan later in this programme. It includes learning, exploration, and opportunities for members to share. Specific events, dates, budgets, travel arrangements, and permissions will need confirmation before they become commitments. For now, our purpose is clear: to make discovery a thoughtful, collaborative learning experience.
 
-Our club | 30 seconds
+As we begin the year, let us measure success not only by where we go, but by what we understand, how responsibly we act, and how well we work together. Thank you.
 
-Introduce each office bearer by the name and role on screen. Pause between introductions and allow time for acknowledgement. Keep the emphasis on shared responsibility and collaboration; no individual biography has been supplied. Names and roles are transcribed from the provided team artwork and should be confirmed before the event.
+HANDOVER: We will now proceed with the formal introduction to our Chief Guest.
 
-## 9. Ideas into action.
+## 6. Welcoming our Chief Guest.
 
-Our club | 35 seconds
+Chief guest | 4:50 - 5:00 PM | 600 seconds allocated to this slide
 
-Continue the team introductions using the displayed names and designations. These roles help translate the club's ideas into a coherent experience for members. Allow each name its own moment. Do not rush the introductions or add unverified responsibilities. Thank the group and invite a brief acknowledgement from the audience.
+HOST CUE ONLY, 4:50 - 5:00 PM. The Chief Guest's name, designation, and approved introduction have not been supplied. Confirm pronunciation and the approved biography before the event. Introduce only those verified details; do not invent credentials, affiliations, achievements, or a speech topic to fill this slot. Suggested neutral opening: It is our pleasure to welcome our Chief Guest to the Yuva Tourism Club inauguration. Thank you for joining our student community today. After the confirmed introduction, invite the guest to address the gathering. The ten-minute window is the agenda allocation and may include the organisers' agreed formalities; no additional ceremony is assumed.
 
-## 10. One team. Shared purpose.
+## 7. Guest address
 
-Our club | 35 seconds
+Chief guest | 5:00 - 5:20 PM | 1200 seconds allocated to this slide
 
-Introduce the remaining office bearers by name and role. Thank our faculty advisors and the entire student team for taking up these responsibilities. Invite a round of applause. Transition: Having introduced the people behind the club, let us explore the heritage closest to home. Hand over to the confirmed Tamil Nadu tourism and heritage speaker; topic assignments have not yet been finalised.
+STAGE CUE ONLY, 5:00 - 5:20 PM. The Chief Guest delivers their own address. No speech, topic outline, talking points, or claims on their behalf are provided. Keep this holding slide displayed and advance only when the address ends. Host handover afterwards: Thank you for sharing your time and perspective with us. We will now introduce our faculty advisors and office bearers for the year ahead.
 
-## 11. Tamil Nadu tourism & heritage
+## 8. The guidance behind our journey.
 
-Tamil Nadu heritage | 40 seconds
+Our team | 5:20 - 5:30 PM | 120 seconds allocated to this slide
 
-Our first journey begins in Tamil Nadu. In five minutes, we will connect three different expressions of heritage: the living Chola temples of the Cauvery region, the Pallava monuments of Mamallapuram, and the Nilgiri Mountain Railway. These are not simply attractive backdrops. They help us understand architecture, craftsmanship, engineering, and the communities that keep places meaningful. From our base in Coimbatore, they invite us to look more closely at our own state. The map is a geographic introduction, not a proposed single-day route. Let us begin with the Chola temples.
+TEAM INTRODUCTIONS, 5:20 - 5:30 PM, PART 1. Use approximately two minutes to acknowledge the two faculty advisors within the office-bearer introduction slot; this is not an extra faculty-address segment. Their names, departments, and portraits remain unconfirmed. Do not read the placeholders as names. Suggested wording: We are grateful to our faculty advisors for guiding our planning, encouraging student initiative, and helping us organise responsibly. Introduce each using confirmed details, allow a pause for acknowledgement, and thank them for their mentorship. Then move to the student secretaries.
 
-## 12. Great Living Chola Temples
+## 9. Meet our secretaries.
 
-Tamil Nadu heritage | 70 seconds
+Our team | 5:20 - 5:30 PM | 120 seconds allocated to this slide
 
-The UNESCO property called the Great Living Chola Temples includes three temples: Brihadisvara at Thanjavur, Brihadisvara at Gangaikondacholapuram, and Airavatesvara at Darasuram. Built in the eleventh and twelfth centuries, they reveal the development of Chola architecture and art. At Thanjavur, notice the rising tiers of the vimana, the tower above the sanctum. At Gangaikondacholapuram, the tower has a more gently curving profile. At Darasuram, the front mandapa was conceived as a chariot with wheels, and the detailed carving rewards close observation. The word living matters: worship and ritual remain part of these places. They are both protected monuments and active sacred spaces. As visitors, we should appreciate their engineering and artistry while following the rules of worship, access, and photography. Look at the photographs and compare the silhouette, the scale, and the details. Tourism becomes more meaningful when we notice how a place was made and how it continues to be used.
+TEAM INTRODUCTIONS, PART 2. Introduce Paramaguru H first, then Rithika Sri R, followed by Joint Secretaries Nisha D and Dharanidharan P. Use the displayed designations and confirm pronunciation before the event. Allow each person time to be recognised. Suggested transition: Our secretaries and joint secretaries will help the team communicate, coordinate, and work towards a shared purpose. These are intended responsibilities, not claims about past achievements. Do not add unconfirmed departments or biographies. Invite a brief acknowledgement before introducing the design team.
 
-## 13. Mamallapuram: stories in stone.
+## 10. Working together.
 
-Tamil Nadu heritage | 60 seconds
+Our team | 5:20 - 5:30 PM | 90 seconds allocated to this slide
 
-Mamallapuram, also called Mahabalipuram, brings us to the Coromandel Coast. Its UNESCO-listed monuments were created under the Pallava rulers, with celebrated works from the seventh and eighth centuries. They demonstrate several ways of working with stone. The rathas are monolithic forms carved from individual large boulders. The cave sanctuaries are cut into rock. The open-air relief commonly called Arjuna's Penance or the Descent of the Ganges transforms a rock face into a scene of extraordinary detail. The Shore Temple represents structural temple architecture beside the sea. These are different building and carving methods, not interchangeable descriptions. A useful way to visit is to compare what has been carved out of a rock with what has been constructed from stone blocks. Follow protected routes and do not climb on or touch fragile carvings. The important souvenir is a better understanding of the craftsmanship.
+TEAM INTRODUCTIONS, PART 3. Introduce Neka S, Ezhilarasu M, and Venu Prasath S as the design team, using the names supplied in the original artwork. Suggested lead-in: Clear visual communication helps a club present its ideas consistently. We now introduce the office bearers taking up the design role. Pause between names and allow acknowledgement. Do not invent individual achievements or claim that any particular campaign has already been completed. Hand over to publicity and ambience.
 
-## 14. Heritage that still moves.
+## 11. Ideas into action.
 
-Tamil Nadu heritage | 70 seconds
+Our team | 5:20 - 5:30 PM | 120 seconds allocated to this slide
 
-Heritage is not limited to temples and monuments. Near Coimbatore, the Nilgiri Mountain Railway connects Mettupalayam with Udhagamandalam, also known as Ooty. UNESCO describes the roughly forty-six-kilometre metre-gauge line as an important achievement in mountain railway engineering. Construction began in 1891 and was completed in 1908. On its steep mountain section, a rack-and-pinion system helps the train negotiate the gradient. The railway is part of the UNESCO World Heritage property called Mountain Railways of India, alongside lines in other states. Our focus here is specifically the Nilgiri component in Tamil Nadu. The experience brings engineering and landscape together: track, bridges, stations, and the effort required to maintain a working railway in difficult terrain. It is not a preserved object behind glass. It is transport heritage that still serves people. Before planning a visit, confirm current services, tickets, and conditions with the railway. A beautiful photograph is not a timetable. Respect railway safety rules and the communities and environments along the line.
+TEAM INTRODUCTIONS, PART 4. Introduce Mounica Sri S and Dhanalakshmi K for publicity, followed by Nithya Sree J and Akshitha Shri S for ambience. Use the confirmed role labels and allow each person a moment of recognition. Suggested transition: Bringing people together involves both communicating clearly and preparing a welcoming event environment. Thank the group for taking up these responsibilities. Keep the introduction factual; no individual biographies have been supplied. Continue to photography and ERM.
 
-## 15. Our heritage. Our responsibility.
+## 12. One team. Shared purpose.
 
-Tamil Nadu heritage | 60 seconds
+Our team | 5:20 - 5:30 PM | 150 seconds allocated to this slide
 
-These places offer three perspectives on Tamil Nadu: living religious traditions, extraordinary stone craftsmanship, and working transport heritage. What connects them is the need for thoughtful visitors. Learn before arriving. Use reliable sources and local knowledge to understand the place, not simply its most popular photo angle. Follow the rules on access, dress, photography, and safety. Never write on monuments, climb restricted structures, or disturb worship. Support credible local guides, craftspeople, and businesses, and pay fairly for their work. For our club, a well-researched local visit or heritage discussion can be a useful beginning, subject to faculty guidance and permissions. The aim is not to collect locations as quickly as possible. It is to understand more and leave places respected. That brings us to our next theme: how AI can help us prepare for travel, and why a generated recommendation must still be checked. Hand over to the confirmed presenter.
+TEAM INTRODUCTIONS, PART 5. Introduce Mutharasappan AR and Maithreyan A for photography, then Sanjna S, Deekshikaa M, and Hari Krishna CR for ERM. Retain ERM as supplied; its expansion has not been confirmed. Pause between names, then acknowledge all office bearers and both faculty advisors. Suggested closing: A club moves forward through shared effort. We thank every member of this team for accepting that responsibility and look forward to working together. Invite applause and proceed to the annual plan at 5:30 PM. There is no student topic talk or separate presentation handover here.
 
-## 16. AI & tourism
+## 13. Annual plan 2026-27
 
-AI & tourism | 40 seconds
+Annual plan | 5:30 - 5:35 PM | 300 seconds allocated to this slide
 
-Artificial intelligence is influencing several stages of travel, from searching for ideas to communicating during a visit. It can help organise information, suggest options, and reduce some language barriers. But a fluent answer is not the same as a verified answer. The useful question is not whether AI can plan everything for us. It is where AI can help, what information it needs, and which decisions still require trusted sources and human judgment. We will follow a simple example, then look at wider uses and the limits that responsible travellers should understand.
+ANNUAL PLAN, 5:30 - 5:35 PM. The approved activity calendar has not been supplied. The slide therefore presents proposed priorities, not confirmed trips, dates, partnerships, budgets, or bookings. Replace these proposals with the approved programme when available.
 
-## 17. From an idea to an informed itinerary.
+Our proposed annual direction connects three priorities: discover and learn, explore responsibly, and participate and share. Each should help members build knowledge while giving them a meaningful way to contribute.
 
-AI & tourism | 90 seconds
+First, discover and learn. We propose destination discussions and student-led heritage research. These can help members practise finding reliable information, understanding local context, and presenting a place beyond its familiar photographs. A useful discussion should leave people with better questions as well as new information. Faculty guidance and member interests will help us select suitable themes.
 
-Imagine a student group considering a short heritage visit from Coimbatore. This is an illustrative scenario, not a confirmed club trip or a live booking. First, describe the constraints: available time, budget, interests, accessibility needs, and group size. Avoid entering unnecessary personal information. Second, ask an AI tool to propose a few options and explain the trade-offs. It might help compare themes or organise a draft schedule. Third, verify every detail that could affect the trip. Check opening hours and ticket rules with the site or operator. Check transport availability with the provider. Confirm accessibility, permissions, weather, and safety advice through appropriate sources. AI may invent a service or repeat outdated details, so this stage is essential. Finally, people make the decision. The organiser confirms feasibility, the group considers comfort and inclusion, and local knowledge helps refine the plan. Use the timeline to show that verification sits between the generated suggestion and the decision. AI can make the first draft faster; it cannot turn an unverified draft into a trustworthy itinerary by itself.
+Second, explore responsibly. We propose developing local visits and heritage walks where they are feasible and approved. A visit should have a clear learning purpose and realistic arrangements. Permissions, safety, accessibility, cost, travel logistics, and the needs of the host community must be considered before any announcement. No destination or date is being confirmed today. The priority is to build a careful planning process so that an activity, when approved, is worthwhile for everyone involved.
 
-## 18. Beyond the itinerary.
+Third, participate and share. Members can contribute through research, travel-awareness discussions, photography with consent, event support, and reflection after an activity. Documentation should record what we learned, not simply that an event happened. Feedback can help the club improve future proposals and make participation more welcoming.
 
-AI & tourism | 55 seconds
+Across these priorities, we suggest a simple working sequence: listen to members, develop a clear proposal, review it with our faculty advisors, organise the approved activity, and reflect afterwards. The office bearers will need to work together throughout this process. Good communication and shared records can help prevent uncertainty about responsibilities and expectations.
 
-The influence of AI extends beyond a traveller's itinerary. Language tools can assist with translation, although sensitive or unfamiliar expressions still deserve care. Recommendation systems can help people find options, but they can also narrow attention or reflect commercial priorities. Tourism operators may use forecasting tools to support staffing, demand planning, and resource decisions. Information assistants can answer routine questions, provided their content is maintained and there is a way to reach a person. These are possible applications, not claims that every destination or business uses them successfully. Their value depends on suitable data, good implementation, and human oversight. Accessibility must also be checked rather than assumed. A tool that works well for one traveller may not meet another traveller's needs.
+We should also remain realistic. The quality of an activity matters more than the length of a calendar. A smaller programme prepared carefully can offer more value than a long list announced before resources and permissions are known. We will present confirmed details through the club's agreed communication channels after the necessary review.
 
-## 19. Useful does not always mean reliable.
+This proposed plan is an invitation to contribute ideas and help shape a thoughtful year. With the guidance of our faculty advisors and the participation of our members, we hope to make the club a place for curiosity, collaboration, and responsible discovery. Thank you.
 
-AI & tourism | 75 seconds
+HANDOVER: We will now proceed with the vote of thanks.
 
-First, check accuracy. Does the place or service exist, and is the information current? Verify important details with the relevant destination, operator, or authority. Second, protect privacy. Do not casually share identity documents, booking references, payment details, or another person's information with a tool. Use the minimum information needed, and understand the service's data practices. Third, question the recommendation. Which options are missing? Is the suggestion accessible, culturally appropriate, and suitable for the actual traveller? Recommendations may reflect gaps in data or commercial incentives. A confident tone should never replace evidence. There should also be a clear human path when things go wrong: a real operator, organiser, or local contact. For our club, a sensible principle would be to use AI for exploration and drafting, use trusted sources for verification, and keep people responsible for decisions. This is how convenience and care can work together.
+## 14. With sincere thanks.
 
-## 20. Let technology assist. Let people lead.
+Closing | 5:35 - 5:40 PM | 300 seconds allocated to this slide
 
-AI & tourism | 40 seconds
+VOTE OF THANKS, 5:35 - 5:40 PM. Use confirmed names where appropriate. Do not attribute particular advice or commitments to the Chief Guest unless those were actually expressed. The slot includes acknowledgement and the transition to the photograph.
 
-The strongest use of AI in tourism is supportive. It can help us organise questions, compare possibilities, and prepare for a visit. It does not replace a guide's lived knowledge, a community's voice, or our responsibility to behave thoughtfully. The practical sequence is simple: explore with technology, verify with trusted sources, and decide with people. That brings us back to the purpose of the Yuva Tourism Club. We want to be curious enough to discover new places, informed enough to understand them, and responsible enough to leave them respected.
+Good evening. On behalf of the Yuva Tourism Club, I have the privilege of proposing the vote of thanks as we conclude our inaugural programme.
 
-## 21. Rooted in heritage. Open to tomorrow.
+First, we extend our sincere thanks to our Chief Guest for accepting our invitation, joining us today, and addressing our student community. We appreciate the time you have shared with us. Your presence has made this occasion especially meaningful, and we are grateful for the opportunity to listen and learn.
 
-Closing | 30 seconds
+We offer our special thanks to our two faculty advisors for their mentorship, encouragement, and support. Thank you for helping us approach our ideas with responsibility and for guiding the work that lies ahead. Your involvement will remain important as we turn proposals into carefully planned activities and learn from the experience of organising together.
 
-Today, we have brought together Tamil Nadu's remarkable heritage and the growing influence of AI on travel. From living temples to coastal monuments and a mountain railway, the places around us deserve curiosity and care. Technology can help us prepare, but people remain responsible for our decisions. Guided by our faculty advisors, let us build a year of thoughtful exploration and shared learning.
+We also thank the faculty members and the institution for supporting this student initiative. A club grows in an environment where curiosity is encouraged and learning can take different forms. We value the opportunity to develop that spirit through the Yuva Tourism Club.
 
-## 22. With sincere thanks.
+To our office bearers, thank you for accepting your roles and for the preparation that has brought us to this beginning. The work of a team is built from many contributions, including those that happen quietly before anyone sees the final programme. We acknowledge everyone who helped with planning, communication, design, arrangements, photography, and support for today's event, without assuming that any task belongs to one person alone.
 
-Closing | 30 seconds
+We thank the performers who led the prayer song and everyone who helped the programme proceed smoothly. We are grateful for the care taken with each part of this occasion. Please include any additional acknowledgement requested by the organisers only after confirming the person's contribution and preferred name.
 
-On behalf of the Yuva Tourism Club, I extend our special thanks to our two faculty advisors for their mentorship, encouragement, and support. Use their confirmed names here when available. We also thank our faculty members, all office bearers for their commitment, and every student who joined us today. Thank you to everyone who helped make this inaugural programme possible. We look forward to learning and exploring together throughout the year.
+To all the students who joined us, thank you for your time, attention, and interest. Your participation will shape the club's year. We hope you will continue to bring questions, ideas, and a willingness to work with others. A successful inauguration is a beginning; the value of the club will be created through what we do together afterwards.
 
-## References
+As we move forward, let us carry the same spirit of curiosity and respect into our activities. We look forward to a year of thoughtful learning, responsible exploration, and shared effort.
 
-- [Great Living Chola Temples](https://whc.unesco.org/en/list/250/) | UNESCO World Heritage Centre
-- [Group of Monuments at Mahabalipuram](https://whc.unesco.org/en/list/249/) | UNESCO World Heritage Centre
-- [Mountain Railways of India: Nilgiri Mountain Railway](https://whc.unesco.org/en/list/944/) | UNESCO World Heritage Centre
-- [Travel for LiFE](https://www.incredibleindia.gov.in/en/travel-for-life) | Ministry of Tourism, Government of India
-- [Artificial Intelligence and tourism in APEC economies](https://www.oecd.org/en/publications/artificial-intelligence-and-tourism-in-apec-economies_4549486a-en.html) | OECD, 9 September 2026
-- [AI Risk Management Framework](https://www.nist.gov/itl/ai-risk-management-framework) | NIST
+Thank you once again to our Chief Guest, faculty advisors, faculty members, office bearers, and fellow students. We now invite the Chief Guest, faculty advisors, and office bearers to join the photo session, following the organisers' directions. Thank you.
+
+## 15. A shared beginning.
+
+Closing | 5:40 - 5:45 PM | 300 seconds allocated to this slide
+
+PHOTO SESSION, 5:40 - 5:45 PM. Keep this closing slide displayed. Invite the Chief Guest, faculty advisors, and office bearers to the agreed photo area, and follow the photographer's or organisers' directions. Allow a clear route and time for participants to arrange themselves. Do not assume a particular seating order or announce an unconfirmed venue. After the photographs, thank the gathering and close the programme. The deck does not trigger a camera, record images, or advance automatically.
