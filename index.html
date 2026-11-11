@@ -4,6 +4,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Parama Guru</title>
+    <script>
+      document.documentElement.classList.add("js");
+    </script>
     <meta name="description" content="Projects and presentations by Parama Guru, Researcher at M365 Research, Microsoft; MS-DS student at PSG College of Technology." />
     <link rel="icon" type="image/png" href="originzero/favicon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -18,24 +21,49 @@
         --ink: rgb(26, 22, 19);
         --muted: rgb(102, 102, 102);
         --sand: rgba(227, 221, 207, 0.4);
+        --sand-line: rgba(26, 22, 19, 0.14);
+        --ease: cubic-bezier(0.22, 1, 0.36, 1);
+        --pad-x: clamp(18px, 5vw, 64px);
+        --pad-y: clamp(28px, 6vh, 72px);
+        --card-min: 300px;
       }
       * {
         box-sizing: border-box;
       }
+      html {
+        -webkit-text-size-adjust: 100%;
+      }
       body {
         margin: 0;
         min-height: 100vh;
-        display: grid;
-        place-items: center;
-        padding: 40px 24px;
+        min-height: 100svh;
+        padding: var(--pad-y) var(--pad-x) calc(var(--pad-y) + env(safe-area-inset-bottom));
         background: var(--paper);
         color: var(--ink);
         font-family: 'DM Sans', system-ui, sans-serif;
         -webkit-font-smoothing: antialiased;
       }
-      main {
+      /* Phones and tablets: one column. Laptops and wider: intro and filters on the left, projects on the right. */
+      .layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas: "side" "work" "foot";
+        gap: clamp(28px, 4vw, 40px);
         width: 100%;
-        max-width: 640px;
+        max-width: 960px;
+        margin: 0 auto;
+      }
+      .side {
+        grid-area: side;
+        min-width: 0;
+        container-type: inline-size;
+      }
+      .work {
+        grid-area: work;
+        min-width: 0;
+      }
+      .layout > footer {
+        grid-area: foot;
       }
       .eyebrow {
         font-family: 'DM Mono', monospace;
@@ -51,6 +79,7 @@
         line-height: 0.98;
         letter-spacing: -0.02em;
         font-size: clamp(38px, 7vw, 62px);
+        font-size: clamp(38px, 15cqi, 72px);
         margin: 0 0 14px;
       }
       h1 em {
@@ -60,25 +89,33 @@
         color: var(--muted);
         font-size: 17px;
         line-height: 1.6;
-        margin: 0 0 40px;
+        margin: 0 0 clamp(26px, 4vw, 40px);
         max-width: 46ch;
       }
       a.card {
-        display: block;
-        padding: 22px 24px;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        padding: clamp(18px, 2.4vw, 24px) clamp(18px, 2.4vw, 26px);
         border: 1px solid var(--sand);
         border-radius: 16px;
         background: #fff;
         text-decoration: none;
         color: inherit;
-        transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.35s;
+        transition: transform 0.45s var(--ease), border-color 0.45s, box-shadow 0.45s;
       }
-      a.card:hover {
-        transform: translateY(-2px);
+      a.card[href]:hover {
+        transform: translateY(-3px);
         border-color: rgba(26, 22, 19, 0.22);
+        box-shadow: 0 14px 30px -22px rgba(26, 22, 19, 0.35);
       }
-      a.card + a.card {
-        margin-top: 16px;
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--card-min)), 1fr));
+        gap: clamp(12px, 1.6vw, 18px);
+      }
+      .card[hidden] {
+        display: none;
       }
       a.card:focus-visible {
         outline: 2px solid var(--ink);
@@ -93,7 +130,8 @@
       a.card h2 {
         font-family: 'Newsreader', Georgia, serif;
         font-weight: 300;
-        font-size: 26px;
+        font-size: clamp(23px, 2.2vw, 27px);
+        line-height: 1.15;
         margin: 0 0 6px;
       }
       a.card p {
@@ -102,37 +140,336 @@
         font-size: 15px;
         line-height: 1.55;
       }
-      footer {
-        margin-top: 40px;
+      .layout > footer {
         font-family: 'DM Mono', monospace;
         font-size: 12px;
         letter-spacing: 0.06em;
         color: var(--muted);
       }
+
+      /* Filters */
+      .filters {
+        display: grid;
+        gap: 14px;
+        margin: 0;
+      }
+      .filters[hidden] {
+        display: none;
+      }
+      .group {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        min-width: 0;
+      }
+      .group legend {
+        padding: 0;
+        margin-bottom: 8px;
+        font-family: 'DM Mono', monospace;
+        font-size: 11px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .chip {
+        position: relative;
+        display: inline-flex;
+        cursor: pointer;
+      }
+      .chip input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+      }
+      .chip span {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        min-height: 34px;
+        padding: 0 13px;
+        border: 1px solid var(--sand-line);
+        border-radius: 999px;
+        background: #fff;
+        font-family: 'DM Mono', monospace;
+        font-size: 12px;
+        color: var(--ink);
+        transition: background-color 0.3s, color 0.3s, border-color 0.3s, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .chip small {
+        font-size: 11px;
+        color: var(--muted);
+        transition: color 0.3s;
+      }
+      .chip:hover span {
+        border-color: rgba(26, 22, 19, 0.3);
+      }
+      .chip input:checked + span {
+        background: var(--ink);
+        border-color: var(--ink);
+        color: var(--paper);
+      }
+      .chip input:checked + span small {
+        color: rgba(249, 248, 245, 0.65);
+      }
+      .chip:active span {
+        transform: scale(0.96);
+      }
+      .chip input:focus-visible + span {
+        outline: 2px solid var(--ink);
+        outline-offset: 3px;
+      }
+      .sub {
+        display: grid;
+        grid-template-rows: 0fr;
+        opacity: 0;
+        margin-top: -14px;
+        transition: grid-template-rows 0.6s var(--ease), opacity 0.45s, margin-top 0.6s var(--ease);
+      }
+      .sub > div {
+        overflow: hidden;
+        padding: 2px 0 2px 14px;
+        border-left: 1px solid var(--sand-line);
+      }
+      .sub.is-open {
+        grid-template-rows: 1fr;
+        opacity: 1;
+        margin-top: 0;
+      }
+      .filter-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px 32px;
+      }
+      .filter-status {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px 16px;
+        min-height: 24px;
+        font-family: 'DM Mono', monospace;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .filter-status p {
+        margin: 0;
+      }
+      .clear {
+        padding: 0;
+        border: 0;
+        background: none;
+        font: inherit;
+        color: var(--ink);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        cursor: pointer;
+      }
+      .clear[hidden] {
+        display: none;
+      }
+      .clear:focus-visible {
+        outline: 2px solid var(--ink);
+        outline-offset: 3px;
+      }
+      .empty {
+        margin: 8px 0 0;
+        padding: 22px 24px;
+        border: 1px dashed var(--sand-line);
+        border-radius: 16px;
+        color: var(--muted);
+        font-size: 15px;
+      }
+      .empty[hidden] {
+        display: none;
+      }
+
+      /* Entrance: a slow, gentle reveal — intro lines, then filters, then the cards one by one. */
+      @keyframes rise {
+        from {
+          opacity: 0;
+          transform: translateY(18px);
+        }
+      }
+      html.js .intro > *,
+      html.js .filters,
+      html.js .card.enter,
+      html.js .layout > footer {
+        animation: rise 1.3s var(--ease) backwards;
+      }
+      html.js .intro > h1 {
+        animation-delay: 0.15s;
+      }
+      html.js .intro > .lead {
+        animation-delay: 0.3s;
+      }
+      html.js .filters {
+        animation-delay: 0.45s;
+      }
+      html.js .card.enter {
+        animation-delay: calc(0.6s + min(var(--i, 0), 10) * 0.11s);
+      }
+      html.js .layout > footer {
+        animation-delay: 1.4s;
+      }
+      h1 em {
+        background: linear-gradient(currentColor, currentColor) no-repeat 0 92% / 0 1px;
+      }
+      html.js h1 em {
+        animation: underline 1.8s 1.1s var(--ease) forwards;
+      }
+      @keyframes underline {
+        to {
+          background-size: 100% 1px;
+        }
+      }
+
+      /* Phones: each filter group is one swipeable row so the projects stay close to the top. */
+      @media (max-width: 599px) {
+        .chips {
+          flex-wrap: nowrap;
+          overflow-x: auto;
+          margin: -4px calc(var(--pad-x) * -1) -4px -4px;
+          padding: 4px var(--pad-x) 4px 4px;
+          scrollbar-width: none;
+          -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent);
+          mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent);
+        }
+        .chips::-webkit-scrollbar {
+          display: none;
+        }
+        .chip span {
+          white-space: nowrap;
+        }
+        .filter-row {
+          display: grid;
+          gap: 14px;
+        }
+        .lead {
+          font-size: 16px;
+        }
+      }
+      /* Touch screens get larger targets. */
+      @media (pointer: coarse) {
+        .chip span {
+          min-height: 40px;
+          padding: 0 15px;
+        }
+      }
+      /* Laptops and desktops: two columns with the intro and filters kept in view. */
+      @media (min-width: 1100px) {
+        .layout {
+          max-width: 1600px;
+          grid-template-columns: clamp(320px, 28vw, 420px) minmax(0, 1fr);
+          grid-template-areas: "side work" "side foot";
+          align-items: start;
+          column-gap: clamp(48px, 5vw, 96px);
+        }
+        .work {
+          padding-top: 6px;
+        }
+      }
+      @media (min-width: 1100px) and (min-height: 700px) {
+        .side {
+          position: sticky;
+          top: var(--pad-y);
+        }
+      }
+      /* Large screens: roomier cards so three or four columns still read comfortably. */
+      @media (min-width: 1800px) {
+        :root {
+          --card-min: 340px;
+        }
+        .layout {
+          max-width: 2000px;
+        }
+        .lead {
+          font-size: 18px;
+        }
+        a.card p {
+          font-size: 16px;
+        }
+      }
       @media (prefers-reduced-motion: reduce) {
-        a.card {
+        a.card,
+        .chip span,
+        .sub {
           transition: none;
+        }
+        html.js .intro > *,
+        html.js .filters,
+        html.js .layout > footer,
+        html.js .card.enter {
+          animation: none;
+        }
+        html.js h1 em {
+          animation: none;
+          background-size: 100% 1px;
         }
       }
     </style>
   </head>
 
   <body>
-    <main>
-      <p class="eyebrow">Parama Guru</p>
-      <h1>Things I have<br /><em>been building.</em></h1>
-      <p class="lead">
-        Researcher, M365 Research, Microsoft.<br />
-        MS-DS student at PSG College of Technology.
-      </p>
+    <main class="layout">
+      <header class="side">
+      <div class="intro">
+        <p class="eyebrow">Parama Guru</p>
+        <h1>Things I have<br /><em>been building.</em></h1>
+        <p class="lead">
+          Researcher, M365 Research, Microsoft.<br />
+          MS-DS student at PSG College of Technology.
+        </p>
+      </div>
 
+      <form class="filters" data-filters hidden aria-label="Filter and sort projects">
+        <fieldset class="group">
+          <legend>Product</legend>
+          <div class="chips" data-chips="product"></div>
+        </fieldset>
+        <div class="sub" data-sub>
+          <div>
+            <fieldset class="group">
+              <legend>Presentation type</legend>
+              <div class="chips" data-chips="type"></div>
+            </fieldset>
+          </div>
+        </div>
+        <div class="filter-row">
+          <fieldset class="group">
+            <legend>Year</legend>
+            <div class="chips" data-chips="year"></div>
+          </fieldset>
+          <fieldset class="group">
+            <legend>Sort</legend>
+            <div class="chips" data-chips="sort"></div>
+          </fieldset>
+        </div>
+        <div class="filter-status">
+          <p data-status aria-live="polite"></p>
+          <button type="button" class="clear" data-clear hidden>Clear filters</button>
+        </div>
+      </form>
+      </header>
+
+      <section class="work" aria-label="Projects">
+      <div class="cards" data-cards>
       <!-- Public link to be added: set href="..." on this card. -->
-      <a class="card">
+      <a class="card" data-product="website" data-year="2027">
         <p class="card-meta">client / 2027</p>
         <h2>Harimurugan Ellappan Portfolio</h2>
       </a>
 
-      <a class="card" href="https://parama-guru.github.io/Solari/">
+      <a class="card" href="https://parama-guru.github.io/Solari/" data-product="application" data-year="2026">
         <p class="card-meta">Solari hackathon / 2026</p>
         <h2>Openable — built on Solari</h2>
         <p>
@@ -141,7 +478,7 @@
         </p>
       </a>
 
-      <a class="card" href="matweb/">
+      <a class="card" href="matweb/" data-product="application" data-year="2026">
         <p class="card-meta">Matrimony application / Client preview / 2026</p>
         <h2>GenZ Matrimony</h2>
         <p>
@@ -151,7 +488,7 @@
         </p>
       </a>
 
-      <a class="card" href="ge/">
+      <a class="card" href="ge/" data-product="website" data-year="2026">
         <p class="card-meta">3D website / 2026</p>
         <h2>Ganesh Electricals — 3D website</h2>
         <p>
@@ -160,7 +497,7 @@
         </p>
       </a>
 
-      <a class="card" href="https://parama-guru.github.io/Ge/">
+      <a class="card" href="https://parama-guru.github.io/Ge/" data-product="website" data-year="2026">
         <p class="card-meta">2D website / 2026</p>
         <h2>Ganesh Electricals — 2D website</h2>
         <p>
@@ -169,13 +506,13 @@
         </p>
       </a>
 
-      <a class="card" href="https://parama-guru.github.io/Tirunex/">
+      <a class="card" href="https://parama-guru.github.io/Tirunex/" data-product="website" data-year="2026">
         <p class="card-meta">Company website / 2026</p>
         <h2>Tirunex</h2>
         <p>The Tirunex company website.</p>
       </a>
 
-      <a class="card" href="ytc-inaguration/">
+      <a class="card" href="ytc-inaguration/" data-product="presentation" data-type="professional" data-year="2026">
         <p class="card-meta">Club Inauguration / 29 September 2026 / F201</p>
         <h2>Yuva Tourism Club inauguration</h2>
         <p>
@@ -184,7 +521,7 @@
         </p>
       </a>
 
-      <a class="card" href="ns/">
+      <a class="card" href="ns/" data-product="presentation" data-type="academic" data-year="2026">
         <p class="card-meta">Semester 9 / 2026</p>
         <h2>Network Science presentation</h2>
         <p>
@@ -193,7 +530,7 @@
         </p>
       </a>
 
-      <a class="card" href="ir/">
+      <a class="card" href="ir/" data-product="presentation" data-type="academic" data-year="2026">
         <p class="card-meta">Semester 9 / 2026</p>
         <h2>Information Retrieval presentation</h2>
         <p>
@@ -202,7 +539,7 @@
         </p>
       </a>
 
-      <a class="card" href="CCT/">
+      <a class="card" href="CCT/" data-product="presentation" data-type="hackathon" data-year="2026">
         <p class="card-meta">NIT Hackathon / 2026</p>
         <h2>CCT: Confusion-Calibrated Tutoring</h2>
         <p>
@@ -211,15 +548,168 @@
         </p>
       </a>
 
-      <a class="card" href="originzero/">
+      <a class="card" href="originzero/" data-product="presentation" data-type="professional" data-year="2026">
+        <p class="card-meta">Approval deck / 2026</p>
         <h2>OriginZero — approval deck</h2>
         <p>
           A research collaboration portal for the AMCS department. Seven slides, presented as a
           website.
         </p>
       </a>
+      </div>
+
+      <p class="empty" data-empty hidden>
+        Nothing matches these filters yet. <button type="button" class="clear" data-clear>Clear filters</button>
+      </p>
+      </section>
 
       <footer>github.com/Parama-Guru</footer>
     </main>
+    <script>
+      (() => {
+        // Products and presentation types live only here and in each card's data-* attributes.
+        const PRODUCTS = [
+          { id: "website", label: "Websites" },
+          { id: "application", label: "Applications" },
+          { id: "presentation", label: "Presentations" },
+        ];
+        const TYPES = [
+          { id: "academic", label: "Academic" },
+          { id: "hackathon", label: "Hackathon" },
+          { id: "professional", label: "Professional" },
+        ];
+        const SORTS = [
+          { id: "featured", label: "Featured" },
+          { id: "newest", label: "Newest" },
+          { id: "oldest", label: "Oldest" },
+        ];
+
+        const form = document.querySelector("[data-filters]");
+        const list = document.querySelector("[data-cards]");
+        const sub = document.querySelector("[data-sub]");
+        const status = document.querySelector("[data-status]");
+        const empty = document.querySelector("[data-empty]");
+        const clearButtons = document.querySelectorAll("[data-clear]");
+        const cards = [...list.querySelectorAll(".card")];
+        const reduce = matchMedia("(prefers-reduced-motion: reduce)");
+        const years = [...new Set(cards.map((card) => card.dataset.year))].sort((a, b) => b - a);
+        const defaults = { product: "all", type: "all", year: "all", sort: "featured" };
+        const valid = {
+          product: ["all", ...PRODUCTS.map((p) => p.id)],
+          type: ["all", ...TYPES.map((t) => t.id)],
+          year: ["all", ...years],
+          sort: SORTS.map((s) => s.id),
+        };
+
+        cards.forEach((card, index) => {
+          card.dataset.order = index;
+          card.style.setProperty("--i", index);
+          card.classList.add("enter");
+          card.addEventListener("animationend", () => card.classList.remove("enter"), { once: true });
+        });
+
+        const params = new URLSearchParams(location.search);
+        const state = { ...defaults };
+        for (const key of Object.keys(state)) if (valid[key].includes(params.get(key))) state[key] = params.get(key);
+        if (state.product !== "presentation") state.type = "all";
+
+        const productOk = (card, product = state.product, type = state.type) =>
+          product === "all" || (card.dataset.product === product && (product !== "presentation" || type === "all" || card.dataset.type === type));
+        const yearOk = (card, year = state.year) => year === "all" || card.dataset.year === year;
+
+        function chips(name, options) {
+          document.querySelector(`[data-chips="${name}"]`).innerHTML = options
+            .map(
+              (o) => `<label class="chip"><input type="radio" name="${name}" value="${o.id}"${state[name] === o.id ? " checked" : ""}><span>${o.label}${
+                name === "sort" ? "" : ` <small data-count="${name}:${o.id}"></small>`
+              }</span></label>`,
+            )
+            .join("");
+        }
+        chips("product", [{ id: "all", label: "All" }, ...PRODUCTS]);
+        chips("type", [{ id: "all", label: "All presentations" }, ...TYPES]);
+        chips("year", [{ id: "all", label: "All years" }, ...years.map((y) => ({ id: y, label: y }))]);
+        chips("sort", SORTS);
+
+        function counts() {
+          const set = (key, value) => (document.querySelector(`[data-count="${key}"]`).textContent = value);
+          set("product:all", cards.filter((c) => yearOk(c)).length);
+          for (const p of PRODUCTS) set(`product:${p.id}`, cards.filter((c) => productOk(c, p.id, "all") && yearOk(c)).length);
+          set("type:all", cards.filter((c) => productOk(c, "presentation", "all") && yearOk(c)).length);
+          for (const t of TYPES) set(`type:${t.id}`, cards.filter((c) => productOk(c, "presentation", t.id) && yearOk(c)).length);
+          set("year:all", cards.filter((c) => productOk(c)).length);
+          for (const y of years) set(`year:${y}`, cards.filter((c) => productOk(c) && yearOk(c, y)).length);
+        }
+
+        function apply(animate) {
+          const before = new Map();
+          if (animate) for (const card of cards) if (!card.hidden) before.set(card, card.getBoundingClientRect());
+
+          const order = (a, b) => a.dataset.order - b.dataset.order;
+          const sorted = [...cards].sort((a, b) => {
+            if (state.sort === "featured") return order(a, b);
+            const byYear = state.sort === "newest" ? b.dataset.year - a.dataset.year : a.dataset.year - b.dataset.year;
+            return byYear || order(a, b);
+          });
+          const shown = sorted.filter((card) => productOk(card) && yearOk(card));
+          for (const card of sorted) {
+            card.hidden = !shown.includes(card);
+            if (card.hidden) card.classList.remove("enter");
+            list.append(card);
+          }
+
+          const open = state.product === "presentation";
+          sub.classList.toggle("is-open", open);
+          sub.inert = !open;
+          counts();
+          const filtered = Object.keys(defaults).some((key) => state[key] !== defaults[key]);
+          status.textContent = shown.length === cards.length ? `Showing all ${cards.length} projects` : `Showing ${shown.length} of ${cards.length} projects`;
+          empty.hidden = shown.length > 0;
+          for (const button of clearButtons) if (button.closest("[data-filters]")) button.hidden = !filtered;
+
+          const query = new URLSearchParams();
+          for (const key of Object.keys(defaults)) if (state[key] !== defaults[key]) query.set(key, state[key]);
+          const search = query.toString();
+          history.replaceState(null, "", search ? `?${search}` : location.pathname);
+
+          if (!animate || reduce.matches) return;
+          const easing = "cubic-bezier(0.22, 1, 0.36, 1)";
+          shown.forEach((card, index) => {
+            card.classList.remove("enter");
+            const from = before.get(card);
+            if (from) {
+              const to = card.getBoundingClientRect();
+              const dx = from.left - to.left;
+              const dy = from.top - to.top;
+              if (dx || dy) card.animate([{ transform: `translate(${dx}px, ${dy}px)` }, { transform: "none" }], { duration: 750, easing });
+            } else {
+              card.animate([{ opacity: 0, transform: "translateY(16px) scale(0.98)" }, { opacity: 1, transform: "none" }], { duration: 700, delay: 70 * Math.min(index, 8), easing, fill: "backwards" });
+            }
+          });
+        }
+
+        form.addEventListener("change", (event) => {
+          const input = event.target;
+          if (!(input instanceof HTMLInputElement)) return;
+          state[input.name] = input.value;
+          input.closest(".chip")?.scrollIntoView({ block: "nearest", inline: "nearest", behavior: reduce.matches ? "auto" : "smooth" });
+          if (input.name === "product" && input.value !== "presentation") {
+            state.type = "all";
+            form.querySelector('input[name="type"][value="all"]').checked = true;
+          }
+          apply(true);
+        });
+        form.addEventListener("submit", (event) => event.preventDefault());
+        for (const button of clearButtons)
+          button.addEventListener("click", () => {
+            Object.assign(state, defaults);
+            for (const input of form.querySelectorAll("input")) input.checked = input.value === defaults[input.name];
+            apply(true);
+          });
+
+        form.hidden = false;
+        apply(false);
+      })();
+    </script>
   </body>
 </html>
