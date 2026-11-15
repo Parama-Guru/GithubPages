@@ -1,7 +1,7 @@
-import type { RouteId, ZoneKey } from "@/routes/routes";
+import type { ZoneKey } from "@/routes/routes";
 import cameraPath from "./camera-path.json";
 import type { Key, Pose, Vec3 } from "./math";
-import { lerpPose, sampleKeys } from "./math";
+import { sampleKeys } from "./math";
 
 export type ChapterRange = { start: number; end: number };
 
@@ -24,15 +24,6 @@ export function sampleJourney(ranges: ChapterRange[], progress: number): Pose {
 
 export function evenRanges(count: number): ChapterRange[] {
   return Array.from({ length: count }, (_, index) => ({ start: index / count, end: (index + 1) / count }));
-}
-
-export const routePoses = Object.fromEntries(
-  Object.entries(cameraPath.routes).map(([id, poses]) => [id, poses.map((entry) => ({ position: entry.position as unknown as Vec3, target: entry.target as unknown as Vec3, fov: entry.fov }))]),
-) as unknown as Record<Exclude<RouteId, "home">, [Pose, Pose]>;
-
-export function sampleRoute(id: Exclude<RouteId, "home">, progress: number): Pose {
-  const [from, to] = routePoses[id];
-  return lerpPose(from, to, progress);
 }
 
 export const zoneExtents: Record<ZoneKey, [number, number]> = {
@@ -58,7 +49,7 @@ function bump(value: number, from: number, to: number): number {
 }
 
 export function exposureAt(z: number): number {
-  return 1 + 0.42 * bump(z, -3, 3.5) - 0.3 * bump(z, -116, -107);
+  return 1 + 0.24 * bump(z, -3, 3.5) - 0.3 * bump(z, -116, -107);
 }
 
 export function travelAt(ranges: ChapterRange[], progress: number): number {

@@ -3,16 +3,18 @@ import { clients } from "@/content";
 import { box, merged, partition, placed, plane, pool, room } from "../kit";
 import { label } from "../textures";
 import { letterbox, loadImage } from "./painters";
-import { createZone, cue, type ZoneBuilder } from "./shared";
+import { createZone, cue, pause, type ZoneBuilder } from "./shared";
 
 export const buildGallery: ZoneBuilder = async (context) => {
   const { m } = context;
   const images = await Promise.all(clients.logos.map((logo) => loadImage(`/GithubPages/ge/${logo.src}`)));
-  const boxes = clients.logos.map((logo, index) => {
+  const boxes: { logo: (typeof clients.logos)[number]; material: MeshBasicMaterial }[] = [];
+  for (const [index, logo] of clients.logos.entries()) {
+    // One plate per task: painting them all at once was a long task on a phone.
+    if (index % 3 === 0) await pause();
     const plate = label(`logo-${index}`, 512, 288, letterbox(images[index] ?? null));
-    const material = new MeshBasicMaterial({ map: plate.texture, toneMapped: false });
-    return { logo, material };
-  });
+    boxes.push({ logo, material: new MeshBasicMaterial({ map: plate.texture, toneMapped: false }) });
+  }
 
   const zone = createZone(context, (frame) => {
     const reveal = cue(-frame.camera.z, 63, 65.4);
@@ -22,7 +24,7 @@ export const buildGallery: ZoneBuilder = async (context) => {
     });
   });
   const g = zone.group;
-  g.add(room(m, { width: 7, height: 4.4, near: -64, far: -80, strips: 1, wall: m.wallDark, floor: m.floorDark }));
+  g.add(room(m, { width: 7, height: 4.4, near: -64, far: -80, strips: 1, wall: m.wallDark, floor: m.floorDark, wainscot: 0 }));
   g.add(partition(m, -80, 7, 4.4, 3.2, 3.2));
 
   boxes.forEach((entry, index) => {

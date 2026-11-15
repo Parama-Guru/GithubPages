@@ -14,7 +14,7 @@ float hash(vec3 p) {
 void main() {
   vec3 direction = normalize(vDirection);
   float height = clamp(direction.y, -0.2, 1.0);
-  vec3 color = mix(uHorizon, uTop, smoothstep(-0.02, 0.55, height));
+  vec3 color = mix(uHorizon, uTop, smoothstep(0.0, 0.32, height));
   float glow = pow(max(dot(direction, normalize(uGlowDirection)), 0.0), 12.0) * 0.55;
   color += uGlow * glow * smoothstep(0.16, -0.02, height);
   vec3 cell = floor(direction * 420.0);

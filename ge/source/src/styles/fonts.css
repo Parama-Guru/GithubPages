@@ -1,0 +1,41 @@
+/* Self-hosted fonts, Latin subset only (README "Typography"): Spectral 500 for display, Hanken Grotesk (variable) for
+   reading text, controls and the tracked uppercase labels, and Parisienne (Fontsource's Latin stylesheet, main.ts) for
+   script accents. index.html preloads Spectral and Hanken Grotesk, the faces of the first screen. */
+@font-face {
+  font-family: "Spectral";
+  font-style: normal;
+  font-display: swap;
+  /* One static weight serves every display weight, so the browser never fakes a bolder cut. */
+  font-weight: 400 700;
+  src: url("@fontsource/spectral/files/spectral-latin-500-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Hanken Grotesk Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url("@fontsource-variable/hanken-grotesk/files/hanken-grotesk-latin-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* Local fallbacks scaled to the web fonts' width, ascent and descent (measured with canvas text metrics), so the
+   swap after loading does not reflow the prerendered text. */
+@font-face {
+  font-family: "Spectral Fallback";
+  src: local("Georgia");
+  size-adjust: 101.3%;
+  ascent-override: 104.6%;
+  descent-override: 45.4%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: "Hanken Grotesk Fallback";
+  src: local("Arial"), local("Helvetica");
+  size-adjust: 101.8%;
+  ascent-override: 98.3%;
+  descent-override: 29.5%;
+  line-gap-override: 0%;
+}

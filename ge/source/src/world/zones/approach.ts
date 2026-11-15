@@ -21,28 +21,16 @@ export const buildApproach: ZoneBuilder = async (context) => {
     element.onerror = () => resolve(element);
     element.src = `/GithubPages/ge/${company.logo.src}`;
   });
-  const signLabel = label("approach-sign", 2048, 264, () => undefined);
-  let signDrawn = -1;
-  const drawSign = (progress: number) => {
-    const step = Math.round(progress * 60) / 60;
-    if (step === signDrawn) return;
-    signDrawn = step;
-    signLabel.redraw((ctx, w, h) => {
-      if (!logo.naturalWidth) return;
-      ctx.save();
-      ctx.beginPath();
-      ctx.rect(0, 0, w * step, h);
-      ctx.clip();
-      ctx.shadowColor = tone(ink.logoGlow, 0.9);
-      ctx.shadowBlur = 18;
-      ctx.drawImage(logo, 0, 0, w, h);
-      ctx.restore();
-    });
-  };
+  // The sign is painted once, fully lit, before the zone's first frame (also when the zone is rebuilt after streaming).
+  const signLabel = label("approach-sign", 2048, 264, (ctx, w, h) => {
+    if (!logo.naturalWidth) return;
+    ctx.shadowColor = tone(ink.logoGlow, 0.9);
+    ctx.shadowBlur = 18;
+    ctx.drawImage(logo, 0, 0, w, h);
+  });
 
   const doors = await animated("entrance");
   const zone = createZone(context, (frame) => {
-    drawSign(frame.motion ? Math.min(1, frame.time / 1.2) : 1);
     doors.scrub(cue(-frame.camera.z, -9.5, -2.5));
   });
   const dispose = zone.dispose;
@@ -72,6 +60,8 @@ export const buildApproach: ZoneBuilder = async (context) => {
     placed(new BoxGeometry(opening, H - doorHeight, 0.6), [0, doorHeight + (H - doorHeight) / 2, -0.3]),
   ];
   g.add(merged(m.cladding, facade));
+  // Emerald plinth band along the foot of the terracotta façade, either side of the entrance.
+  for (const x of [-(opening / 2 + side / 2), opening / 2 + side / 2]) g.add(box(m.darkMetal, [side, 0.7, 0.08], [x, 0.35, 0.04]));
   for (const x of [-10.2, 10.2]) g.add(box(m.glassWarm, [12.6, 1.9, 0.05], [x, 4.6, 0.04]));
   const fins: BufferGeometry[] = [];
   for (let x = -17; x <= 17; x += 1.7) if (Math.abs(x) > 2.6) fins.push(placed(new BoxGeometry(0.08, 2.3, 0.3), [x, 4.6, 0.15]));
@@ -86,10 +76,11 @@ export const buildApproach: ZoneBuilder = async (context) => {
   g.add(pool(m, [0, 0, 2.2], 7));
 
   const signMaterial = zone.own(glowMaterial(signLabel.texture, 2.2));
-  const signPlate = plane(signMaterial, 11, 11 / signLabel.aspect, [0, 6.6, 0.06]);
+  // Clear of the plate's face (and pulled forward in depth) so the lettering never z-fights with it and flickers.
+  Object.assign(signMaterial, { polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 });
+  const signPlate = plane(signMaterial, 11, 11 / signLabel.aspect, [0, 6.6, 0.1]);
   g.add(box(m.darkMetal, [12.7, 2.1, 0.12], [0, 6.6, 0.0]));
   g.add(signPlate);
-  drawSign(0);
 
   doors.root.position.z = -0.1;
   g.add(doors.root);

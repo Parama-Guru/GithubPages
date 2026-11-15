@@ -6,8 +6,9 @@ Export (after editing the empties in Blender):
   blender --background blender/camera_path.blend --python blender/camera_path.py -- export src/world/camera-path.json
 
 Empties "key.NNN" are camera positions and "key.NNN.target" their look-at points; custom
-properties hold the chapter, the chapter-local time and the field of view. "route.<id>.<n>"
-empties are the start and end poses of each dedicated page. Blender is Z-up; the website is Y-up.
+properties hold the chapter, the chapter-local time and the field of view. Blender is Z-up; the website is Y-up.
+The 3D world is shown on the home page only, so there are no per-page camera poses ("route.*" empties left in an
+older .blend file are ignored).
 """
 
 import json
@@ -41,9 +42,7 @@ def seed(source, target):
     data = json.load(open(source, encoding="utf-8"))
     scene = bpy.context.scene
     journey = bpy.data.collections.new("Journey")
-    routes = bpy.data.collections.new("Routes")
     scene.collection.children.link(journey)
-    scene.collection.children.link(routes)
     points = []
     for index, key in enumerate(data["journey"]):
         name = f"key.{index:03d}"
@@ -60,12 +59,6 @@ def seed(source, target):
     for point, location in zip(spline.points, points):
         point.co = (*location, 1.0)
     journey.objects.link(bpy.data.objects.new("JourneyPath", curve))
-    for route_id, poses in data["routes"].items():
-        for index, pose in enumerate(poses):
-            name = f"route.{route_id}.{index}"
-            obj = empty(name, to_blender(pose["position"]), "ARROWS", 0.5, routes)
-            obj["fov"] = pose["fov"]
-            empty(f"{name}.target", to_blender(pose["target"]), "SPHERE", 0.15, routes)
     bpy.ops.wm.save_as_mainfile(filepath=target, compress=True)
     print("seeded", target)
 
@@ -85,16 +78,10 @@ def export(target):
                 "fov": float(obj["fov"]),
             }
         )
-    routes = {}
-    for name in sorted(n for n in objects if n.startswith("route.") and not n.endswith(".target")):
-        route_id, index = name[len("route.") :].rsplit(".", 1)
-        obj = objects[name]
-        pose = {"position": to_web(obj.matrix_world.translation), "target": to_web(objects[f"{name}.target"].matrix_world.translation), "fov": float(obj["fov"])}
-        routes.setdefault(route_id, [None, None])[int(index)] = pose
     with open(target, "w", encoding="utf-8") as handle:
-        json.dump({"journey": journey, "routes": routes}, handle, indent=1)
+        json.dump({"journey": journey}, handle, indent=1)
         handle.write("\n")
-    print("exported", target, len(journey), "keys", len(routes), "routes")
+    print("exported", target, len(journey), "keys")
 
 
 if mode == "seed":

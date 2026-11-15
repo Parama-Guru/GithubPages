@@ -1,18 +1,4 @@
 {
- "about": {
-  "founded": "Ganesh Electricals was established in 1997 by Mr. B.Kumareson to further enhance and capitalise on his strong background and knowledge of the Power Distribution and Transmission sector.",
-  "note": "Mr.Kumareson has past experience in Tamilnadu government establishment.",
-  "purpose": "To undertake specialized turnkey industrial electrification projects and power the industrial sector of our nation.",
-  "introduction": [
-   "GANESH ELECTRICALS, an electrical engineering and contracting company established in 1997 to provide quality, safety, reliability and timely completion of projects. GANESH ELECTRICALS has successfully managed to carve its niche in the field of electrical engineering and contracting in India.",
-   "We wish to introduce ourselves as one of the prosperous electrical contractors in Chennai carrying out electrical design & installation on turnkey basis for valuable clients from 230KV, 110kV EHV substations to 33KV, 11kV Installation, up to downstream electrical works including plant, machinery and office electrification works."
-  ],
-  "capability": "We are authorized to carryout all electrical works with no limitation in type of voltage or capacity. We have executed turnkey projects in various categories based on Voltage level 230KV, 110KV, 33kV & 11KV.",
-  "localIssues": [
-   "Ganesh Electricals has rich experience executing projects in Pillaipakkam, Oragadam, Vallam vadagal and neighboring area. We've good public, industrial relation and good rapport with local and district administration authorities.",
-   "We don't entertain any issues affecting project work. In case of any unforeseen issues, it's our responsibility to resolve it amicably without disturbing our client."
-  ]
- },
  "serve": [
   "Understand and meet client requirement",
   "Provide quality, safety, reliability and timely completion of projects",
@@ -27,7 +13,7 @@
    "designation": "Proprietor",
    "education": "DEE",
    "experience": "30 yrs",
-   "email": "kumareson@ganeshvar.com"
+   "email": "kumareson@ganeshelectricals.in"
   },
   {
    "name": "S. Krishnan",
@@ -1377,15 +1363,15 @@
   },
   {
    "title": "Udyam (MSME) Registration",
-   "detail": "UDYAM-TN-24-0003618 — Small enterprise, Services. Date of incorporation 06/05/1997."
+   "detail": "Registered as a small enterprise (services). Date of incorporation / registration: 06/05/1997."
   },
   {
    "title": "Financial stability",
    "detail": "No liabilities to bank and suppliers. Consistently high financial strength CRISIL score — CRISIL MSE 2 rating (Financial Strength: High), indicating 'High credit worthiness in relation to other MSEs'."
   },
   {
-   "title": "GST Appreciation Letter",
-   "detail": "Certificate of appreciation from the Central Board of Indirect Taxes and Customs, Government of India, for prompt filing of returns and payment of GST during the financial year 2024-25."
+   "title": "GST Appreciation",
+   "detail": "Certificates of appreciation for prompt filing of returns and payment of GST in FY 2021–22, 2022–23, 2023–24 and 2024–25 (the FY 2024–25 letter is from the Central Board of Indirect Taxes and Customs, Government of India)."
   }
  ],
  "achievements": {
@@ -1601,13 +1587,6 @@
      "M/s. Zetek Casting Pvt. Ltd."
     ]
    }
-  ]
- },
- "contact": {
-  "address": "No.1, 1st Floor, New Street, Shakthi Nagar, Porur, Chennai – 600 116",
-  "emails": [
-   "enquiry@ganeshelectricals.in",
-   "kumareson@ganeshvar.com"
   ]
  }
 }

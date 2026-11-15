@@ -1,29 +1,24 @@
 import { AnimationMixer, type AnimationClip, type Group, type Mesh, type MeshStandardMaterial, type Object3D } from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "three/addons/libs/meshopt_decoder.module.js";
-import { looks, type Finish, type Look } from "./look";
+import { look, type Finish } from "./look";
 
 export type AssetName = "switchgear" | "transformer" | "insulator" | "tower" | "entrance";
 
 const loader = new GLTFLoader();
+// Decompress the models in workers: on the main thread the meshopt decoder took one long task per model.
+MeshoptDecoder.useWorkers?.(2);
 loader.setMeshoptDecoder(MeshoptDecoder);
 
 const scenes = new Map<AssetName, Promise<{ scene: Group; clips: AnimationClip[] }>>();
-const finishes = new Map<string, Set<MeshStandardMaterial>>();
-let modelLook: Look["models"] = looks.copper.models;
 
+// Named Blender materials take their finish from look.json, so the models follow the palette without a rebuild.
 function finish(material: MeshStandardMaterial, value: Finish | undefined): void {
   if (!value) return;
   material.color.set(value.color);
   if (value.metalness !== undefined) material.metalness = value.metalness;
   if (value.roughness !== undefined) material.roughness = value.roughness;
 }
-
-export function applyModelLook(look: Look): void {
-  modelLook = look.models;
-  for (const [name, materials] of finishes) for (const material of materials) finish(material, modelLook[name]);
-}
-
 
 function prepare(scene: Group): void {
   scene.traverse((object) => {
@@ -34,14 +29,11 @@ function prepare(scene: Group): void {
     if (material.emissiveIntensity > 0 && material.emissive.getHex() !== 0) {
       material.emissiveIntensity = 2.4;
       material.toneMapped = false;
+      // Meter displays glow jade like the energy flow instead of the model's cyan.
+      if (material.name === "MeterGlass") material.emissive.set(look.energy.cool);
     }
     material.envMapIntensity = 1.1;
-    if (material.name) {
-      const group = finishes.get(material.name) ?? new Set<MeshStandardMaterial>();
-      group.add(material);
-      finishes.set(material.name, group);
-      finish(material, modelLook[material.name]);
-    }
+    if (material.name) finish(material, look.models[material.name]);
     if (material.transparent) material.depthWrite = false;
   });
 }

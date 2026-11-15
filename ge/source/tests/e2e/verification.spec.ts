@@ -81,31 +81,37 @@ test.describe("verification", () => {
     await page.goto("#clients");
     await ready(page);
     await expect.poll(async () => (await data(page)).zone, { timeout: 15_000 }).toBe("gallery");
-    await page.goto("about/");
-    await ready(page);
-    await page.evaluate(() => {
+    // From a page entered directly (no world loaded there) the link boots the world on the way home.
+    const fresh = await page.context().newPage();
+    await fresh.goto("about/");
+    await fresh.waitForFunction(() => document.querySelector<HTMLElement>(".world")?.dataset.world === "idle");
+    await fresh.evaluate(() => {
       const link = document.createElement("a");
       link.href = "/GithubPages/ge/#quality";
       document.querySelector("main")?.append(link);
       link.click();
     });
-    await expect.poll(async () => (await data(page)).zone, { timeout: 15_000 }).toBe("safety");
+    await ready(fresh);
+    await expect.poll(async () => (await data(fresh)).zone, { timeout: 20_000 }).toBe("safety");
+    await fresh.close();
   });
 
-  test("scrolling during a camera flight leaves no residue", async ({ page }) => {
+  test("scrolling another page leaves the parked camera where the tour was left", async ({ page }) => {
     await page.goto("");
     await ready(page);
-    await page.locator(".header-nav").getByRole("link", { name: "Projects" }).click();
-    await page.waitForTimeout(500);
-    await page.mouse.wheel(0, 700);
-    await page.waitForTimeout(3500);
-    const y = await page.evaluate(() => window.scrollY);
-    const settled = (await data(page)).camera;
-    await page.evaluate(() => window.scrollTo(0, 0));
-    await page.waitForTimeout(1000);
-    await page.evaluate((target) => window.scrollTo(0, target), y);
+    await page.evaluate((y) => window.scrollTo(0, y), await chapterY(page, 3));
+    await expect.poll(async () => (await data(page)).zone, { timeout: 15_000 }).toBe("hall");
     await page.waitForTimeout(1500);
-    expect((await data(page)).camera).toBe(settled);
+    const parked = (await data(page)).camera;
+    await page.locator("#projects .actions").getByRole("link", { name: "View projects" }).click();
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Projects");
+    await page.mouse.wheel(0, 1400);
+    await page.waitForTimeout(1500);
+    expect((await data(page)).camera).toBe(parked);
+    await page.goBack();
+    await expect(page).toHaveURL(/\/GithubPages\/ge\/$/);
+    await page.waitForTimeout(1500);
+    expect((await data(page)).camera).toBe(parked);
     expect((await data(page)).zone).toBe("hall");
   });
 
@@ -124,19 +130,39 @@ test.describe("verification", () => {
     await context.close();
   });
 
-  test("sound is off by default and can be switched on", async ({ page }) => {
+  test("with 3D on, sound starts at the first interaction; the static site stays silent", async ({ page, browser }) => {
+    const sound = (target: Page) =>
+      target.evaluate(() => ({ sound: document.documentElement.dataset.sound, audio: document.documentElement.dataset.audio, last: document.documentElement.dataset.lastSound }));
     await page.goto("");
     await ready(page);
-    expect(await page.evaluate(() => document.documentElement.dataset.sound)).toBe("off");
-    await page.getByRole("button", { name: "Menu" }).click();
-    await page.getByLabel("Sound").check();
-    await page.keyboard.press("Escape");
-    expect(await page.evaluate(() => document.documentElement.dataset.sound)).toBe("on");
+    // Browsers only allow audio after a gesture, so nothing is created before the first click.
+    expect(await sound(page)).toEqual({ sound: "on" });
+    await page.locator("#welcome .chapter-lead").click();
+    await expect.poll(async () => (await sound(page)).audio).toBe("running");
+    expect((await sound(page)).last).toBe("hum");
     await page.getByRole("button", { name: "Enter the facility" }).click();
-    await expect.poll(() => page.evaluate(() => document.documentElement.dataset.lastSound)).toBe("door");
-    await page.reload();
-    await ready(page);
-    expect(await page.evaluate(() => document.documentElement.dataset.sound)).toBe("on");
+    await expect.poll(async () => (await sound(page)).last).toBe("door");
+    // Switching the 3D experience off in the menu (the page reloads) stops its sound with it.
+    await page.getByRole("button", { name: "Menu" }).click();
+    await page.getByRole("switch", { name: /3D experience/ }).click();
+    await expect(page.locator(".world")).toHaveAttribute("data-world", "static");
+    await expect(page.getByRole("switch", { name: /3D experience/, includeHidden: true })).not.toBeChecked();
+    // The 2D site has no Enter button; clicking around it stays silent.
+    await expect(page.getByRole("button", { name: "Enter the facility" })).toBeHidden();
+    await page.locator("#welcome .chapter-lead").click();
+    await page.locator(".flat-hero-art").click();
+    await page.waitForTimeout(500);
+    expect(await sound(page)).toEqual({ sound: "off" });
+    // The static site for reduced motion is silent too.
+    const context = await browser.newContext({ reducedMotion: "reduce" });
+    const still = await context.newPage();
+    await still.goto("");
+    await expect(still.locator(".world")).toHaveAttribute("data-world", "static");
+    await still.locator("#welcome .chapter-lead").click();
+    await still.locator(".flat-hero-art").click();
+    await still.waitForTimeout(500);
+    expect(await sound(still)).toEqual({ sound: "off" });
+    await context.close();
   });
 
   test("tapping the doors on a touch screen enters the facility", async ({ browser }) => {

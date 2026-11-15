@@ -193,8 +193,8 @@ def timeline(name, end):
     scene.render.fps = 50
 
 
-THEMES = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src", "world", "themes.json"), encoding="utf-8"))
-MODEL = THEMES[os.environ.get("GE_THEME", "copper")]["models"]
+LOOK = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src", "world", "look.json"), encoding="utf-8"))
+MODEL = LOOK["models"]
 
 
 def linear(hex_color):
@@ -203,27 +203,27 @@ def linear(hex_color):
     return tuple((c / 255) / 12.92 if c / 255 <= 0.04045 else (((c / 255) + 0.055) / 1.055) ** 2.4 for c in channels)
 
 
-def themed(name, metallic, roughness, emission=None, strength=0.0):
+def look_material(name, metallic, roughness, emission=None, strength=0.0):
     finish = MODEL.get(name, {})
     return material(name, linear(finish["color"]), metallic, finish.get("roughness", roughness), emission, strength)
 
 
 def palette():
     return {
-        "enamel": themed("PanelEnamel", 0.15, 0.42),
-        "enamel_dark": themed("PanelDark", 0.3, 0.5),
-        "steel": themed("Steel", 0.9, 0.32),
-        "black": themed("Rubber", 0.0, 0.7),
-        "copper": themed("Copper", 1.0, 0.28),
-        "porcelain": themed("Porcelain", 0.0, 0.18),
-        "glass": themed("GlassInsulator", 0.0, 0.08),
-        "tank": themed("TankPaint", 0.25, 0.45),
-        "galvanised": themed("Galvanised", 0.85, 0.45),
+        "enamel": look_material("PanelEnamel", 0.15, 0.42),
+        "enamel_dark": look_material("PanelDark", 0.3, 0.5),
+        "steel": look_material("Steel", 0.9, 0.32),
+        "black": look_material("Rubber", 0.0, 0.7),
+        "copper": look_material("Copper", 1.0, 0.28),
+        "porcelain": look_material("Porcelain", 0.0, 0.18),
+        "glass": look_material("GlassInsulator", 0.0, 0.08),
+        "tank": look_material("TankPaint", 0.25, 0.45),
+        "galvanised": look_material("Galvanised", 0.85, 0.45),
         "lamp_red": material("LampRed", (0.5, 0.05, 0.03), 0.0, 0.3, (1.0, 0.12, 0.05), 6.0),
         "lamp_green": material("LampGreen", (0.05, 0.4, 0.12), 0.0, 0.3, (0.15, 1.0, 0.35), 6.0),
         "lamp_amber": material("LampAmber", (0.5, 0.3, 0.02), 0.0, 0.3, (1.0, 0.6, 0.08), 6.0),
         "display": material("MeterGlass", (0.02, 0.05, 0.06), 0.0, 0.1, (0.2, 0.75, 1.0), 2.5),
-        "warning": themed("WarningYellow", 0.0, 0.5),
+        "warning": look_material("WarningYellow", 0.0, 0.5),
         "pane": glass_material(),
     }
 

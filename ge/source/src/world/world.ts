@@ -1,11 +1,11 @@
 import {
-  ACESFilmicToneMapping,
-  AgXToneMapping,
   BufferGeometry,
   Color,
+  DirectionalLight,
   FogExp2,
   HemisphereLight,
   Mesh,
+  NeutralToneMapping,
   NoToneMapping,
   PerspectiveCamera,
   PMREMGenerator,
@@ -17,22 +17,71 @@ import {
   Vector2,
   Vector3,
   WebGLRenderer,
+  WebGLRenderTarget,
+  type Material,
   type Object3D,
+  type Texture,
 } from "three";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
-import type { ThemeId } from "@/app/theme";
-import type { RouteId, ZoneKey } from "@/routes/routes";
-import { applyModelLook, preloadAssets, type AssetName } from "./assets";
-import { setInk } from "./ink";
-import { looks } from "./look";
+import type { ZoneKey } from "@/routes/routes";
+import { preloadAssets, type AssetName } from "./assets";
+import { look } from "./look";
 import { batch, type Frame, type LightSpec, type Pickable, type Zone } from "./kit";
-import { applyLook, createMaterials, disposeMaterials, skyMaterial, type SkyMaterial } from "./materials";
+import { createMaterials, disposeMaterials, paintMaterials, skyMaterial, type SkyMaterial } from "./materials";
 import { clamp01, lerpPose, smootherstep, type Pose } from "./math";
-import { palettes, type ScenePalette } from "./palette";
-import { evenRanges, exposureAt, sampleJourney, sampleRoute, travelAt, zoneAt, zoneOrder, type ChapterRange } from "./path";
+import { palette } from "./palette";
+import { evenRanges, exposureAt, sampleJourney, travelAt, zoneAt, zoneOrder, type ChapterRange } from "./path";
 import type { Post } from "./post";
-import { disposeTextures, fontsReady, repaintLabels } from "./textures";
-import type { Tier, ZoneBuilder } from "./zones/shared";
+import { disposeTextures, fontsReady } from "./textures";
+import { pause, type Tier, type ZoneBuilder } from "./zones/shared";
+
+const sleep = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+/** Resolves when the browser is idle (or after `timeout` ms), for work that is only needed later. */
+const idle = (timeout = 1500) =>
+  new Promise<void>((resolve) => (typeof window.requestIdleCallback === "function" ? window.requestIdleCallback(() => resolve(), { timeout }) : setTimeout(resolve, 120)));
+
+type Drawable = Mesh & { isInstancedMesh?: boolean; isBatchedMesh?: boolean; isSkinnedMesh?: boolean; instanceColor?: unknown };
+
+/**
+ * Meshes that draw a material already seen in another variant (e.g. the switchgear row is instanced, the hero panel
+ * with the same materials is not). three's compile() prepares one program per material, so these are compiled on their
+ * own; otherwise their program was linked synchronously on the first frame they appeared in (a 0.4 s freeze).
+ */
+function variants(root: Object3D): Object3D[] {
+  const first = new Set<Material>();
+  const seen = new Set<string>();
+  const extra: Object3D[] = [];
+  root.traverse((object) => {
+    const mesh = object as Drawable;
+    if (!mesh.isMesh) return;
+    const flags = `${mesh.isInstancedMesh ? 1 : 0}${mesh.isBatchedMesh ? 1 : 0}${mesh.isSkinnedMesh ? 1 : 0}${mesh.instanceColor ? 1 : 0}${Object.keys(mesh.geometry.morphAttributes).length}`;
+    for (const material of Array.isArray(mesh.material) ? mesh.material : [mesh.material]) {
+      const key = `${material.uuid}|${flags}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      if (first.has(material)) extra.push(object);
+      else first.add(material);
+    }
+  });
+  return extra;
+}
+
+function texturesOf(root: Object3D): Set<Texture> {
+  const found = new Set<Texture>();
+  const add = (value: unknown) => {
+    if ((value as Texture | null)?.isTexture) found.add(value as Texture);
+  };
+  root.traverse((object) => {
+    const mesh = object as Mesh;
+    if (!mesh.isMesh) return;
+    for (const material of Array.isArray(mesh.material) ? mesh.material : [mesh.material]) {
+      Object.values(material).forEach(add);
+      const uniforms = (material as { uniforms?: Record<string, { value: unknown }> }).uniforms;
+      if (uniforms) for (const uniform of Object.values(uniforms)) add(uniform.value);
+    }
+  });
+  return found;
+}
 
 // Post-processing is only used above the low tier and picking acceleration only after the first frame,
 // so both stay out of the critical download.
@@ -71,13 +120,13 @@ const zoneAssets: Record<ZoneKey, AssetName[]> = {
   yard: ["transformer", "insulator", "tower"],
 };
 
-export type Target = { kind: "journey" } | { kind: "route"; id: Exclude<RouteId, "home"> };
+// The world is shown on the home page only (the other pages share the 2D design), so the camera follows the journey.
+export type Target = { kind: "journey" };
 
 type WorldOptions = {
   canvas: HTMLCanvasElement;
   tier: Tier;
   motion: boolean;
-  theme: ThemeId;
   onProgress?: (value: number) => void;
   onHover?: (label: string | null, x: number, y: number) => void;
   onPick?: (id: string) => void;
@@ -95,8 +144,7 @@ export class World {
   private readonly pool: PointLight[] = [];
   private readonly sky: Mesh<SphereGeometry, SkyMaterial>;
   private readonly hemisphere: HemisphereLight;
-  private theme: ThemeId;
-  private palette: ScenePalette;
+  private readonly sun = new DirectionalLight();
   private readonly raycaster = new Raycaster();
   private readonly pointer = new Vector2(2, 2);
   private readonly parallax = new Vector2();
@@ -107,7 +155,6 @@ export class World {
   private target: Target = { kind: "journey" };
   private ranges: ChapterRange[] = evenRanges(8);
   private journey = 0;
-  private routeProgress = 0;
   private transition: { from: Pose; start: number; duration: number } | null = null;
   private panel = 0;
   private dirty = true;
@@ -122,28 +169,46 @@ export class World {
   private disposed = false;
   private focus = 0;
   private lastZone: ZoneKey = "approach";
-  private tints: { warm: Color; cool: Color } | null = null;
+  private readonly tints = { warm: new Color(look.lightTint.warm), cool: new Color(look.lightTint.cool) };
   private readonly lightColor = new Color();
   private present: { object: Object3D; from: Vector3; to: Vector3; start: number; duration: number; restore: boolean; done: () => void } | null = null;
+  // Read once per resize: reading window.innerWidth/innerHeight on every pointer move or frame forces a layout.
+  private viewport = { width: window.innerWidth, height: window.innerHeight };
+  // Bound while compiling streamed zones under post-processing, which draws the scene into a render target.
+  private readonly warmTarget = new WebGLRenderTarget(1, 1);
+  private booted = false;
+  private readonly uploaded = new WeakSet<Texture>();
+  private pumping = false;
+  private switching = false;
+  private indexing = false;
+  private reindex = false;
+  private readonly lightSpecs: LightSpec[] = [];
+  private readonly specColors = new WeakMap<LightSpec, Color>();
+  private readonly aim = new Vector3();
+  private readonly written = new Map<string, string>();
+  private frames: number;
 
   constructor(options: WorldOptions) {
     this.options = options;
     this.tier = options.tier;
     this.motion = options.motion;
-    this.theme = options.theme;
-    this.palette = palettes[options.theme];
+    this.frames = Number(options.canvas.dataset.frames ?? 0);
     this.renderer = new WebGLRenderer({ canvas: options.canvas, antialias: options.tier === "low", powerPreference: "high-performance", alpha: false, stencil: false });
+    // Reading a shader's info log waits for the GPU process to finish everything queued before it; the shaders are
+    // fixed, so production builds skip the check (a stall of up to half a second when a new room first appeared).
+    this.renderer.debug.checkShaderErrors = import.meta.env.DEV;
     this.renderer.outputColorSpace = SRGBColorSpace;
     this.renderer.toneMappingExposure = 1.05;
     this.renderer.info.autoReset = false;
     this.scene.background = new Color();
     this.scene.fog = new FogExp2("#070b12", 0.014);
-    const pmrem = new PMREMGenerator(this.renderer);
-    this.scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-    pmrem.dispose();
     this.scene.environmentIntensity = 0.35;
     this.hemisphere = new HemisphereLight();
     this.scene.add(this.hemisphere);
+    // A low warm sun behind the camera's right shoulder lights the façade and the yard; it is off indoors.
+    this.sun.position.set(40, 46, 70);
+    this.sun.target.position.set(0, 0, -40);
+    this.scene.add(this.sun, this.sun.target);
     for (let i = 0; i < LIGHTS; i++) {
       const light = new PointLight("#ffffff", 0, 10, 2);
       this.pool.push(light);
@@ -159,32 +224,13 @@ export class World {
     this.resize();
   }
 
-  setTheme(theme: ThemeId): void {
-    this.theme = theme;
-    this.palette = palettes[theme];
-    this.applyPalette();
-    this.dirty = true;
-  }
-
   private applyPalette(): void {
-    const palette = this.palette;
     this.renderer.setClearColor(palette.background);
     (this.scene.background as Color).set(palette.background);
-    const uniforms = this.sky.material.uniforms;
-    uniforms.uTop.value.set(palette.skyTop);
-    uniforms.uHorizon.value.set(palette.skyHorizon);
-    uniforms.uGlow.value.set(palette.skyGlow);
-    uniforms.uStars.value = palette.stars;
     this.hemisphere.color.set(palette.hemiSky);
     this.hemisphere.groundColor.set(palette.hemiGround);
     this.hemisphere.intensity = palette.hemi;
-    this.post?.setLook(palette.bloom, palette.bloomThreshold, palette.vignette);
-    const look = looks[this.theme];
-    applyLook(this.materials, look);
-    applyModelLook(look);
-    setInk(look.ink);
-    repaintLabels();
-    this.tints = look.lightTint ? { warm: new Color(look.lightTint.warm), cool: new Color(look.lightTint.cool) } : null;
+    this.sun.color.set(palette.sun);
     this.options.canvas.dataset.look = `${look.surfaces.copper?.color ?? ""}|${look.ink.accent}|${look.models.PanelEnamel?.color ?? ""}`;
   }
 
@@ -203,11 +249,149 @@ export class World {
     const models = preloadAssets(assets, step);
     const modules = needed.map((key) => builders[key]());
     const post = this.tier === "low" ? null : loadPost().then(() => !this.disposed && this.applyTier());
+    // Each of the next steps starts in a task of its own (the renderer's context set-up took the one before).
+    await pause();
+    const environment = this.environment();
+    await pause();
+    const surfaces = paintMaterials(this.materials, pause);
     await fonts;
-    await Promise.all([...needed.map((key) => this.ensure(key).then(step)), models, ...modules, post]);
+    await Promise.all([...needed.map((key) => this.ensure(key).then(step)), models, ...modules, post, environment, surfaces]);
     this.applyPose();
-    this.compile();
-    void loadBvh().then(() => this.indexPickables()).catch(() => undefined);
+    // Textures go up one per task and the programs link in the background; the first frame then only draws. Left to
+    // that frame, uploads and links froze the poster-to-scene cross-fade half way (a washed-out double exposure).
+    await this.upload(this.scene);
+    await this.warm();
+    await this.settle();
+    this.booted = true;
+    this.renderOnce(performance.now());
+    // The page wires the journey up when this resolves: in a task after the first frame's, not in it.
+    await pause();
+    void idle(4000)
+      .then(loadBvh)
+      .then(() => this.indexPickables())
+      .catch(() => undefined);
+  }
+
+  /**
+   * The soft room reflections (PMREM of three's RoomEnvironment). Its filter shaders took about a second to compile
+   * on the main thread, so a first dry run turns every internal draw into compileAsync; the real pass then only draws.
+   * It must be set before warm(), because the scene's shaders are compiled for an environment map.
+   */
+  private async environment(): Promise<void> {
+    const renderer = this.renderer;
+    const room = new RoomEnvironment();
+    const pmrem = new PMREMGenerator(renderer);
+    const pending: Promise<unknown>[] = [];
+    const render = renderer.render;
+    renderer.render = (scene, camera) => void pending.push(renderer.compileAsync(scene, camera));
+    try {
+      pmrem.fromScene(room, 0.04).dispose();
+    } finally {
+      renderer.render = render;
+    }
+    await Promise.all(pending);
+    if (!this.disposed) this.scene.environment = pmrem.fromScene(room, 0.04).texture;
+    pmrem.dispose();
+    room.dispose();
+  }
+
+  /**
+   * Compiles every shader the first frame needs without blocking the main thread: with KHR_parallel_shader_compile
+   * the driver compiles in the background and compileAsync resolves once all programs are linked. Under
+   * post-processing one dry run of the composer turns each internal draw into compileAsync while that pass's render
+   * target is bound, so every program is built in the variant (colour space, tone mapping) it is really drawn with.
+   */
+  private async warm(): Promise<void> {
+    const renderer = this.renderer;
+    if (!this.post) {
+      await Promise.all([renderer.compileAsync(this.scene, this.camera), ...variants(this.scene).map((object) => renderer.compileAsync(object, this.camera, this.scene))]);
+      await this.linked();
+      return;
+    }
+    const pending: Promise<unknown>[] = [];
+    const render = renderer.render;
+    renderer.render = (scene, camera) => void pending.push(renderer.compileAsync(scene, camera));
+    try {
+      // Non-zero focus so the depth-of-field bokeh passes are drawn (and compiled) too.
+      this.post.render(0, 1, 10);
+      renderer.setRenderTarget(this.warmTarget);
+      for (const object of variants(this.scene)) pending.push(renderer.compileAsync(object, this.camera, this.scene));
+    } finally {
+      renderer.render = render;
+      renderer.setRenderTarget(null);
+    }
+    await Promise.all(pending);
+    await this.linked();
+  }
+
+  /** Waits until the driver has linked every program created so far (each compileAsync only checks the last variant). */
+  private async linked(): Promise<void> {
+    const programs = (this.renderer.info.programs ?? []) as unknown as { isReady(): boolean }[];
+    const deadline = performance.now() + 10000;
+    while (!this.disposed && programs.some((program) => !program.isReady()) && performance.now() < deadline) await sleep(12);
+  }
+
+  /**
+   * Uploads the textures of a subtree one per task, photos decoded off the main thread first. Left to the first frame
+   * that showed them, a room's uploads took one long task (a photo is decoded on the main thread at upload).
+   */
+  private async upload(root: Object3D): Promise<void> {
+    for (const texture of texturesOf(root)) {
+      if (this.disposed) return;
+      if (this.uploaded.has(texture)) continue;
+      const ready = texture.userData.ready as Promise<void> | undefined;
+      if (ready) await Promise.race([ready, sleep(2500)]);
+      const source = texture.image as HTMLImageElement | HTMLCanvasElement | ImageBitmap | null | undefined;
+      if (!source) continue;
+      if (source instanceof HTMLImageElement && (!source.complete || !source.naturalWidth)) continue;
+      this.renderer.initTexture(texture);
+      this.uploaded.add(texture);
+      texture.addEventListener("dispose", () => this.uploaded.delete(texture));
+      await pause();
+    }
+  }
+
+  /** Waits, without blocking the main thread, until the GPU has carried out everything issued so far (the uploads). */
+  private async settle(): Promise<void> {
+    const gl = this.renderer.getContext();
+    if (!(gl instanceof WebGL2RenderingContext)) return;
+    const sync = gl.fenceSync(gl.SYNC_GPU_COMMANDS_COMPLETE, 0);
+    if (!sync) return;
+    gl.flush();
+    const deadline = performance.now() + 3000;
+    try {
+      while (!this.disposed && gl.getSyncParameter(sync, gl.SYNC_STATUS) !== gl.SIGNALED && performance.now() < deadline) await sleep(8);
+    } finally {
+      gl.deleteSync(sync);
+    }
+  }
+
+  /**
+   * Gets a room streamed in while scrolling ready before it is shown, a few objects per task: textures uploaded, every
+   * program compiled in the background (KHR_parallel_shader_compile) and the GPU caught up, so the first frame that
+   * shows the room only draws it.
+   */
+  private async warmZone(group: Object3D): Promise<void> {
+    await this.upload(group);
+    const renderer = this.renderer;
+    const pending: Promise<unknown>[] = [];
+    const parts = [...group.children, ...variants(group)];
+    let slice = performance.now();
+    for (const part of parts) {
+      if (this.disposed) return;
+      const previous = renderer.getRenderTarget();
+      renderer.setRenderTarget(this.post ? this.warmTarget : null);
+      // compileAsync creates the programs synchronously with the render target bound, then waits for the driver.
+      pending.push(renderer.compileAsync(part, this.camera, this.scene));
+      renderer.setRenderTarget(previous);
+      if (performance.now() - slice > 8) {
+        await pause();
+        slice = performance.now();
+      }
+    }
+    await Promise.all(pending);
+    await this.linked();
+    await this.settle();
   }
 
   start(): void {
@@ -238,11 +422,6 @@ export class World {
     this.dirty = true;
   }
 
-  setRouteProgress(progress: number): void {
-    this.routeProgress = clamp01(progress);
-    this.dirty = true;
-  }
-
   setPanel(value: number): void {
     this.panel = clamp01(value);
     this.dirty = true;
@@ -251,13 +430,12 @@ export class World {
   goTo(target: Target, duration = 1.8): void {
     const from = this.cameraPose();
     this.target = target;
-    this.routeProgress = 0;
     this.transition = this.motion && duration > 0 ? { from, start: performance.now(), duration: duration * 1000 } : null;
     this.dirty = true;
   }
 
   setPointer(x: number, y: number): void {
-    this.pointer.set((x / window.innerWidth) * 2 - 1, -(y / window.innerHeight) * 2 + 1);
+    this.pointer.set((x / this.viewport.width) * 2 - 1, -(y / this.viewport.height) * 2 + 1);
     this.parallaxTarget.set(this.pointer.x, this.pointer.y);
     this.dirty = true;
   }
@@ -279,6 +457,7 @@ export class World {
   resize(): void {
     const width = window.innerWidth;
     const height = window.innerHeight;
+    this.viewport = { width, height };
     const ratio = Math.min(window.devicePixelRatio, this.tier === "high" ? 1.5 : this.tier === "medium" ? 1.25 : 1);
     this.renderer.setPixelRatio(ratio);
     this.renderer.setSize(width, height, false);
@@ -308,8 +487,7 @@ export class World {
   async renderPose(target: Target, progress: number): Promise<void> {
     this.target = target;
     this.transition = null;
-    if (target.kind === "journey") this.journey = progress;
-    else this.routeProgress = progress;
+    this.journey = progress;
     const pose = this.currentTargetPose();
     const zone = zoneAt(pose.position[2]);
     const index = zoneOrder.indexOf(zone);
@@ -323,6 +501,7 @@ export class World {
     for (const zone of this.zones.values()) zone.dispose();
     this.zones.clear();
     this.post?.dispose();
+    this.warmTarget.dispose();
     disposeMaterials(this.materials);
     disposeTextures();
     this.sky.geometry.dispose();
@@ -338,18 +517,20 @@ export class World {
     document.documentElement.dataset.webgl = "lost";
   };
 
-  private applyTier(): void {
+  private applyTier(post?: Post | null): void {
     this.post?.dispose();
-    this.post = this.tier === "low" || !postModule ? null : postModule.createPost(this.renderer, this.scene, this.camera, this.tier);
-    this.post?.setLook(this.palette.bloom, this.palette.bloomThreshold, this.palette.vignette);
-    this.renderer.toneMapping = this.post ? NoToneMapping : AgXToneMapping;
-    if (!this.post && this.tier === "low") this.renderer.toneMapping = ACESFilmicToneMapping;
+    this.post = post !== undefined ? post : this.tier === "low" || !postModule ? null : postModule.createPost(this.renderer, this.scene, this.camera, this.tier);
+    this.post?.setLook(palette.bloom, palette.bloomThreshold, palette.vignette);
+    this.renderer.toneMapping = this.post ? NoToneMapping : NeutralToneMapping;
+    const sky = this.sky.material.uniforms;
+    const direct = !this.post;
+    sky.uTop.value.set(direct ? palette.skyTopLow : palette.skyTop);
+    sky.uHorizon.value.set(direct ? palette.skyHorizonLow : palette.skyHorizon);
     this.resize();
   }
 
   private currentTargetPose(): Pose {
-    if (this.target.kind === "journey") return sampleJourney(this.ranges, this.journey);
-    return sampleRoute(this.target.id, this.routeProgress);
+    return sampleJourney(this.ranges, this.journey);
   }
 
   private cameraPose(): Pose {
@@ -387,20 +568,34 @@ export class World {
     let pending = this.building.get(key);
     if (!pending) {
       pending = builders[key]()
-        .then((build) => build({ m: this.materials, tier: this.tier }))
-        .then((zone) => {
+        .then(async (build) => {
+          // Start in a task of its own, not in the frame (or other work) that asked for the room.
+          await pause();
+          return build({ m: this.materials, tier: this.tier });
+        })
+        .then(async (zone) => {
           if (this.disposed) {
             zone.dispose();
             return zone;
           }
+          await pause();
           const keep = new Set<Object3D>();
           for (const pickable of zone.pickables) pickable.object.traverse((object: Object3D) => keep.add(object));
           batch(zone.group, keep);
+          // The first zones are uploaded and compiled together in load(); later ones on their own.
+          if (this.booted) {
+            await pause();
+            await this.warmZone(zone.group).catch(() => undefined);
+          }
+          if (this.disposed) {
+            zone.dispose();
+            return zone;
+          }
           this.zones.set(key, zone);
           this.scene.add(zone.group);
           this.building.delete(key);
           this.refreshPickables();
-          this.indexPickables();
+          void this.indexPickables();
           this.dirty = true;
           return zone;
         });
@@ -411,10 +606,6 @@ export class World {
 
   private stream(zone: ZoneKey): void {
     const index = zoneOrder.indexOf(zone);
-    for (const offset of [0, 1, -1]) {
-      const key = zoneOrder[index + offset];
-      if (key) void this.ensure(key);
-    }
     for (const [key, built] of this.zones) {
       const distance = Math.abs(zoneOrder.indexOf(key) - index);
       built.group.visible = distance <= 1;
@@ -425,20 +616,81 @@ export class World {
         this.refreshPickables();
       }
     }
+    if (!this.pumping && this.missing(index, 2)) void this.pump();
+  }
+
+  private missing(index: number, reach: number): ZoneKey | undefined {
+    for (const offset of [0, 1, -1, 2, -2]) {
+      if (Math.abs(offset) > reach) continue;
+      const key = zoneOrder[index + offset];
+      if (key && !this.zones.has(key) && !this.building.has(key)) return key;
+    }
+    return undefined;
+  }
+
+  /**
+   * Builds the rooms around the camera one at a time, outside the frame that noticed them: the room in view and its
+   * neighbours first, then (when the browser is idle) the next ones, so a room is ready well before its doorway.
+   */
+  private async pump(): Promise<void> {
+    if (this.pumping) return;
+    this.pumping = true;
+    try {
+      for (;;) {
+        await pause();
+        if (this.disposed) return;
+        const index = zoneOrder.indexOf(this.lastZone);
+        let key = this.missing(index, 1);
+        if (!key) {
+          if (!this.missing(index, 2)) return;
+          await idle();
+          if (this.disposed) return;
+          key = this.missing(zoneOrder.indexOf(this.lastZone), 2);
+          if (!key) continue;
+        }
+        await this.ensure(key).catch(() => undefined);
+      }
+    } finally {
+      this.pumping = false;
+    }
   }
 
   private refreshPickables(): void {
     this.pickables = [...this.zones.values()].filter((zone) => zone.group.visible).flatMap((zone) => zone.pickables);
   }
 
-  private indexPickables(): void {
+  /** Builds the picking index (three-mesh-bvh) of new pickable meshes in short slices. */
+  private async indexPickables(): Promise<void> {
     if (!bvhReady || this.disposed) return;
-    for (const zone of this.zones.values())
-      for (const pickable of zone.pickables)
-        pickable.object.traverse((object: Object3D) => {
-          const mesh = object as Mesh;
-          if (mesh.isMesh && !mesh.geometry.boundsTree) mesh.geometry.computeBoundsTree();
-        });
+    if (this.indexing) {
+      this.reindex = true;
+      return;
+    }
+    this.indexing = true;
+    try {
+      do {
+        this.reindex = false;
+        let slice = performance.now();
+        for (const zone of [...this.zones.values()])
+          for (const pickable of zone.pickables) {
+            const meshes: Mesh[] = [];
+            pickable.object.traverse((object: Object3D) => {
+              const mesh = object as Mesh;
+              if (mesh.isMesh && !mesh.geometry.boundsTree) meshes.push(mesh);
+            });
+            for (const mesh of meshes) {
+              if (this.disposed) return;
+              if (!mesh.geometry.boundsTree) mesh.geometry.computeBoundsTree();
+              if (performance.now() - slice > 8) {
+                await pause();
+                slice = performance.now();
+              }
+            }
+          }
+      } while (this.reindex && !this.disposed);
+    } finally {
+      this.indexing = false;
+    }
   }
 
   private intersect(): Pickable | null {
@@ -456,9 +708,17 @@ export class World {
 
   private assignLights(): void {
     const camera = this.camera.position;
-    const specs: LightSpec[] = [];
-    for (const zone of this.zones.values()) if (zone.group.visible) specs.push(...zone.lights);
-    specs.sort((a, b) => camera.distanceToSquared(new Vector3(...a.position)) - camera.distanceToSquared(new Vector3(...b.position)));
+    const specs = this.lightSpecs;
+    specs.length = 0;
+    for (const zone of this.zones.values()) if (zone.group.visible) for (const spec of zone.lights) specs.push(spec);
+    // Runs every frame: sorted without allocating vectors, colours parsed once per light.
+    const distance = (spec: LightSpec) => {
+      const dx = camera.x - spec.position[0];
+      const dy = camera.y - spec.position[1];
+      const dz = camera.z - spec.position[2];
+      return dx * dx + dy * dy + dz * dz;
+    };
+    specs.sort((a, b) => distance(a) - distance(b));
     this.pool.forEach((light, index) => {
       const spec = specs[index];
       if (!spec) {
@@ -466,12 +726,14 @@ export class World {
         return;
       }
       light.position.set(...spec.position);
-      light.color.set(spec.color);
-      if (this.tints) {
-        this.lightColor.set(spec.color);
-        light.color.lerp(this.lightColor.r >= this.lightColor.b ? this.tints.warm : this.tints.cool, 0.8);
+      let color = this.specColors.get(spec);
+      if (!color) {
+        color = new Color(spec.color);
+        this.specColors.set(spec, color);
       }
-      light.intensity = spec.intensity * this.palette.lights;
+      this.lightColor.copy(color);
+      light.color.copy(this.lightColor).lerp(this.lightColor.r >= this.lightColor.b ? this.tints.warm : this.tints.cool, 0.8);
+      light.intensity = spec.intensity * palette.lights;
       light.distance = spec.distance;
     });
   }
@@ -480,13 +742,10 @@ export class World {
     const outside = exterior.has(zone);
     this.sky.visible = outside || this.camera.position.z > -3 || this.camera.position.z < -104;
     const fog = this.scene.fog as FogExp2;
-    fog.density = (outside ? 0.016 : 0.022) * this.palette.fogScale;
-    fog.color.set(outside ? this.palette.fogOutside : this.palette.fogInside);
-    this.scene.environmentIntensity = (outside ? 0.24 : 0.56) * this.palette.environment;
-  }
-
-  private compile(): void {
-    this.renderer.compile(this.scene, this.camera);
+    fog.density = (outside ? 0.016 : 0.022) * palette.fogScale;
+    fog.color.set(outside ? palette.fogOutside : palette.fogInside);
+    this.scene.environmentIntensity = (outside ? 0.24 : 0.56) * palette.environment;
+    this.sun.intensity = outside ? palette.sunIntensity : 0;
   }
 
   private tick(now: number): void {
@@ -519,10 +778,10 @@ export class World {
     } else this.focus = this.target.kind === "journey" ? travelAt(this.ranges, this.journey) * 0.75 : 0;
     this.animatePresent(now);
     const exposure = exposureAt(this.camera.position.z);
-    const output = exposure * this.palette.exposure;
+    const output = exposure * palette.exposure;
     if (this.post) this.post.setExposure(output);
     else this.renderer.toneMappingExposure = 1.05 * output;
-    const distance = new Vector3(...pose.target).distanceTo(this.camera.position);
+    const distance = this.aim.set(...pose.target).distanceTo(this.camera.position);
     this.renderer.info.reset();
     if (this.post) this.post.render(delta, this.focus, distance);
     else this.renderer.render(this.scene, this.camera);
@@ -530,19 +789,26 @@ export class World {
     this.dirty = false;
     this.frameTimes.push(performance.now() - started);
     if (this.frameTimes.length > 90) this.frameTimes.shift();
-    const canvas = this.options.canvas;
-    canvas.dataset.zone = zone;
-    canvas.dataset.theme = this.theme;
-    canvas.dataset.calls = String(this.renderer.info.render.calls);
-    canvas.dataset.triangles = String(this.renderer.info.render.triangles);
-    canvas.dataset.frames = String(Number(canvas.dataset.frames ?? 0) + 1);
-    canvas.dataset.camera = this.camera.position.toArray().map((value) => value.toFixed(2)).join(",");
-    canvas.dataset.panel = this.panel.toFixed(2);
-    canvas.dataset.motion = String(this.motion);
-    canvas.dataset.exposure = exposure.toFixed(2);
-    canvas.dataset.focus = this.focus.toFixed(2);
-    const subject = new Vector3(...pose.target).project(this.camera);
-    canvas.dataset.subject = `${Math.round(((subject.x + 1) / 2) * window.innerWidth)},${Math.round(((1 - subject.y) / 2) * window.innerHeight)}`;
+    // Tests and tools read these; attributes are only written when their value changes.
+    this.frames++;
+    this.options.canvas.dataset.frames = String(this.frames);
+    this.write("zone", zone);
+    this.write("calls", String(this.renderer.info.render.calls));
+    this.write("triangles", String(this.renderer.info.render.triangles));
+    const position = this.camera.position;
+    this.write("camera", `${position.x.toFixed(2)},${position.y.toFixed(2)},${position.z.toFixed(2)}`);
+    this.write("panel", this.panel.toFixed(2));
+    this.write("motion", String(this.motion));
+    this.write("exposure", exposure.toFixed(2));
+    this.write("focus", this.focus.toFixed(2));
+    const subject = this.aim.set(...pose.target).project(this.camera);
+    this.write("subject", `${Math.round(((subject.x + 1) / 2) * this.viewport.width)},${Math.round(((1 - subject.y) / 2) * this.viewport.height)}`);
+  }
+
+  private write(key: string, value: string): void {
+    if (this.written.get(key) === value) return;
+    this.written.set(key, value);
+    this.options.canvas.dataset[key] = value;
   }
 
   private animatePresent(now: number): void {
@@ -588,12 +854,9 @@ export class World {
 
   async prepare(target: Target): Promise<void> {
     const previous = this.target;
-    const previousProgress = this.routeProgress;
     this.target = target;
-    this.routeProgress = 0;
     const pose = this.currentTargetPose();
     this.target = previous;
-    this.routeProgress = previousProgress;
     const zone = zoneAt(pose.position[2]);
     const index = zoneOrder.indexOf(zone);
     const assets = [zoneOrder[index - 1], zone, zoneOrder[index + 1]].filter(Boolean).flatMap((key) => zoneAssets[key as ZoneKey]);
@@ -608,16 +871,61 @@ export class World {
       this.hovered = hit;
       document.documentElement.classList.toggle("is-pointer-target", Boolean(hit));
     }
-    const x = ((this.pointer.x + 1) / 2) * window.innerWidth;
-    const y = ((1 - this.pointer.y) / 2) * window.innerHeight;
+    const x = ((this.pointer.x + 1) / 2) * this.viewport.width;
+    const y = ((1 - this.pointer.y) / 2) * this.viewport.height;
     this.options.onHover?.(hit?.label ?? null, x, y);
   }
 
   downgrade(): boolean {
-    if (this.tier === "low") return false;
+    if (this.tier === "low" || this.switching) return false;
     this.tier = this.tier === "high" ? "medium" : "low";
-    this.applyTier();
+    this.switching = true;
+    void this.switchTier()
+      .catch(() => this.applyTier())
+      .finally(() => (this.switching = false));
     return true;
+  }
+
+  /**
+   * Moves to the lower tier once everything it draws with is compiled. Switched at once, every program of the scene
+   * (another tone mapping and output) and of the new effects linked synchronously in the next frame: a freeze of
+   * seconds on exactly the slow devices that get downgraded. Meanwhile the current tier keeps rendering.
+   */
+  private async switchTier(): Promise<void> {
+    const renderer = this.renderer;
+    if (this.tier !== "low" && postModule) {
+      const next = postModule.createPost(renderer, this.scene, this.camera, this.tier);
+      next.setSize(this.viewport.width, this.viewport.height);
+      const pending: Promise<unknown>[] = [];
+      const render = renderer.render;
+      const target = renderer.getRenderTarget();
+      renderer.render = (scene, camera) => void pending.push(renderer.compileAsync(scene, camera));
+      try {
+        next.render(0, 1, 10);
+      } finally {
+        renderer.render = render;
+        renderer.setRenderTarget(target);
+      }
+      await Promise.all(pending);
+      await this.linked();
+      if (this.disposed) {
+        next.dispose();
+        return;
+      }
+      next.setLook(palette.bloom, palette.bloomThreshold, palette.vignette);
+      this.applyTier(next);
+      return;
+    }
+    const tone = renderer.toneMapping;
+    const target = renderer.getRenderTarget();
+    renderer.toneMapping = NeutralToneMapping;
+    renderer.setRenderTarget(null);
+    const pending = [renderer.compileAsync(this.scene, this.camera), ...variants(this.scene).map((object) => renderer.compileAsync(object, this.camera, this.scene))];
+    renderer.toneMapping = tone;
+    renderer.setRenderTarget(target);
+    await Promise.all(pending);
+    await this.linked();
+    if (!this.disposed) this.applyTier(null);
   }
 
   get averageFrame(): number {

@@ -1,10 +1,6 @@
-import { looks, type Ink } from "./look";
+import { look, type Ink } from "./look";
 
-export const ink: Ink = { ...looks.copper.ink };
-
-export function setInk(next: Ink): void {
-  Object.assign(ink, next);
-}
+export const ink: Ink = look.ink;
 
 export function tone(hex: string, alpha: number): string {
   const value = Number.parseInt(hex.slice(1), 16);

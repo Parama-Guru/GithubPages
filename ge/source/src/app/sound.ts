@@ -3,13 +3,33 @@ type Voice = "door" | "breaker" | "hum";
 let context: AudioContext | null = null;
 let humGain: GainNode | null = null;
 let enabled = false;
+let interacted = false;
+
+// Browsers start audio only after a user gesture, and a touch only counts once it ends, so the hum waits for the
+// visitor's first click, tap or key press on the page.
+const gestures = ["pointerdown", "pointerup", "touchend", "keydown"] as const;
+
+function gesture(): void {
+  if (navigator.userActivation && !navigator.userActivation.isActive) return;
+  interacted = true;
+  for (const type of gestures) window.removeEventListener(type, gesture, { capture: true });
+  if (enabled) play("hum");
+}
+
+for (const type of gestures) window.addEventListener(type, gesture, { capture: true, passive: true });
 
 function audio(): AudioContext | null {
   if (!enabled) return null;
   if (!context) {
     const Constructor = window.AudioContext ?? (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
     if (!Constructor) return null;
-    context = new Constructor();
+    const created = new Constructor();
+    const track = () => {
+      document.documentElement.dataset.audio = created.state;
+    };
+    created.addEventListener("statechange", track);
+    context = created;
+    track();
   }
   if (context.state === "suspended") void context.resume();
   return context;
@@ -22,16 +42,24 @@ function noise(ctx: AudioContext, seconds: number): AudioBuffer {
   return buffer;
 }
 
+// Sound belongs to the 3D experience: on while the world runs, off in the static site.
 export function setSound(value: boolean): void {
   enabled = value;
   document.documentElement.dataset.sound = value ? "on" : "off";
-  if (!value) {
-    humGain?.gain.setTargetAtTime(0, context?.currentTime ?? 0, 0.2);
-    void context?.suspend();
-  } else {
-    audio();
+  if (value) {
+    if (interacted) play("hum");
+    return;
   }
+  humGain?.gain.setTargetAtTime(0, context?.currentTime ?? 0, 0.2);
+  void context?.suspend();
 }
+
+// Hidden tabs fall silent, as the 3D world stops drawing.
+document.addEventListener("visibilitychange", () => {
+  if (!context || !enabled) return;
+  if (document.hidden) void context.suspend();
+  else void context.resume();
+});
 
 export function play(voice: Voice): void {
   const ctx = audio();
@@ -87,8 +115,4 @@ export function play(voice: Voice): void {
   }
   source.connect(filter).connect(gain).connect(ctx.destination);
   source.start(now);
-}
-
-export function quiet(): void {
-  if (context && humGain) humGain.gain.setTargetAtTime(0, context.currentTime, 0.4);
 }

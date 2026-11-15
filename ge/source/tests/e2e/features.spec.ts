@@ -55,32 +55,19 @@ test.describe("cinematic features", () => {
     await expect.poll(async () => Number((await data(page)).focus), { timeout: 8_000 }).toBeGreaterThan(0.3);
   });
 
-  test("Read more opens the chapter details and returns focus", async ({ page }) => {
-    await page.goto("");
-    await ready(page);
-    await hold(page, 1);
-    const button = page.locator("#about").getByRole("button", { name: "Read more" });
-    await expect(button).toBeVisible();
-    await button.click();
-    const dialog = page.getByRole("dialog", { name: "Ganesh Electricals" });
-    await expect(dialog).toBeVisible();
-    await expect(dialog.getByRole("heading", { name: "Milestones" })).toBeVisible();
-    await page.keyboard.press("Escape");
-    await expect(dialog).toBeHidden();
-    await expect(button).toBeFocused();
-  });
-
-  test("opening the panel shows its details; closing them closes the panel", async ({ page }) => {
+  test("the switchgear panel opens with its breaker sound and no dialog", async ({ page }) => {
     await page.goto("");
     await ready(page);
     await hold(page, 3);
-    await page.getByRole("button", { name: /switchgear panel/ }).click();
+    await expect.poll(async () => (await data(page)).zone, { timeout: 10_000 }).toBe("hall");
+    await page.waitForTimeout(1500);
+    const point = await screenPoint(page, [-3.9, 1.2, -48.5]);
+    await page.mouse.click(point.x, point.y);
     await expect.poll(async () => (await data(page)).panel, { timeout: 8_000 }).toBe("1.00");
-    const dialog = page.locator("#more-projects");
-    await expect(dialog).toBeVisible();
-    await expect(dialog.getByRole("link", { name: /On-going/ })).toBeVisible();
-    await dialog.getByRole("button", { name: "Close" }).click();
-    await expect.poll(async () => (await data(page)).panel, { timeout: 8_000 }).toBe("0.00");
+    await expect.poll(() => page.evaluate(() => document.documentElement.dataset.lastSound)).toBe("breaker");
+    // The removed project details used to open 1.5 s after the panel.
+    await page.waitForTimeout(2000);
+    await expect(page.locator("dialog[open]")).toHaveCount(0);
   });
 
   test("clicking a client lightbox flies it forward and opens the page", async ({ page }) => {
@@ -97,26 +84,34 @@ test.describe("cinematic features", () => {
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Our Clients");
   });
 
-  test("shows the branded loader when the next room is still loading", async ({ page, context }) => {
+  test("shows the branded curtain while the tour's first room is rebuilt on the way home", async ({ page, context }) => {
     await page.goto("");
     await ready(page);
-    const session = await context.newCDPSession(page);
-    await session.send("Network.enable");
-    await session.send("Network.emulateNetworkConditions", { offline: false, latency: 400, downloadThroughput: 200_000, uploadThroughput: 100_000 });
+    // Far into the tour the entrance room is released (rooms more than two away are disposed).
+    await hold(page, 6);
+    await expect.poll(async () => (await data(page)).zone, { timeout: 10_000 }).toBe("office");
+    await page.waitForTimeout(1200);
+    await page.locator(".header-nav").getByRole("link", { name: "Quality & Safety" }).click();
+    await expect(page).toHaveURL(/quality-safety\/$/);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Quality & Safety");
     await page.evaluate(() => {
       const curtain = document.querySelector("[data-curtain]");
       new MutationObserver(() => {
         if (curtain?.classList.contains("is-visible")) document.documentElement.dataset.curtainSeen = "yes";
       }).observe(curtain as Element, { attributes: true });
     });
-    await page.locator(".header-nav").getByRole("link", { name: "Quality & Safety" }).click();
-    await expect(page).toHaveURL(/quality-safety\/$/);
-    await expect.poll(async () => (await data(page)).zone, { timeout: 30_000 }).toBe("safety");
+    // A slow processor makes rebuilding the entrance room take longer than the curtain's 160 ms grace period.
+    const session = await context.newCDPSession(page);
+    await session.send("Emulation.setCPUThrottlingRate", { rate: 6 });
+    await page.locator(".header-nav").getByRole("link", { name: "Home" }).click();
+    await expect(page).toHaveURL(/\/GithubPages\/ge\/$/);
+    await expect.poll(async () => (await data(page)).zone, { timeout: 30_000 }).toBe("approach");
+    await session.send("Emulation.setCPUThrottlingRate", { rate: 1 });
     expect(await page.evaluate(() => document.documentElement.dataset.curtainSeen)).toBe("yes");
   });
 
   test("recovers the 3D world after the graphics context is lost", async ({ page }) => {
-    await page.goto("about/");
+    await page.goto("");
     await ready(page);
     await page.evaluate(() => {
       const canvas = document.querySelector<HTMLCanvasElement>("[data-canvas]");
@@ -125,6 +120,6 @@ test.describe("cinematic features", () => {
     await expect(page.locator(".world")).toHaveAttribute("data-world", "static", { timeout: 5_000 });
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     await ready(page);
-    await expect.poll(async () => (await data(page)).zone, { timeout: 10_000 }).toBe("lobby");
+    await expect.poll(async () => (await data(page)).zone, { timeout: 10_000 }).toBe("approach");
   });
 });

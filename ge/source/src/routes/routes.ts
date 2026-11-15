@@ -140,7 +140,7 @@ export const routes: Route[] = [
     zone: "yard",
     label: "Contact",
     title: "Contact Us — Ganesh Electricals",
-    description: "Contact Ganesh Electricals at No.1, New Street, Shakthi Nagar, Porur, Chennai 600 116: telephone 044-4284 0227, email and an enquiry form.",
+    description: "Contact Ganesh Electricals at No.1, New Street, Shakthi Nagar, Porur, Chennai 600 116: telephone 044-22523330, email and an enquiry form.",
   },
   {
     id: "not-found",
@@ -152,7 +152,7 @@ export const routes: Route[] = [
   },
 ];
 
-export const headerLinks: RouteId[] = ["about", "features", "projects", "clients", "quality-safety", "contact"];
+export const headerLinks: RouteId[] = ["home", "about", "features", "projects", "clients", "quality-safety", "contact"];
 export const menuLinks: RouteId[] = ["home", "about", "features", "execution", "projects", "clients", "quality-safety", "leadership", "organisation", "downloads", "contact"];
 
 export function route(id: RouteId): Route {

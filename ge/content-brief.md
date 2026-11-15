@@ -177,3 +177,25 @@ The owner asked for professional decisions to be taken; these were applied:
 9. **New page "How we work"** (`/execution/`) → local issue handling, TNEB liaisoning (211 days), manpower (95),
    equipment. "Why choose us" becomes "How we serve" with the deck's six statements.
 10. Deck wording is kept verbatim, including its spelling (e.g. "Liasioning", "Jappan").
+
+## Client review applied (round 4, 15 Nov 2026)
+
+The client's review comments and approved content supersede decisions 3 and 7 above. Open items are tracked in
+`client-inputs.md`.
+
+1. **About Us**: the approved tagline "Powering Infrastructure. Engineering Reliability. Building Trust." heads the
+   home hero (under the name) and the About page. The approved introduction replaces the deck's two introduction
+   paragraphs on the home page, About page and footer. The About page lists the six approved expertise items and ends
+   with the approved closing statement.
+2. **Contact**: only kumareson@ganeshelectricals.in and 044-22523330 (click-to-call `tel:+914422523330`) are published
+   in the menu, footer, Contact page, enquiry form and Organization JSON-LD. kumareson@ganeshvar.com and 044-4284 0227
+   are retired (a unit test checks that "ganeshvar" and "4284" never appear). enquiry@ganeshelectricals.in remains
+   only as K. Elumalai's email in the key-personnel table until the client confirms it.
+3. **Milestones**: GST appreciation FY 2024–25, 2023–24, 2022–23 and 2021–22 · 2019 CRISIL MSE 2 · 2008 ESA licence 283 ·
+   1997 established (incorporated / registered 06/05/1997). The home About chapter and the 3D lobby show four entries,
+   with the GST years combined into one ("2021–25").
+4. **Credentials**: "GST Appreciation" lists all four years. CBIC is named as the issuer only for FY 2024–25, the only
+   certificate seen in the deck. The Udyam entry shows the small-enterprise registration and the 06/05/1997 date; the
+   number UDYAM-TN-24-0003618 is withheld until the client supplies the certificate.
+5. **Removed**: the home hero eyebrow "230 KV · 110 KV · 33 KV · 11 KV" (the six expertise items replace it) and the
+   "Open a switchgear panel" button (the 3D panel still opens when clicked).

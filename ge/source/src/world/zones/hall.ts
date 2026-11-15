@@ -5,7 +5,7 @@ import { box, contactShadow, framed, merged, partition, placed, plane, pool, roo
 import { energyMaterial } from "../materials";
 import { image, label } from "../textures";
 import { sign } from "./painters";
-import { createZone, cue, type ZoneBuilder } from "./shared";
+import { createZone, cue, pause, type ZoneBuilder } from "./shared";
 
 function instancedRow(source: Group, transforms: Matrix4[]): Group {
   const row = new Group();
@@ -77,14 +77,17 @@ export const buildHall: ZoneBuilder = async (context) => {
   heroGlow.rotation.y = Math.PI / 2;
   g.add(heroGlow, pool(m, [-3.2, 0, HERO_PANEL.z], 3.2));
 
-  projectGroups.forEach((group, index) => {
+  for (const [index, group] of projectGroups.entries()) {
+    // One sign per task: painting them all at once was a long task on a phone.
+    await pause();
     const z = -43 - index * 5;
-    const plate = label(`year-${group.slug}`, 900, 180, sign(group.label, "PROJECTS"));
+    const plate = label(`year-${group.slug}`, 900, 180, sign(group.label, "Projects"));
     const material = zone.own(new MeshBasicMaterial({ map: plate.texture, toneMapped: false }));
     g.add(box(m.darkMetal, [0.02, 0.02, 0.02], [-3.6, 5.6, z]));
     g.add(plane(material, 2.6, 2.6 / plate.aspect, [-3.55, 4.6, z], [0, Math.PI / 2, 0]));
     g.add(box(m.steel, [0.02, 1.2, 0.02], [-3.56, 5.6, z - 1.1]), box(m.steel, [0.02, 1.2, 0.02], [-3.56, 5.6, z + 1.1]));
-  });
+  }
+  await pause();
 
   projectImages.forEach((photo, index) => {
     const z = -37.5 - index * 5.6;

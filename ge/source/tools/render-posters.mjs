@@ -24,8 +24,7 @@ const routes = [
   "contact",
 ];
 
-const themes = ["light", "copper", "signal"];
-for (const theme of themes) await mkdir(path.join(root, "public", "posters", theme), { recursive: true });
+await mkdir(path.join(root, "public", "posters"), { recursive: true });
 await mkdir(path.join(root, "public", "og"), { recursive: true });
 const browser = await chromium.launch({ channel: process.platform === "win32" ? "msedge" : undefined, args: ["--ignore-gpu-blocklist", "--enable-gpu"] });
 
@@ -39,18 +38,31 @@ async function capture(query, width, height) {
   return buffer;
 }
 
-for (const theme of themes) {
-  for (const [index, chapter] of chapters.entries()) {
-    const buffer = await capture(`poster=journey&p=${holds[index]}&theme=${theme}`, 1280, 800);
-    await sharp(buffer).webp({ quality: 72 }).toFile(path.join(root, "public", "posters", theme, `${chapter}.webp`));
-    if (index === 0 && theme === "light") await sharp(buffer).resize(1200, 630, { fit: "cover", position: "right" }).jpeg({ quality: 80, mozjpeg: true }).toFile(path.join(root, "public", "og", "home.jpg"));
-  }
-  console.log(`posters ${theme}`);
+for (const [index, chapter] of chapters.entries()) {
+  const buffer = await capture(`poster=journey&p=${holds[index]}`, 1280, 800);
+  await sharp(buffer).webp({ quality: 72 }).toFile(path.join(root, "public", "posters", `${chapter}.webp`));
+  if (index === 0) await sharp(buffer).resize(1200, 630, { fit: "cover", position: "right" }).jpeg({ quality: 80, mozjpeg: true }).toFile(path.join(root, "public", "og", "home.jpg"));
+  console.log(`poster ${chapter}`);
+}
+
+// Inner pages share one design in both modes, so their social images show the page itself: header and hero at
+// 1200×630, in the final state of the entrance animation (reduced motion). The home page keeps the 3D façade above.
+async function capturePage(id) {
+  const context = await browser.newContext({ viewport: { width: 1200, height: 630 }, reducedMotion: "reduce" });
+  await context.addInitScript(() => globalThis.localStorage.setItem("ge-3d", "off"));
+  const page = await context.newPage();
+  const route = id.startsWith("projects-") ? `projects/${id.slice("projects-".length)}/` : `${id}/`;
+  await page.goto(`${base}${route}`, { waitUntil: "networkidle" });
+  await page.evaluate(() => document.fonts.ready);
+  await page.waitForTimeout(400);
+  const buffer = await page.screenshot();
+  await context.close();
+  return buffer;
 }
 
 for (const id of routes) {
-  const buffer = await capture(`poster=${id}&p=0&theme=light`, 1200, 630);
-  await sharp(buffer).jpeg({ quality: 80, mozjpeg: true }).toFile(path.join(root, "public", "og", `${id}.jpg`));
+  const buffer = await capturePage(id);
+  await sharp(buffer).jpeg({ quality: 82, mozjpeg: true }).toFile(path.join(root, "public", "og", `${id}.jpg`));
   console.log(`og ${id}`);
 }
 await browser.close();

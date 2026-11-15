@@ -1,7 +1,7 @@
 import { BoxGeometry, BufferGeometry, MeshBasicMaterial } from "three";
 import { whyUs } from "@/content";
-import { box, merged, partition, placed, plane, pool, room } from "../kit";
-import { label } from "../textures";
+import { box, contactShadow, merged, partition, placed, plane, pool, room } from "../kit";
+import { fonts, label } from "../textures";
 import { diagram, statScreen } from "./painters";
 import { ink, tone } from "../ink";
 import { createZone, cue, type ZoneBuilder } from "./shared";
@@ -22,10 +22,10 @@ export const buildControl: ZoneBuilder = async (context) => {
   const principles = label("principles", 900, 440, (ctx, w, h) => {
     ctx.fillStyle = ink.screenBottom;
     ctx.fillRect(0, 0, w, h);
-    ctx.font = '800 58px "Big Shoulders Display Variable", sans-serif';
+    ctx.font = fonts.display(54, 600);
     whyUs.principles.forEach((item, index) => {
-      ctx.fillStyle = index === whyUs.principles.length - 1 ? ink.accentStrong : ink.text;
-      ctx.fillText(`${String(index + 1).padStart(2, "0")}  ${item.short.toUpperCase()}`, 40, 76 + index * 68);
+      ctx.fillStyle = index === whyUs.principles.length - 1 ? ink.accent : ink.signText;
+      ctx.fillText(`${String(index + 1).padStart(2, "0")}  ${item.short}`, 40, 76 + index * 68);
     });
   });
   let drawnDiagram = -1;
@@ -64,7 +64,7 @@ export const buildControl: ZoneBuilder = async (context) => {
     const z = VIDEO_WALL.z + (col - 1) * (sw + 0.12);
     const y = VIDEO_WALL.y + 0.81 - row * (sh + 0.12);
     const material = zone.own(new MeshBasicMaterial({ map: screen.texture, toneMapped: false }));
-    material.color.setScalar(1.25);
+    material.color.setScalar(0.92);
     g.add(plane(material, sw, sh, [VIDEO_WALL.x - 0.02, y, z], [0, -Math.PI / 2, 0]));
   });
   g.add(box(m.black, [0.1, 2 * (sh + 0.12) + 0.3, 3 * (sw + 0.12) + 0.3], [VIDEO_WALL.x + 0.04, VIDEO_WALL.y, VIDEO_WALL.z]));
@@ -81,7 +81,7 @@ export const buildControl: ZoneBuilder = async (context) => {
   const consoleScreen = label("console", 512, 288, (ctx, w, h) => {
     ctx.fillStyle = ink.screenBottom;
     ctx.fillRect(0, 0, w, h);
-    ctx.strokeStyle = tone(ink.screenLine, 0.16);
+    ctx.strokeStyle = tone(ink.screenLine, 0.08);
     for (let x = 0; x < w; x += 32) {
       ctx.beginPath();
       ctx.moveTo(x, 0);
@@ -93,12 +93,13 @@ export const buildControl: ZoneBuilder = async (context) => {
     ctx.beginPath();
     [0.7, 0.55, 0.62, 0.4, 0.46, 0.3, 0.36, 0.22].forEach((y, index) => ctx.lineTo(30 + index * 64, h * y));
     ctx.stroke();
-    ctx.fillStyle = tone(ink.accentStrong, 0.85);
+    ctx.fillStyle = tone(ink.accent, 0.9);
     for (let i = 0; i < 6; i++) ctx.fillRect(30 + i * 76, h - 40, 44, -(18 + ((i * 37) % 60)));
   });
   const consoleMaterial = zone.own(new MeshBasicMaterial({ map: consoleScreen.texture, toneMapped: false }));
   consoleMaterial.color.setScalar(0.85);
-  g.add(merged(m.navy, desk), merged(consoleMaterial, monitors));
+  g.add(merged(m.lacquer, desk), merged(consoleMaterial, monitors));
+  g.add(contactShadow(m, [VIDEO_WALL.x - 3.9, 0, VIDEO_WALL.z], 2.4, 10));
   g.add(box(m.copper, [0.04, 0.04, 14], [-6.94, 1.0, -24]));
   g.add(pool(m, [VIDEO_WALL.x - 3.4, 0, VIDEO_WALL.z], 8, true));
   g.add(pool(m, [0, 0, -20], 6, true), pool(m, [0, 0, -29], 5, true));

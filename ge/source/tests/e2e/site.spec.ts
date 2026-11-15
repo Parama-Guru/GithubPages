@@ -6,7 +6,8 @@ const zones = ["approach", "lobby", "control", "hall", "gallery", "safety", "off
 const pages = routes.filter((entry) => entry.id !== "not-found");
 
 async function ready(page: Page) {
-  await page.waitForFunction(() => ["ready", "static"].includes(document.querySelector<HTMLElement>(".world")?.dataset.world ?? ""), null, { timeout: 60_000 });
+  // "idle": a page other than home with 3D on, where the world is not loaded until the way home.
+  await page.waitForFunction(() => ["ready", "static", "idle"].includes(document.querySelector<HTMLElement>(".world")?.dataset.world ?? ""), null, { timeout: 60_000 });
 }
 
 async function canvasData(page: Page) {
@@ -27,6 +28,9 @@ test.describe("prerendered pages", () => {
       expect(response.status()).toBe(200);
       const html = await response.text();
       expect(html.match(/<h1[\s>]/g)?.length).toBe(1);
+      // No "Read more" buttons or chapter detail dialogs: the menu is the only dialog.
+      expect(html).not.toMatch(/Read more|data-more|class="detail/);
+      expect(html.match(/<dialog[\s>]/g)?.length).toBe(1);
       expect(html).toContain(`<title>${entry.title.replace(/&/g, "&amp;")}</title>`);
       expect(html).toContain('name="description"');
       if (entry.id !== "not-found") expect(html).toContain('rel="canonical"');
@@ -59,6 +63,20 @@ test.describe("3D journey", () => {
       expect(Number(data.triangles)).toBeLessThanOrEqual(300_000);
     }
     expect(external).toEqual([]);
+  });
+
+  test("only the chapter on screen shows its frosted card", async ({ page }) => {
+    await page.goto("");
+    await ready(page);
+    const cards = () =>
+      page.evaluate(() => [...document.querySelectorAll<HTMLElement>(".chapter-panel")].map((panel) => Number(panel.style.getPropertyValue("--card") || "1")));
+    // The intro fades the first card in; the cards of the chapters below must not show before their text does.
+    await expect.poll(async () => (await cards())[0], { timeout: 8_000 }).toBe(1);
+    expect((await cards()).slice(1).filter((value) => value > 0)).toEqual([]);
+    await page.evaluate((y) => window.scrollTo(0, y), await chapterHold(page, 3));
+    await expect.poll(async () => (await cards())[3], { timeout: 8_000 }).toBe(1);
+    await page.waitForTimeout(800);
+    expect((await cards()).map((value, index) => (index === 3 ? 0 : value)).filter((value) => value > 0)).toEqual([]);
   });
 
   test("scrolling back returns exactly the same camera", async ({ page }) => {
@@ -100,36 +118,46 @@ test.describe("3D journey", () => {
     await expect.poll(async () => (await canvasData(page)).zone, { timeout: 15_000 }).toBe("lobby");
   });
 
-  test("the switchgear panel opens and closes", async ({ page }) => {
+  test("the switchgear panel opens and closes from the 3D scene", async ({ page }) => {
     await page.goto("");
     await ready(page);
     await page.evaluate((y) => window.scrollTo(0, y), await chapterHold(page, 3));
-    const button = page.getByRole("button", { name: /switchgear panel/ });
-    await expect(button).toBeVisible();
-    await button.click();
-    await expect(button).toHaveAttribute("aria-pressed", "true");
+    await expect.poll(async () => (await canvasData(page)).zone, { timeout: 10_000 }).toBe("hall");
+    await page.waitForTimeout(1500);
+    await expect(page.getByRole("button", { name: /switchgear panel/ })).toHaveCount(0);
+    const point = await page.evaluate(() => {
+      const world = (window as unknown as { __ge: { world(): { camera: { position: { clone(): { set(x: number, y: number, z: number): { project(camera: unknown): { x: number; y: number } } } } } } } }).__ge.world();
+      const projected = world.camera.position.clone().set(-3.9, 1.2, -48.5).project(world.camera);
+      return { x: ((projected.x + 1) / 2) * innerWidth, y: ((1 - projected.y) / 2) * innerHeight };
+    });
+    await page.mouse.move(point.x, point.y);
+    await page.waitForTimeout(300);
+    await expect(page.locator("[data-hover-label]")).toHaveText("Open the panel");
+    await page.mouse.click(point.x, point.y);
     await expect.poll(async () => (await canvasData(page)).panel, { timeout: 8_000 }).toBe("1.00");
-    await page.keyboard.press("Escape");
+    await page.mouse.click(point.x, point.y);
     await expect.poll(async () => (await canvasData(page)).panel, { timeout: 8_000 }).toBe("0.00");
-    await expect(button).toHaveAttribute("aria-pressed", "false");
   });
 
-  test("pausing stops ambient rendering", async ({ page }) => {
+  test("ambient motion always runs; old pause, motion and sound settings are ignored", async ({ page }) => {
+    await page.addInitScript(() => {
+      localStorage.setItem("ge-pause", "on");
+      localStorage.setItem("ge-motion", "reduce");
+      localStorage.setItem("ge-sound", "off");
+    });
     await page.goto("");
     await ready(page);
-    await page.getByRole("button", { name: "Menu" }).click();
-    await page.getByLabel("Pause animation").check();
-    await page.keyboard.press("Escape");
-    await page.waitForTimeout(600);
+    await expect(page.locator(".world")).toHaveAttribute("data-world", "ready");
+    expect((await canvasData(page)).motion).toBe("true");
     const before = Number((await canvasData(page)).frames);
     await page.waitForTimeout(1200);
-    expect(Number((await canvasData(page)).frames)).toBe(before);
-    expect((await canvasData(page)).motion).toBe("false");
+    expect(Number((await canvasData(page)).frames)).toBeGreaterThan(before);
+    expect(await page.evaluate(() => document.documentElement.dataset.sound)).toBe("on");
   });
 });
 
 test.describe("navigation", () => {
-  test("changes page without reloading the 3D world", async ({ page }) => {
+  test("changes page without reloading the 3D world, which waits stopped and hidden until the way home", async ({ page }) => {
     await page.goto("");
     await ready(page);
     await page.evaluate(() => document.querySelector<HTMLCanvasElement>("[data-canvas]")?.setAttribute("data-marker", "same"));
@@ -139,7 +167,10 @@ test.describe("navigation", () => {
     await expect(page).toHaveTitle("Projects — Ganesh Electricals");
     await expect(page.locator("link[rel=canonical]")).toHaveAttribute("href", "https://parama-guru.github.io/GithubPages/ge/projects/");
     await expect(page.locator("[data-canvas]")).toHaveAttribute("data-marker", "same");
-    await expect.poll(async () => (await canvasData(page)).zone, { timeout: 10_000 }).toBe("hall");
+    await expect(page.locator(".world")).toHaveCSS("visibility", "hidden");
+    const parked = Number((await canvasData(page)).frames);
+    await page.waitForTimeout(1000);
+    expect(Number((await canvasData(page)).frames)).toBe(parked);
     await page.getByRole("link", { name: "2019–2022" }).first().click();
     await expect(page).toHaveURL(/projects\/2019-2022\/$/);
     await expect(page.locator("tbody tr")).toHaveCount(26);
@@ -147,47 +178,53 @@ test.describe("navigation", () => {
     await expect(page).toHaveURL(/\/projects\/$/);
     await page.goBack();
     await expect(page.getByRole("heading", { level: 1 })).toContainText("Ganesh");
-  });
-
-  test("colour themes switch live, persist and default to light", async ({ page }) => {
-    await page.goto("");
-    await ready(page);
-    const html = page.locator("html");
-    await expect(html).toHaveAttribute("data-theme", "light");
-    expect(await page.locator(".site-header").evaluate((header) => getComputedStyle(header).backgroundImage)).toContain("rgb(0, 74, 153)");
-    await expect(page.locator(".theme-switch").getByLabel("Light")).toBeChecked();
-    await page.evaluate(() => document.querySelector<HTMLCanvasElement>("[data-canvas]")?.setAttribute("data-marker", "same"));
-    await page.locator(".theme-switch").getByLabel("Signal").check();
-    await expect(html).toHaveAttribute("data-theme", "signal");
-    await expect.poll(async () => (await canvasData(page)).theme).toBe("signal");
+    await expect(page.locator(".world")).toHaveCSS("visibility", "visible");
     await expect(page.locator("[data-canvas]")).toHaveAttribute("data-marker", "same");
-    await page.locator(".theme-switch").getByLabel("Copper").focus();
-    await page.keyboard.press("ArrowLeft");
-    await expect(html).toHaveAttribute("data-theme", "light");
-    await page.getByRole("button", { name: "Menu" }).click();
-    await expect(page.locator(".menu-theme").getByLabel("Light")).toBeChecked();
-    await page.locator(".menu-theme").getByLabel("Copper").click();
-    await expect(html).toHaveAttribute("data-theme", "copper");
-    await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute("content", "#06090d");
-    await page.locator("#site-menu").getByRole("link", { name: /Projects/ }).click();
-    await expect(page).toHaveURL(/\/projects\/$/);
-    await expect(page.locator(".theme-switch").getByLabel("Copper")).toBeChecked();
-    await page.reload();
-    await ready(page);
-    await expect(html).toHaveAttribute("data-theme", "copper");
-    expect((await canvasData(page)).theme).toBe("copper");
+    await expect.poll(async () => Number((await canvasData(page)).frames), { timeout: 5_000 }).toBeGreaterThan(parked);
   });
 
-  test("menu works with the keyboard", async ({ page }) => {
+  test("menu: grouped pages, a brand card and the 3D switch, with the keyboard", async ({ page }) => {
     await page.goto("about/");
     await ready(page);
     const menu = page.getByRole("button", { name: "Menu" });
     await menu.focus();
     await page.keyboard.press("Enter");
-    await expect(page.getByRole("dialog", { name: "Website menu" })).toBeVisible();
+    const dialog = page.getByRole("dialog", { name: "Website menu" });
+    await expect(dialog).toBeVisible();
+    await expect(dialog.getByRole("list", { name: "Company" }).getByRole("link")).toHaveText(["01About", "02How we serve", "03How we work", "04Leadership", "05Organisation"]);
+    await expect(dialog.getByRole("list", { name: "Work" }).getByRole("link")).toHaveText(["06Projects", "07Clients", "08Quality & Safety", "09Downloads"]);
+    await expect(dialog.getByRole("link", { name: "About" })).toHaveAttribute("aria-current", "page");
+    await expect(dialog.getByRole("link", { name: "Home" })).toBeVisible();
+    await expect(dialog.getByRole("link", { name: "Contact", exact: true })).toBeVisible();
+    await expect(dialog.getByRole("link", { name: "044-22523330" })).toHaveAttribute("href", "tel:+914422523330");
+    await expect(dialog.getByRole("link", { name: "kumareson@ganeshelectricals.in" })).toHaveAttribute("href", "mailto:kumareson@ganeshelectricals.in");
+    await expect(dialog.getByRole("checkbox")).toHaveCount(0);
+    const toggle = dialog.getByRole("switch", { name: "3D experience" });
+    await expect(toggle).toHaveCount(1);
+    await expect(toggle).toBeChecked();
+    await expect(toggle).toHaveAccessibleDescription("With motion and sound. Switch it off for a still, silent site.");
     await page.keyboard.press("Escape");
-    await expect(page.getByRole("dialog", { name: "Website menu" })).toBeHidden();
+    await expect(dialog).toBeHidden();
     await expect(menu).toBeFocused();
+  });
+
+  test("the menu's switch turns the 3D experience off and on", async ({ page }) => {
+    await page.goto("contact/");
+    await ready(page);
+    await expect(page.locator("html")).toHaveClass(/has-3d/);
+    await page.getByRole("button", { name: "Menu" }).click();
+    await page.getByRole("switch", { name: "3D experience" }).click();
+    await expect(page.locator(".world")).toHaveAttribute("data-world", "static");
+    expect(await page.evaluate(() => localStorage.getItem("ge-3d"))).toBe("off");
+    await expect(page.locator("html")).not.toHaveClass(/has-3d/);
+    await page.getByRole("button", { name: "Menu" }).click();
+    const toggle = page.getByRole("switch", { name: "3D experience" });
+    await expect(toggle).not.toBeChecked();
+    await toggle.focus();
+    await page.keyboard.press("Space");
+    await expect(page.locator(".world")).toHaveAttribute("data-world", "idle");
+    expect(await page.evaluate(() => localStorage.getItem("ge-3d"))).toBe("on");
+    await expect(page.locator("html")).toHaveClass(/has-3d/);
   });
 
   test("organisation chart follows the company profile format", async ({ page }) => {
@@ -196,7 +233,7 @@ test.describe("navigation", () => {
     await expect(page.locator(".org-project .org-box")).toHaveCount(34);
     await expect(page.locator(".org-project .org-box-lead")).toHaveCount(4);
     await expect(page.locator(".org-box").first()).toHaveText(/Mr\.B\.Kumareson\s*Proprietor/);
-    await expect(page.locator(".org-box").first()).toHaveCSS("background-color", "rgb(47, 119, 179)");
+    await expect(page.locator(".org-box").first()).toHaveCSS("background-color", "rgb(15, 92, 64)");
     await expect(page.locator(".org-core > .org-tree > li > ul > li")).toHaveCount(11);
   });
 
@@ -208,12 +245,12 @@ test.describe("navigation", () => {
     await page.getByLabel("Email address").fill("test@example.com");
     await page.getByLabel("Tell us about your project").fill("Substation works");
     await page.getByRole("button", { name: "Prepare email" }).click();
-    await expect(page.locator(".form-status a")).toHaveAttribute("href", /^mailto:enquiry@ganeshelectricals\.in\?subject=Enquiry/);
+    await expect(page.locator(".form-status a")).toHaveAttribute("href", /^mailto:kumareson@ganeshelectricals\.in\?subject=Enquiry/);
   });
 });
 
 test.describe("fallbacks and accessibility", () => {
-  test("reduced motion shows rendered posters without WebGL", async ({ browser }) => {
+  test("reduced motion shows the 2D site without posters or WebGL", async ({ browser }) => {
     const context = await browser.newContext({ reducedMotion: "reduce", viewport: { width: 1280, height: 800 } });
     const page = await context.newPage();
     const scripts: string[] = [];
@@ -221,10 +258,9 @@ test.describe("fallbacks and accessibility", () => {
     await page.goto("");
     await ready(page);
     await expect(page.locator(".world")).toHaveAttribute("data-world", "static");
-    const poster = page.locator(".chapter-poster img").first();
-    await expect(poster).toBeVisible();
-    expect(await poster.evaluate((image: HTMLImageElement) => image.complete && image.naturalWidth > 0)).toBe(true);
-    expect(scripts.some((url) => /\/world-[\w-]+\.js$/.test(url))).toBe(false);
+    await expect(page.locator(".chapter-poster").first()).toBeHidden();
+    await expect(page.locator(".flat-hero-art svg")).toBeVisible();
+    expect(scripts.some((url) => /\/world-[\w-]+\.js$|\/posters\//.test(url))).toBe(false);
     await context.close();
   });
 
@@ -283,11 +319,11 @@ test.describe("fallbacks and accessibility", () => {
     expect(await page.locator(".world").getAttribute("data-world")).toBe("loading");
     expect((await page.locator(".loader").boundingBox())?.height ?? 0).toBeLessThanOrEqual(4);
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-    await expect(page.locator(".chapter-poster img[data-poster-theme='light']").first()).toBeVisible();
-    await page.getByRole("button", { name: "Read more" }).first().click();
-    await expect(page.locator("dialog.detail[open]")).toBeVisible();
-    await page.locator("dialog.detail[open] [data-close-more]").first().click();
-    await expect(page.locator("dialog.detail[open]")).toHaveCount(0);
+    await expect(page.locator(".chapter-poster img").first()).toBeVisible();
+    await page.getByRole("button", { name: "Menu" }).click();
+    await expect(page.getByRole("dialog", { name: "Website menu" })).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(page.getByRole("dialog", { name: "Website menu" })).toBeHidden();
     await expect(page.locator(".world")).toHaveAttribute("data-world", "ready", { timeout: 60_000 });
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     await context.close();
@@ -321,20 +357,17 @@ test.describe("fallbacks and accessibility", () => {
     await context.close();
   });
 
-  test("has no serious accessibility violations in any theme", async ({ browser }) => {
-    for (const theme of ["light", "copper", "signal"]) {
-      const context = await browser.newContext({ reducedMotion: "reduce" });
-      await context.addInitScript((value) => localStorage.setItem("ge-theme", value), theme);
-      const page = await context.newPage();
-      for (const entry of routes) {
-        await page.goto(href(entry.id).replace("/GithubPages/ge/", ""));
-        await ready(page);
-        const result = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze();
-        const serious = result.violations.filter((violation) => ["serious", "critical"].includes(violation.impact ?? ""));
-        expect(serious.map((violation) => `${theme} ${entry.id}: ${violation.id} ${violation.nodes.map((node) => node.target.join(" ")).join(", ")}`)).toEqual([]);
-      }
-      await context.close();
+  test("has no serious accessibility violations", async ({ browser }) => {
+    const context = await browser.newContext({ reducedMotion: "reduce" });
+    const page = await context.newPage();
+    for (const entry of routes) {
+      await page.goto(href(entry.id).replace("/GithubPages/ge/", ""));
+      await ready(page);
+      const result = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze();
+      const serious = result.violations.filter((violation) => ["serious", "critical"].includes(violation.impact ?? ""));
+      expect(serious.map((violation) => `${entry.id}: ${violation.id} ${violation.nodes.map((node) => node.target.join(" ")).join(", ")}`)).toEqual([]);
     }
+    await context.close();
   });
 
   test("first visit stays within the transfer budget", async ({ browser }) => {

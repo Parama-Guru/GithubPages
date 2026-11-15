@@ -56,10 +56,20 @@ describe("company profile content", () => {
   it("uses the profile statistics, milestones, credentials and contacts", () => {
     expect(whyUs.statistics.map((stat) => stat.value)).toEqual(["230", "122", "10", "95"]);
     expect(whyUs.principles).toHaveLength(6);
-    expect(timeline.map((item) => item.year)).toEqual(["2025", "2019", "2008", "1997"]);
+    expect(timeline.map((item) => item.year)).toEqual(["2024–25", "2023–24", "2022–23", "2021–22", "2019", "2008", "1997"]);
+    expect(timeline.filter((item) => item.title === "GST appreciation").map((item) => item.date)).toEqual([
+      "FY 2024–25",
+      "FY 2023–24",
+      "FY 2022–23",
+      "FY 2021–22",
+    ]);
     expect(execution.manpowerTotal).toBe(95);
     expect(credentials.map((item) => item.title)).toContain("ESA License");
-    expect(company.emails).toEqual(["enquiry@ganeshelectricals.in", "kumareson@ganeshvar.com"]);
+    expect(company.emails).toEqual(["kumareson@ganeshelectricals.in"]);
+    expect(company.phone).toBe("044-22523330");
+    expect(company.phoneHref).toBe("tel:+914422523330");
+    expect(company.incorporated).toBe("06/05/1997");
+    expect(company.expertise).toHaveLength(6);
     expect(clients.logos).toHaveLength(12);
     expect(quality.ehs.commitments).toHaveLength(9);
     expect(quality.ehsStandards).toHaveLength(24);
@@ -68,7 +78,9 @@ describe("company profile content", () => {
   it("publishes no personal mobile numbers or retired contacts", () => {
     const html = routes.map((entry) => renderMain(entry.id)).join("");
     expect(html).not.toMatch(/(?<![\d+])(?:\+91[\s-]?)?[6-9]\d{4}[\s-]?\d{5}(?!\d)/);
-    expect(html).not.toContain("ganeshvar@yahoo.com");
+    expect(html).not.toContain("ganeshvar");
+    expect(html).not.toMatch(/4284/);
+    expect(html).not.toContain("UDYAM-TN");
     expect(html).not.toContain("33AFTPK");
   });
   it("reproduces the profile organisation chart", () => {

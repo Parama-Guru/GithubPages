@@ -1,4 +1,3 @@
-import { themes } from "@/app/theme";
 import {
   achievements,
   clients,
@@ -8,6 +7,7 @@ import {
   execution,
   featuredProjects,
   leadership,
+  milestoneSummary,
   projectGroups,
   projectImages,
   projectTotals,
@@ -17,9 +17,11 @@ import {
   type ProjectGroup,
   type ProjectRow,
 } from "@/content";
-import { href, route, routes, type RouteId } from "@/routes/routes";
+import { href, routes, type RouteId } from "@/routes/routes";
 import { chapterNumber, chapters } from "@/timeline/chapters";
-import { arrow, arrowUp, esc, img } from "./html";
+import { heroMotif } from "./art";
+import { homeExtra } from "./flat";
+import { arrow, arrowLeft, arrowUp, esc, img, photo } from "./html";
 import { renderOrgChart } from "./orgchart";
 
 const link = (id: RouteId, label: string, kind = "text-link") => `<a class="${kind}" href="${href(id)}">${esc(label)}${kind === "button" ? arrowUp : arrow}</a>`;
@@ -32,6 +34,12 @@ const awardSizes: Record<string, [number, number]> = {
   "award-danfoss": [211, 300],
   "award-daimler": [318, 153],
   "award-board": [278, 208],
+};
+
+// A figure the 2D site counts up to (app/flat.ts); the text stays the final value without JavaScript.
+const tally = (value: string) => {
+  const number = value.match(/\d[\d,]*(\.\d+)?/)?.[0].replace(/,/g, "");
+  return number ? ` data-tally="${number}"` : "";
 };
 
 function label(index: number, text: string) {
@@ -79,7 +87,7 @@ function awardFigure(name: string, caption: string) {
 function achievementBlock() {
   const board = achievements.board;
   return `<div class="awards">${achievements.awards.map((award) => awardFigure(award.image, award.caption)).join("")}${awardFigure(board.image, board.caption)}</div>
-    <dl class="figures">${board.figures.map(([value = "", text = ""]) => `<div><dd>${esc(value)}</dd><dt>${esc(text)}</dt></div>`).join("")}</dl>`;
+    <dl class="figures">${board.figures.map(([value = "", text = ""]) => `<div><dd${tally(value)}>${esc(value)}</dd><dt>${esc(text)}</dt></div>`).join("")}</dl>`;
 }
 
 function featured() {
@@ -93,19 +101,19 @@ function featured() {
 
 const chapterBodies: Record<string, (index: number) => string> = {
   welcome: () => `
-    <p class="chapter-label chapter-label-hero"><span></span>${esc(company.scope)}</p>
-    <h1 class="hero-title" data-split><span>Ganesh</span> <span>Electricals</span></h1>
-    <p class="chapter-lead">${esc(company.summary)}</p>
-    ${tags(company.scopes)}
+    <h1 class="hero-title" data-split><span>Ganesh</span> <span class="title-script">Electricals</span></h1>
+    <p class="chapter-lead hero-tagline">${esc(company.tagline)}</p>
+    ${tags(company.expertise)}
     <div class="actions">
       <button class="button" type="button" data-action="enter">Enter the facility${arrow}</button>
       ${link("projects", "Explore projects")}
+      <a class="text-link flat-only" href="${company.phoneHref}">Call ${esc(company.phone)}${arrowUp}</a>
     </div>`,
   about: (index) => `
     ${label(index, "About")}
     <h2 class="chapter-title" data-split>Ganesh Electricals</h2>
-    <p class="chapter-lead">${esc(company.about)}</p>
-    <ol class="mini-timeline">${timeline.map((item) => `<li><strong>${item.year}</strong><span>${esc(item.title)}</span></li>`).join("")}</ol>
+    <p class="chapter-lead">${esc(company.introduction)}</p>
+    <ol class="mini-timeline">${milestoneSummary.map((item) => `<li><strong>${item.year}</strong><span>${esc(item.title)}</span></li>`).join("")}</ol>
     <div class="actions">${link("about", "About us")}</div>`,
   "why-us": (index) => `
     ${label(index, "How we serve")}
@@ -118,10 +126,7 @@ const chapterBodies: Record<string, (index: number) => string> = {
     <h2 class="chapter-title" data-split>Projects</h2>
     <p class="chapter-lead">${esc(company.capability)}</p>
     <ul class="year-links">${projectGroups.map((group) => `<li><a href="${href(groupRoute(group))}">${esc(group.label)}</a></li>`).join("")}</ul>
-    <div class="actions">
-      <button class="button button-ghost" type="button" data-action="panel" aria-pressed="false">Open a switchgear panel${arrow}</button>
-      ${link("projects", "View projects")}
-    </div>`,
+    <div class="actions">${link("projects", "View projects")}</div>`,
   clients: (index) => `
     ${label(index, "Clients")}
     <h2 class="chapter-title" data-split>Our Clients</h2>
@@ -146,101 +151,40 @@ const chapterBodies: Record<string, (index: number) => string> = {
     <div class="actions">${link("contact", "Send an enquiry", "button")}</div>`,
 };
 
-const more = (id: string) => `<button class="more-button" type="button" data-more="${id}" aria-haspopup="dialog"><span aria-hidden="true">+</span>Read more</button>`;
+// Without JavaScript this opens the tour at its start; the router resumes the chapter the visitor left and names it.
+const back = `<a class="back-link" href="${href("home")}" data-back aria-label="Back to the start of the tour">${arrowLeft}<span>Back</span></a>`;
 
-const details: Record<string, { label: string; title: string; route: RouteId; body: () => string }> = {
-  about: {
-    label: "About",
-    title: "Ganesh Electricals",
-    route: "about",
-    body: () => `${company.introduction.map((text) => `<p>${esc(text)}</p>`).join("")}
-      <h3>Milestones</h3>
-      <ol class="detail-timeline">${timeline.map((item) => `<li><strong>${item.year}</strong><span>${esc(item.title)}</span><p>${esc(item.body)}</p><time>${item.date}</time></li>`).join("")}</ol>`,
-  },
-  "why-us": {
-    label: "How we serve",
-    title: whyUs.title,
-    route: "features",
-    body: () => `<p>${esc(whyUs.lead)}</p><ol class="commitments">${whyUs.principles.map((item) => `<li>${esc(item.title)}</li>`).join("")}</ol>${statistics()}`,
-  },
-  projects: {
-    label: "Projects",
-    title: "Projects",
-    route: "projects",
-    body: () => `<p>${esc(company.capability)}</p>${groupCards()}`,
-  },
-  clients: {
-    label: "Clients",
-    title: "Our Clients",
-    route: "clients",
-    body: () => `${logos()}${clients.byVoltage.map((group) => `<h3>${esc(group.level)}</h3>${list(group.clients)}`).join("")}`,
-  },
-  quality: {
-    label: "Quality & Safety",
-    title: "Quality & Safety",
-    route: "quality-safety",
-    body: () =>
-      `<h3>${quality.policy.title}</h3>${quality.policy.paragraphs.map((text) => `<p>${esc(text)}</p>`).join("")}` +
-      `<h3>EHS Policy</h3><p>${esc(quality.ehs.intro)}</p><p>${esc(quality.ehs.committed)}</p><ol class="commitments">${quality.ehs.commitments
-        .map((item) => `<li>${esc(item)}</li>`)
-        .join("")}</ol><p>${esc(quality.ehs.closing)}</p>`,
-  },
-  leadership: {
-    label: "Leadership",
-    title: "Leadership",
-    route: "leadership",
-    body: () => `<p class="detail-name">${esc(leadership.name)}, ${esc(leadership.title)}</p>${leadership.paragraphs.map((text) => `<p>${esc(text)}</p>`).join("")}<p>${esc(leadership.note)}</p>`,
-  },
-};
-
-function dialogs() {
-  return Object.entries(details)
-    .map(
-      ([id, detail]) => `<dialog class="detail" id="more-${id}" aria-labelledby="more-${id}-title" data-lenis-prevent>
-        <div class="detail-inner">
-          <button class="detail-close" type="button" data-close-more aria-label="Close">×</button>
-          <p class="chapter-label"><span></span>${esc(detail.label)}</p>
-          <h2 id="more-${id}-title">${esc(detail.title)}</h2>
-          <div class="detail-body">${detail.body()}</div>
-          <div class="actions">${link(detail.route, `Open the ${detail.label} page`)}</div>
-        </div>
-      </dialog>`,
-    )
-    .join("");
-}
+// Each word of a page title sits in its own mask, so a page opened by the router raises its words in turn (main.css
+// main.is-entering); the text itself and its line breaks are those of the plain title.
+const words = (text: string) =>
+  text
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((word, index) => `<span class="w" style="--w:${Math.min(index, 10)}"><span>${esc(word)}</span></span>`)
+    .join(" ");
 
 function home() {
   return `<div class="journey" data-journey>
     ${chapters
       .map(
         (chapter, index) => `<section class="chapter" id="${chapter.id}" data-chapter="${chapter.id}" data-zone="${chapter.zone}" aria-labelledby="${chapter.id}-title">
-          <div class="chapter-panel">${(chapterBodies[chapter.id] ?? (() => ""))(index)
-            .replace(/<h([12]) class="([^"]+)"/, `<h$1 id="${chapter.id}-title" class="$2"`)
-            .replace('<div class="actions">', details[chapter.id] ? `<div class="actions">${more(chapter.id)}` : '<div class="actions">')}</div>
-          <div class="chapter-poster" aria-hidden="true">${themes.map((theme) => `<img data-poster-theme="${theme.id}" src="/GithubPages/ge/posters/${theme.id}/${chapter.id}.webp" width="1280" height="800" alt="" loading="lazy" decoding="async">`).join("")}</div>
+          <div class="chapter-panel">${(chapterBodies[chapter.id] ?? (() => ""))(index).replace(/<h([12]) class="([^"]+)"/, `<h$1 id="${chapter.id}-title" class="$2"`)}</div>
+          ${homeExtra(chapter.id)}
+          <div class="chapter-poster" aria-hidden="true"><picture><source srcset="data:," media="(scripting: none)"><img src="/GithubPages/ge/posters/${chapter.id}.webp" width="1280" height="800" alt="" loading="lazy" decoding="async"></picture></div>
         </section>`,
       )
       .join("")}
     <p class="scroll-cue" aria-hidden="true"><span>Scroll to enter</span><i></i></p>
-  </div>
-  ${dialogs()}`;
-}
-
-function breadcrumbs(id: RouteId) {
-  const trail: RouteId[] = ["home"];
-  const current = route(id);
-  if (current.parent) trail.push(current.parent);
-  trail.push(id);
-  return `<nav class="breadcrumbs" aria-label="Breadcrumb"><ol>${trail
-    .map((step, index) => (index === trail.length - 1 ? `<li aria-current="page">${esc(route(step).label)}</li>` : `<li><a href="${href(step)}">${esc(route(step).label)}</a></li>`))
-    .join("")}</ol></nav>`;
+  </div>`;
 }
 
 function hero(id: RouteId, eyebrow: string, title: string, lead = "", extra = "") {
+  // The text column shares the content's left edge; the page's drawing sits beside it (below 900 px, beside Back).
   return `<header class="page-hero">
-    ${breadcrumbs(id)}
+    ${back}
+    ${heroMotif(id)}
     <p class="chapter-label"><span></span>${esc(eyebrow)}</p>
-    <h1 class="page-title" data-split>${esc(title)}</h1>
+    <h1 class="page-title">${words(title)}</h1>
     ${lead ? `<p class="chapter-lead">${esc(lead)}</p>` : ""}
     ${extra}
   </header>`;
@@ -287,9 +231,11 @@ function roles() {
 
 const pageBodies: Partial<Record<RouteId, () => string>> = {
   about: () =>
-    hero("about", "About", "Ganesh Electricals", company.introduction[0]) +
-    sheet(`<p class="sheet-lead">${esc(company.about)}</p><p>${esc(company.capability)}</p>
-      <div class="split-text"><div><h3>Our purpose</h3><p>${esc(company.purpose)}</p></div><div><h3>Founded in 1997</h3><p>${esc(company.founded)}</p></div></div>`) +
+    hero("about", "About", company.tagline, company.introduction) +
+    section("What we do", "Our expertise", list(company.expertise, "expertise")) +
+    sheet(`<blockquote class="brand-statement"><p>${esc(company.closing)}</p></blockquote>`) +
+    sheet(`<p class="sheet-lead">${esc(company.capability)}</p>
+      <div class="split-text"><div><h3>Our purpose</h3><p>${esc(company.purpose)}</p></div><div><h3>Founded in 1997</h3><p>${esc(company.founded)} Incorporated / registered on ${esc(company.incorporated)}.</p></div></div>`) +
     section("Since 1997", "Milestones", `<ol class="timeline">${timeline
       .map((item) => `<li><strong>${item.year}</strong><h3>${esc(item.title)}</h3><p>${esc(item.body)}</p><time>${item.date}</time></li>`)
       .join("")}</ol>`) +
@@ -315,22 +261,25 @@ const pageBodies: Partial<Record<RouteId, () => string>> = {
     section(
       "Manpower deployment",
       `${execution.manpowerTotal} people per project`,
-      `<dl class="manpower">${execution.manpower.map((item) => `<div><dt>${esc(item.role)}</dt><dd>${item.count}</dd></div>`).join("")}</dl>`,
+      `<dl class="manpower">${execution.manpower.map((item) => `<div><dt>${esc(item.role)}</dt><dd${tally(String(item.count))}>${item.count}</dd></div>`).join("")}</dl>`,
     ) +
     section("Equipment", "Access equipment on site", tags(execution.equipment)),
   projects: () =>
-    hero("projects", "Projects", "Projects", company.capability, tags(company.scopes)) +
+    hero("projects", "Projects", "Projects", company.capability, tags(company.expertise)) +
     sheet(`<dl class="stats">${[
       { value: String(projectTotals.ongoing), label: "On-going projects" },
       { value: String(projectTotals.executed), label: "Projects executed since 2012" },
       { value: "230", label: "kV — highest substation voltage" },
       { value: "1997", label: "Established" },
     ]
-      .map((stat) => `<div><dt>${esc(stat.label)}</dt><dd>${esc(stat.value)}</dd></div>`)
+      .map((stat) => `<div><dt>${esc(stat.label)}</dt><dd${/^(19|20)\d\d$/.test(stat.value) ? "" : tally(stat.value)}>${esc(stat.value)}</dd></div>`)
       .join("")}</dl>`) +
     section("Featured", "Substation & electrification projects", featured()) +
     sheet(`<ul class="gallery">${projectImages
-      .map((image) => `<li><figure>${img(image.src, image.width, image.height, image.alt)}<figcaption>${esc(image.label)}</figcaption></figure></li>`)
+      .map(
+        (image, index) =>
+          `<li><figure>${photo(image, index ? "(max-width: 900px) calc(100vw - 48px), (max-width: 1368px) calc(50vw - 35px), 650px" : "(max-width: 1368px) calc(100vw - 48px), 1320px")}<figcaption>${esc(image.label)}</figcaption></figure></li>`,
+      )
       .join("")}</ul>`) +
     section("Project lists", "On-going and executed projects", groupCards()),
   clients: () =>

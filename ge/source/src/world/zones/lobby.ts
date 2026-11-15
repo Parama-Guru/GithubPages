@@ -1,6 +1,6 @@
 import { BoxGeometry, BufferGeometry, Mesh, MeshBasicMaterial, PlaneGeometry } from "three";
-import { company, timeline } from "@/content";
-import { box, merged, partition, placed, plane, pool, room } from "../kit";
+import { company, milestoneSummary } from "@/content";
+import { box, contactShadow, merged, partition, placed, plane, pool, room } from "../kit";
 import { energyMaterial } from "../materials";
 import { image, label } from "../textures";
 import { plaque } from "./painters";
@@ -8,7 +8,7 @@ import { createZone, cue, glowMaterial, type ZoneBuilder } from "./shared";
 
 export const buildLobby: ZoneBuilder = async (context) => {
   const { m } = context;
-  const plaques = timeline.map((item, index) => ({ item, label: label(`plaque-${index}`, 640, 440, plaque(item.year, item.title, item.body, 0)), lit: -1 }));
+  const plaques = milestoneSummary.map((item, index) => ({ item, label: label(`plaque-${index}`, 640, 440, plaque(item.year, item.title, item.body, 0)), lit: -1 }));
   const energy = energyMaterial("warm", 5);
 
   const zone = createZone(context, (frame) => {
@@ -45,11 +45,12 @@ export const buildLobby: ZoneBuilder = async (context) => {
   g.add(box(m.copper, [1.12, 0.05, 4.72], [-3.6, 1.12, -8.5]));
   g.add(box(m.lightWarm, [0.02, 0.03, 4.4], [-3.08, 0.12, -8.5]));
   const logo = zone.own(glowMaterial(image(`/GithubPages/ge/${company.logo.src}`), 1.4));
-  g.add(box(m.wallDark, [0.1, 1.4, 6.6], [-5.94, 3.1, -8.5]));
+  g.add(box(m.darkMetal, [0.1, 1.4, 6.6], [-5.94, 3.1, -8.5]));
   g.add(plane(logo, 6, 6 / (company.logo.width / company.logo.height), [-5.87, 3.1, -8.5], [0, Math.PI / 2, 0]));
 
   const benches: BufferGeometry[] = [placed(new BoxGeometry(0.7, 0.45, 2.4), [3.4, 0.225, -6]), placed(new BoxGeometry(0.7, 0.45, 2.4), [-1.6, 0.225, -14])];
   g.add(merged(m.fabric, benches));
+  g.add(contactShadow(m, [-3.6, 0, -8.5], 2.2, 6), contactShadow(m, [3.4, 0, -6], 1.5, 3.4), contactShadow(m, [-1.6, 0, -14], 1.5, 3.4));
   for (const z of [-4, -8.5, -13]) g.add(pool(m, [0, 0, z], 5));
   g.add(pool(m, [4.6, 0, -13], 7));
 

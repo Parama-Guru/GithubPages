@@ -27,7 +27,7 @@ export function createPost(renderer: WebGLRenderer, scene: Scene, camera: Perspe
   composer.addPass(new RenderPass(scene, camera));
   const bloom = new BloomEffect({ mipmapBlur: true, luminanceThreshold: 0.82, luminanceSmoothing: 0.18, intensity: 1.15, radius: 0.72 });
   const vignette = new VignetteEffect({ offset: 0.32, darkness: 0.62 });
-  const tone = new ToneMappingEffect({ mode: ToneMappingMode.AGX });
+  const tone = new ToneMappingEffect({ mode: ToneMappingMode.NEUTRAL });
   const exposure = new BrightnessContrastEffect({ brightness: 0, contrast: 0 });
   const dof = tier === "high" ? new DepthOfFieldEffect(camera, { worldFocusRange: 6, bokehScale: 0 }) : null;
   composer.addPass(new EffectPass(camera, bloom, vignette, tone, exposure));

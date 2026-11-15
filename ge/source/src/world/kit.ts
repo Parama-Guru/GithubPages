@@ -76,10 +76,11 @@ export function placed(geometry: BufferGeometry, position: Vec, rotation: Vec = 
   return geometry.applyMatrix4(holder.matrix);
 }
 
-type Room = { width: number; height: number; near: number; far: number; floor?: Material; wall?: Material; ceiling?: Material; strips?: number; stripMaterial?: Material };
+type Room = { width: number; height: number; near: number; far: number; floor?: Material; wall?: Material; ceiling?: Material; strips?: number; stripMaterial?: Material; wainscot?: number };
 
 export function room(m: Materials, spec: Room): Group {
   const group = new Group();
+  group.userData.flatten = true;
   const depth = spec.near - spec.far;
   const centre = (spec.near + spec.far) / 2;
   const floor = plane(spec.floor ?? m.floor, spec.width, depth, [0, 0, centre], [-Math.PI / 2, 0, 0], 2);
@@ -94,6 +95,17 @@ export function room(m: Materials, spec: Room): Group {
     stripParts.push(placed(new BoxGeometry(0.12, 0.04, depth - 1.6), [x, spec.height - 0.03, centre]));
   }
   if (stripParts.length) group.add(merged(spec.stripMaterial ?? m.lightStrip, stripParts));
+  // Deep green wainscot with a copper rail below the warm upper wall.
+  const wainscot = spec.wainscot ?? 1.15;
+  if (wainscot > 0) {
+    const panels: BufferGeometry[] = [];
+    const rails: BufferGeometry[] = [];
+    for (const side of [-1, 1]) {
+      panels.push(placed(scaleUv(new PlaneGeometry(depth, wainscot), depth / 3, wainscot / 3), [side * (spec.width / 2 - 0.005), wainscot / 2, centre], [0, -side * Math.PI / 2, 0]));
+      rails.push(placed(new BoxGeometry(0.05, 0.05, depth), [side * (spec.width / 2 - 0.03), wainscot, centre]));
+    }
+    group.add(merged(m.wallDark, panels), merged(m.copper, rails));
+  }
   const shade = 1.1;
   for (const side of [-1, 1]) {
     const floorShade = plane(m.corner, shade, depth, [side * (spec.width / 2 - shade / 2), 0.008, centre], [-Math.PI / 2, 0, 0]);
@@ -110,6 +122,7 @@ export function room(m: Materials, spec: Room): Group {
 
 export function partition(m: Materials, z: number, width: number, height: number, opening = 3.2, openingHeight = 3.2, material?: Material): Group {
   const group = new Group();
+  group.userData.flatten = true;
   const wall = material ?? m.wallDark;
   const side = (width - opening) / 2;
   group.add(box(wall, [side, height, 0.3], [-(opening / 2 + side / 2), height / 2, z]));
@@ -151,6 +164,16 @@ export function framed(m: Materials, texture: Texture, width: number, height: nu
 }
 
 export function batch(group: Group, keep: Set<Object3D>): number {
+  // Room shells and partitions are plain groups; hoist their meshes so they merge with the zone's own by material.
+  for (const child of [...group.children]) {
+    if (!child.userData.flatten || keep.has(child)) continue;
+    child.updateMatrix();
+    for (const part of [...child.children]) {
+      part.applyMatrix4(child.matrix);
+      group.add(part);
+    }
+    group.remove(child);
+  }
   const buckets = new Map<Material, Mesh[]>();
   for (const child of [...group.children]) {
     const mesh = child as Mesh;

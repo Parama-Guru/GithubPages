@@ -542,3 +542,221 @@ Company profile update (owner request, 2 Nov 2026 — `Ganesh electricals-Profil
       and Signal; the site recolours the whole scene (rooms, signs, screens, lights and models) live.
 - [x] Tests: 23 unit (incl. 122/10 project rows, 43-position chart, no mobile numbers or retired email) and 52 browser
       tests green (axe in all three themes, overflow 320–2560 px, framing, themes, no-JS, redirects).
+
+Colour palette (owner request, 15 Nov 2026 — "remove the three colour … finalise a new pallete … bright elegant and proffesional")
+- [x] *(Superseded by the second round below — the owner rejected the result.)* Research: live sites opened with Playwright (headless Edge) at 1440×900 and 390×844, scrolled top to footer
+      (5 states each), menu opened where offered; colours read with getComputedStyle (24 px grid of the painted
+      background under every point, text colour weighted by text length, borders, filled controls).
+      Screenshots in `source/.cache/research` (not published).
+  - hitachienergy.com — white and #F4F4F4 surfaces, #222222 text, red #CC0000 used only for small controls,
+    black footer. Takeaway: one saturated colour, used sparingly, reads as confident.
+  - siemens-energy.com — deep purple #1B1534 bands with purple #8A00E5 accent, white text. Takeaway: a deep band
+    carries a white logo well, but dark-led pages are not "bright".
+  - se.com — light grey #F0F1F2 and white surfaces, #626469/#000 text, #0075A3 links. Takeaway: an off-white page
+    with white cards keeps long technical pages calm.
+  - gevernova.com — white with deep teal #005E60 text and links, pale #E4F1F1/#F5FBFB panels, lime #C8FF08 as a tiny
+    accent, #212121 footer. Takeaway: tinted near-whites plus one deep brand hue look premium.
+  - eaton.com — white with slate text #333F48, blue #005EB8 utility bar and links, slate #5B6770 footer.
+    Takeaway: an electrical blue on white is the trustworthy convention of the sector.
+  - abb.com — white and near-black #1F1F1F, red #EE0000 buttons. Takeaway: restraint, one accent.
+  - larsentoubro.com — white with deep blue #024D87 links and borders, #ECF0E8 tinted band, #181818 footer.
+    Takeaway: the Indian EPC benchmark pairs a deep blue with generous white.
+  - ramboll.com (design-led) — white and stone #E7EEEC, slate #273943 text, blue #0098EB accent, light footer.
+    Takeaway: warm stone neutrals make engineering feel refined. buro-happold.com — white/black with taupe #958B82.
+    arup.com loaded blank in headless and visible browsers (render timed out) and was replaced by ramboll.com;
+    mottmac.com and fosterandpartners.com answered 403.
+- [x] *(Superseded — rejected by the owner, see the second round below.)* Chosen palette (one palette for the whole site and 3D world; the Light, Copper and Signal themes, the header and
+      Menu theme switches, `ge-theme` storage and the per-theme posters were removed at the owner's request):
+      porcelain #F6F4EF page, white #FFFFFF sheets and header/menu bands, ink #142135, muted #46546A, dim #556172,
+      sapphire #1A4F91 brand (the original website's #004A99, deepened and warmed), deep sapphire #123C70 for data
+      and hover, brass #A8792B as the sparing accent (rules, underlines, 3D trims), midnight #0F2139 footer with
+      champagne #E6C987 links, ISO 7010 safety yellow #F5B21A in 3D. Why: bright like Ramboll/GE Vernova (light,
+      warm neutrals), professional like Eaton/L&T (an electrical blue on white), elegant through one restrained
+      metallic accent instead of a second saturated colour; clearly different from the old white + #004A99 Light,
+      dark Copper and petrol Signal themes. Details and token names in `source/README.md` ("Colour palette").
+- [x] *(Superseded.)* Logo kept legible everywhere without redrawing it: a sapphire copy cut from the white logo's alpha mask (identical
+      shapes) on the white header and menu, the route-change emblem, favicon and touch icon; the white original stays on
+      the midnight footer and on the 3D façade and lobby signs (sapphire plates).
+- [x] *(Superseded.)* Whole 3D world in the palette (`source/src/world/look.json`, `palette.ts`): daylight sky (separate values for
+      AgX on desktop/posters and ACES on phones), warm porcelain rooms with deeper stone floors, sapphire sign plates and
+      frames, brass door frames, rails and conductors, light porcelain control-room screens with sapphire figures, org
+      board and plaques in sapphire on porcelain, blue/brass energy flow, Blender materials recoloured at load
+      (`blender/build_assets.py` reads the same file; `npm run assets:preview` renders a check).
+- [x] *(Superseded; re-measured for the second round.)* Text over the scene: left veil sized to the text column on desktop; on phones and in page heroes a porcelain
+      backdrop anchored to the first line of text. Measured with the text made transparent (2nd-percentile
+      background under each text line): every chapter hold passes WCAG AA at 390, 1024, 1440 and 2560 px (worst 5.0:1),
+      every page hero at 390 and 1440 px (worst 4.7:1), and the reduced-motion posters (worst 5.1:1).
+- [x] *(Superseded; re-rendered in the second round.)* One poster set (8 × 1280×800 WebP, 170 KB) and 15 social images re-rendered from the new scene.
+- [x] *(Superseded; updated in the second round.)* Tests: unit palette tests (every surface, ink and Blender material defined, valid colours, 3D text contrast
+      ≥ 4.5:1, Blender reads `look.json`); browser palette tests (no theme switch or `data-theme`, look signature and
+      model colours match the file, single poster set); theme-switch test removed, axe runs once on every route.
+      typecheck, lint, 23 unit and 54 browser tests green; first visit 878 KiB; 3D ready in 1.5 s on fast 4G.
+- [x] Superseded by this palette: the "Colour themes (owner request, 18 Oct 2026)" items above, including the open
+      "Owner review of the three themes" item, and the theme items of the 2 Nov 2026 update (3 × 8 posters,
+      `npm run assets:themes`, axe in three themes).
+- [x] Owner review of the sapphire palette in the browser: rejected on 15 Nov 2026 (second round below).
+
+Colour palette, second round (owner correction, 15 Nov 2026 — "you ahve giventhe whiete nad blue only which i told you to search
+in web search to find differnet combination of colour pallete and choose one for our okay change that")
+- [x] Why the first round failed: on screen it read as white and blue only (white header and menu, sapphire logo, blue
+      buttons, links and figures, blue sign plates and sky), not as a combination of colours. Every item marked
+      "superseded" above was replaced; the theme system stays removed (one palette, no switch).
+- [x] Research with web search, web fetch and Playwright (headless Edge) of palette libraries, trend reports and brand
+      palettes: Color Hunt's popular, gold and vintage collections (palettes and like counts read from the live pages),
+      Hook Agency's luxury website palettes, Digisperse's Indian festival palettes, media.io's elegant palettes (mostly
+      single-hue ramps), the Pantone 2026 "Cloud Dancer" pairings (thecolortools.com), the WGSN × Coloro 2026 key colours,
+      Iberdrola's official palette (colorcodeguide.com) and the 2026 trend round-ups of colorarchive.org and
+      colorsense.online. Coolors' trending page answered with a Cloudflare bot check and was not used. Mock-ups of every
+      candidate (header band, title, button, chip, figure) in `source/.cache/palette/candidates.png` (not published).
+  1. Racing Green & Marigold — Color Hunt, 11,169 likes (https://colorhunt.co/palette/004225f5f5dcffb000ffcf9d): racing
+     green #004225, beige #F5F5DC, marigold #FFB000, apricot #FFCF9D. Bright and confident, the classic elegant green and
+     gold; on its own only two hue families. Chosen as the core.
+  2. Diya Lamp — Digisperse (https://digisperse.com/blogs/swatchbook/diwali-color-palettes-hex-codes): ghee cream #FFF6E4,
+     flame gold #F5C24E, terracotta #CE7A44, burnt sienna #85401F, peacock teal #1B5F63, midnight #20202E. Warm, Indian,
+     three hues on cream, but teal + gold repeats the removed Signal theme and the mood is festive. Terracotta borrowed.
+  3. Garden — Pantone 2026 Cloud Dancer pairing (https://thecolortools.com/learn/pantone-color-of-the-year-2026): Cloud
+     Dancer #F0EFEA, sage #9CAF88, olive #5E6B52, terracotta #C96A4B. On trend and calm, but muted rather than bright, and
+     sage fails text contrast (2.1:1). Confirms terracotta with green.
+  4. Midcentury Touch — Hook Agency / Davis Humphries Design (https://hookagency.com/blog/luxury-website-colors/): blush
+     #D4BCC0, deep teal #043736, burnt copper #A25524, olive #7F8000. Sophisticated, but boutique interiors, led by a dark
+     teal and not bright.
+  5. Aubergine & Saffron — Color Hunt, 6,565 likes (https://colorhunt.co/palette/42032cd36b00e6d2aaf1efdc): aubergine
+     #42032C, saffron #D36B00, sand #E6D2AA, ivory #F1EFDC. Distinctive and silk-like, but reads fashion and weddings
+     rather than engineering.
+  6. Iberdrola, an energy brand (https://colorcodeguide.com/official/iberdrola): green #5C871A, matcha #759F2F, marine blue
+     #0C88CA, orange #F68C1B, yellow #FFC605. A real multi-colour utility identity, but five saturated hues read as a
+     rainbow and include blue. (WGSN × Coloro 2026 — teal #0F6F6A, fuchsia #FF2BC2, blue aura #B7C4D6, amber #D9A441,
+     mint #45CEA2 — rejected as neon fashion brights.)
+- [x] Chosen: emerald, terracotta and marigold on ivory — candidate 1 completed with the terracotta of candidates 2 and 3
+      and tuned for WCAG AA: ivory #FBF7EF page, paper #FFFDF8 sheets, ink #1B2A22, emerald #0F5C40 brand (deep #0B4632),
+      forest #0C3A2B header, menu bar and footer bands, terracotta #A8492A figures (#96401F for small labels), marigold
+      #E9A23B highlights; ISO 7010 yellow #F5B21A stays for safety in 3D. Why: green and gold is the established,
+      trustworthy pairing ("a step above the typical blue-and-orange contractor site", Hook Agency); terracotta adds warmth
+      and the copper of conductors, marigold the glow of light; together they echo Indian materials (banana leaf, temple
+      terracotta, marigold garlands) without festival brights. Bright through the ivory base and luminous accents, elegant
+      through a jewel-tone green with sparing warm accents, professional through deep brand bands and AA contrast. No role
+      is blue, and the combination differs from sapphire/brass, Light (white + #004A99), Copper (night + copper) and
+      Signal (petrol teal + safety yellow). Roles and hex values in `source/README.md` ("Colour palette").
+- [x] Applied everywhere: CSS tokens `--ivory`, `--paper`, `--emerald`, `--emerald-deep`, `--forest`, `--terracotta`,
+      `--terracotta-deep`, `--marigold` (old `--porcelain`, `--sapphire*`, `--midnight`, `--brass`, `--champagne` removed;
+      new semantic `--eyebrow`, `--figure`, `--chip`): forest header with the white logo, marigold nav underline and gold
+      hairline, marigold Contact button; terracotta labels and figures with marigold rules; marigold chips; emerald
+      buttons, links, focus ring, selection, hover label, org chart, year tabs and table heads; ivory menu with a forest
+      bar; forest footer with marigold links; ivory route curtain with the emerald emblem; `theme-color` #0C3A2B.
+- [x] Logo: header, menu bar and footer show the original white logo on forest, so no tinted copy is needed
+      (`logo-sapphire.webp` deleted); `npm run media` cuts an emerald emblem for the route curtain and makes an emerald
+      favicon and touch icon (white emblem).
+- [x] 3D world (`source/src/world/look.json`, `palette.ts`): emerald sign plates, canopy, bollards and frames; terracotta
+      console desks, lockout box and binders (surface `navy` renamed `lacquer`); copper door frames, trims, rails and
+      conductors; emerald benches; sage partitions and columns; warm-lit façade glass; control screens with terracotta
+      figures and emerald lines; org board in emerald; plaques with emerald years and marigold borders; marigold sign bars,
+      logo glow and warm energy; jade busbar energy; emerald switchgear trim on light grey enamel; warm daylight with a
+      pale aqua zenith and ivory horizon (no blue sky).
+- [x] Verified: typecheck, lint, 29 unit tests (new: brand roles stay emerald, figures terracotta, highlights marigold, and
+      no colour of the 3D palette reads as blue), build, and the full browser suite — 67 tests green (palette spec checks
+      the forest bands, white logos, marigold nav underline, emerald hero word and buttons, terracotta labels and figures,
+      marigold footer links and the emerald emblem; org chart colour; axe on every route; overflow 320–2560 px); first
+      visit 870 KiB; 3D ready in 1.6 s on fast 4G. Text over the live scene (text made transparent, 2nd-percentile
+      background): no failing text box at any of the 8 chapter holds at 1440×900 and 390×844 (worst 4.61:1 on a large
+      34 px figure; labels moved to deep terracotta after the first measurement gave 4.44:1), every page hero ≥ 5.1:1,
+      reduced-motion posters without failures. One poster set (8 × 1280×800 WebP, 170 KB) and 15 social images
+      re-rendered. Screenshots of the 8 holds, 8 pages, menu, footer, org chart and a project table at 1440×900 and
+      390×844 reviewed (`source/.cache/palette/`).
+- [ ] Owner review of the new palette in the browser.
+
+Navigation (owner request, 15 Nov 2026 — "create a home button in the nav bar before about … home/about … can be removed
+for all the pages … there must be back where they must leave from … the scroll animation")
+- [x] Header nav: Home first, then About, How we serve, Projects, Clients, Quality & Safety, with Contact and Menu
+      (`headerLinks`). Home is marked as the current page only on home. From any page Home flies the camera back to the
+      entrance without reloading the 3D world; on home, Home, the logo and Menu → Home rewind the tour to the top
+      (smooth, at most 2.4 s; instant with reduced motion). The header fits on one line without overlaps from 901 to
+      2560 px (checked with and without JavaScript).
+- [x] Breadcrumb trail ("Home / About") removed from every page; the BreadcrumbList JSON-LD stays in the head. Page
+      heroes rebalanced (74svh, 60svh at ≤ 900 px), and long page titles wrap inside the veiled text column so they no
+      longer run across the 3D subject (e.g. "How do we serve our clients?" over the control-room video wall).
+- [x] Back: the first item of every page hero (all inner pages and the 404 page). `source/src/app/tour.ts` remembers the
+      chapter in view when the tour is left by any link, 3D pick or browser history (memory, `sessionStorage` `ge-tour`,
+      `history.state.chapter` on the home entry). Back and the browser's Back/Forward jump instantly to that chapter's
+      hold (the section top in the static site) and the camera flies there in the same canvas; with nothing remembered,
+      Back opens the tour at the start, and without JavaScript it links to the start. Its accessible name names the
+      destination ("Back to the tour: Clients").
+- [x] Browser history no longer jumps the outgoing page: scroll restoration is manual while a page is open and automatic
+      on `pagehide`, so reloads and returns from other sites keep their position.
+- [x] Built by three agents in parallel (palette, Home/breadcrumbs, Back) in separate worktrees and merged; after the
+      merge: typecheck, lint, build, 28 unit and 67 browser tests green (`tests/e2e/nav.spec.ts` 5, `back.spec.ts` 8,
+      `palette.spec.ts` 3, plus the existing suites); Back verified at 1440×900 and 390×844 (returns to "04 Clients").
+- [ ] Owner review of Home, Back and the page heroes in the browser.
+
+Round 3 (owner request, 15 Nov 2026 — "remove the readmore …", "in the menu have only 3d button …", "fonts must be changed add some cursive …", "too much white spaces only throughout the 3D …", "have that light fixed")
+- [x] "Read more" buttons and the chapter detail dialogs removed from every page (markup, script and styles); each chapter links to its own page,
+      and the switchgear panel simply opens and closes. Supersedes the earlier "Read-more dialogs" and dialog items above.
+- [x] Menu has one preference, "3D experience with motion and sound" (`ge-3d`); Pause animation, Reduce motion and Sound were removed and
+      their old stored values are ignored. With 3D on, ambient motion always runs and sound is on by default — the hum starts on the
+      first click, tap or key press (browsers allow audio only after a gesture), with door and breaker sounds; switching 3D off gives the
+      still, silent poster site (also used for OS reduced motion, Data Saver, no WebGL and 2G). Supersedes the earlier sound/motion menu items.
+- [x] New typography: Fraunces (titles and figures, mixed case), Manrope (body), Parisienne (cursive accents only — the hero's
+      "Electricals", chapter and section eyebrows, signatures, the footer's "Since 1997", 3D project-group signs) and IBM Plex Mono
+      (small labels), self-hosted from Fontsource (about 99 KB woff2, 23 KB less than before); 3D canvas text uses the same faces.
+- [x] Richer 3D tour instead of washed-out white: terracotta façade, clay walls over an emerald wainscot with a copper rail, dark
+      polished floors, emerald switchgear with brass handles, dark control-room screens with orange figures, jade and amber light
+      pools, a teal-to-gold daylight sky, less haze, neutral tone mapping on every tier; room shells merged (≤ 94 draw calls desktop,
+      61 phones). Text sits on compact frosted ivory cards sized to the text instead of the large ivory veil (AA contrast measured at
+      every chapter hold and page hero).
+- [x] Ganesh Electricals façade sign painted once, fully and steadily lit (no light-up sweep); the flicker came from the lettering
+      sitting exactly on the plate (z-fighting) and is gone.
+- [x] Built by three agents in parallel (UI, fonts, scene) and merged; posters (8) and social images (15) re-rendered from the merged
+      scene. typecheck, lint, build, 29 unit tests and the full browser suite green (66 tests; one browser-history timing test passed
+      on re-run); every page checked at 1440×900 and 390×844 (titles, Back link, no overflow, no console errors).
+- [ ] Owner review of the round-3 look in the browser.
+
+Round 4 (owner request, 15 Nov 2026 — client review comments and approved content, "cursive is okay but the other fonts need to be changed", "remove the top" (hero eyebrow), "remove this button" (switchgear panel), "a new 2D animated separate website" when 3D is off, and the owner's Lighthouse report "optimise and resolve these for both 2D variant and the 3D variant")
+- [x] Client-approved About Us: tagline "Powering Infrastructure. Engineering Reliability. Building Trust." under the hero name and as
+      the About title (one sentence per line on desktop), the approved introduction (home, About, footer), the six expertise items
+      and the closing brand statement. Hero text checked for readability and alignment at 1920×1080, 1440×900, 1280×720,
+      768×1024 and 390×844 (the hero card now starts at the top of its hold position).
+- [x] Contact: kumareson@ganeshelectricals.in and 044-22523330 with click-to-call (`tel:+914422523330`) in the menu, footer,
+      Contact page, enquiry form and Organization JSON-LD; the old 044-4284 0227 and ganeshvar addresses never render (unit test).
+- [x] Milestones: GST appreciation FY 2021–22, 2022–23, 2023–24 and 2024–25, incorporated / registered 06/05/1997; Udyam number
+      withheld until the client supplies the certificate. Items needing the client are listed in `client-inputs.md`.
+- [x] Removed: the hero eyebrow "230 KV · 110 KV · 33 KV · 11 KV" and the "Open a switchgear panel" button (the switchgear still
+      opens when clicked in the 3D hall; its two browser tests click the projected 3D panel).
+- [x] New fonts: Spectral (display) and Hanken Grotesk (body and tracked-uppercase labels) replace Fraunces, Manrope and IBM
+      Plex Mono; Parisienne kept for the cursive accents. About 80 KB woff2 (was 114 KB), the first-screen faces preloaded, metric-
+      matched fallbacks so the swap does not shift text; 3D canvas text uses the same faces.
+- [x] 3D: the first frame renders under the poster while loading (the washed-out double exposure after "ready" is gone); lobby
+      plaques show four milestones (the GST years combined); every chapter hold, travel point and page checked for blank areas.
+- [x] New 2D website for visitors without 3D (menu switch, reduced motion, Data Saver, 2G, no WebGL, failed load, no JavaScript):
+      editorial layout on the same palette and fonts, animated line drawings of the power network, a distinct layout per home
+      chapter, page heroes with their own drawings; no 3D code, models or posters downloaded (`src/styles/flat.css`,
+      `src/app/flat.ts`, `src/ui/art.ts`, `src/ui/flat.ts`, `tests/e2e/flat.spec.ts`).
+- [x] Performance (Lighthouse 13.6, production build, home page): 3D desktop 67 → 82 (TBT 3.7 s → 0.40 s), 3D mobile 68 → 73
+      (TBT 5.3 s → 1.45 s), 2D desktop 99 → 100, 2D mobile 95 → 96; accessibility and best practices 100. Shaders and the room
+      environment compile off the main thread, no throwaway WebGL context, templates and content load on navigation, Lenis and
+      SplitText only with 3D (start chunk 89 → 56 KB gzip), pointer and tour reflows removed, right-sized images via srcset.
+- [x] Built by agents in parallel (3D + fonts, 2D site, then shared performance) in separate worktrees and merged by the lead with
+      the 3D performance work; posters (8) and social images (15) re-rendered; typecheck, lint, build, unit and browser tests green.
+- [ ] Owner review of the 2D site, the new fonts and the client content in the browser.
+- [ ] Client to supply or confirm the items in `client-inputs.md` (Udyam certificate, GST certificates, statistics and awards).
+
+Round 5 (owner request, 15 Nov 2026 — "improve the 2D website animation alignment even more", "except home all other pages can have the same … the pages in the 2D is the finalised one for the 3D also … remove those old code and have a unified one", "improve the Lighthouse score even more so the page does not lag … the 3D transitions must be very smooth", "modify the menu card also")
+- [x] One implementation for every page except home, in both modes: the 2D page design and animations (`is-page`). In 3D mode
+      the world fades out and stops drawing on these pages and resumes on the same canvas at the chapter left; opening a page
+      directly never downloads the world. Removed: the 3D page heroes, frosted sheets and veils over the scene, the camera
+      flights and per-page camera poses (world route API, `sampleRoute`, the `routes` block of `camera-path.json` and its
+      Blender export), the SplitText page titles and the scroll link from pages to the world. Pages match within 2 px in
+      both modes (`tests/e2e/pages.spec.ts`).
+- [x] 2D polish: one left edge and equal section padding, no orphaned grid cells, tabular figures, even title wrapping;
+      page-enter sequence (title word by word, drawing draws itself), section reveals, photo wipes, counters, About milestone
+      line filling with scroll, hover motion — transform, opacity, clip-path and stroke-dashoffset only; reduced motion safe.
+- [x] Menu redesigned: Company and Work groups, current page marked, forest brand card (tower drawing, "Since 1997",
+      tagline, click-to-call, email, address), an accessible switch for the 3D experience; staggered open, Escape and focus
+      return; on phones call, email and the switch are on the first screen.
+- [x] Smooth 3D: no main-thread task over 50 ms while scrolling the whole tour on desktop (was up to 444 ms); at 4× CPU
+      throttling the worst stall fell from 2.3 s to 0.16 s. Rooms are built, uploaded and compiled in short steps during idle
+      time, every material variant is compiled before a room appears, photos decode off the main thread, models in workers.
+- [x] Lighthouse (production build): 3D home desktop 97–99 (TBT 59–125 ms), mobile 79–83; 2D home 100 / 99; other pages 100
+      in both modes (3D mode was 71–76); accessibility and best practices 100. Social images of the pages now show the page
+      itself (1200×630); the home keeps the 3D façade.
+- [x] Built by two agents in parallel (pages; 3D) and merged by the lead with the dead-code removal; posters and social
+      images re-rendered; typecheck, lint, build, 28 unit and 78 browser tests green.
+- [ ] Owner review of the unified pages, the menu and the 3D smoothness in the browser.

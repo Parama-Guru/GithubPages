@@ -3,22 +3,19 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#004a99" />
+    <meta name="theme-color" content="#0c3a2b" />
     <link rel="icon" href="/GithubPages/ge/favicon.png" type="image/png" />
     <link rel="apple-touch-icon" href="/GithubPages/ge/apple-touch-icon.png" />
+    <!-- The display and text faces of the first screen; the build rewrites these to the hashed font files in assets/. -->
+    <link rel="preload" href="/node_modules/@fontsource/spectral/files/spectral-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/node_modules/@fontsource-variable/hanken-grotesk/files/hanken-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
     <script>
       (function () {
         var root = document.documentElement;
-        var themes = { light: "#004a99", copper: "#06090d", signal: "#061b1e" };
-        var theme = "light";
+        // Every page but home is the same in both modes and never shows the 3D world (main.css html.is-page).
+        if (!/\/GithubPages\/ge\/(index\.html)?$/.test(location.pathname)) root.classList.add("is-page");
         try {
-          var stored = localStorage.getItem("ge-theme");
-          if (Object.prototype.hasOwnProperty.call(themes, stored)) theme = stored;
-        } catch (error) {}
-        root.dataset.theme = theme;
-        document.querySelector('meta[name="theme-color"]').content = themes[theme];
-        try {
-          var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches || localStorage.getItem("ge-motion") === "reduce";
+          var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
           var connection = navigator.connection || {};
           var saving = connection.saveData || (/(^|-)2g$/.test(connection.effectiveType || "") && localStorage.getItem("ge-3d") !== "on");
           if (!reduced && !saving && localStorage.getItem("ge-3d") !== "off") root.classList.add("has-3d");
@@ -42,6 +39,6 @@
     <!--app-footer-->
     <!--app-menu-->
     <div class="hover-label" data-hover-label aria-hidden="true"></div>
-    <div class="route-curtain" data-curtain aria-hidden="true"><img src="/GithubPages/ge/media/emblem.webp" width="64" height="64" alt="" /><p>Energising</p></div>
+    <div class="route-curtain" data-curtain aria-hidden="true"><img src="/GithubPages/ge/media/emblem.webp" srcset="/GithubPages/ge/media/emblem-64.webp 1x, /GithubPages/ge/media/emblem.webp 2x" width="64" height="64" alt="" /><p>Energising</p></div>
   </body>
 </html>

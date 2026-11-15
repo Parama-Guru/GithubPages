@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { phaseAt, sampleKeys, smootherstep, type Key } from "@/world/math";
-import { evenRanges, journeyKeys, routePoses, sampleJourney, zoneAt, zoneExtents, zoneOrder } from "@/world/path";
+import { evenRanges, journeyKeys, sampleJourney, zoneAt, zoneExtents, zoneOrder } from "@/world/path";
 
 const close = (a: readonly number[], b: readonly number[]) => a.forEach((value, index) => expect(value).toBeCloseTo(b[index] ?? NaN, 6));
 
@@ -68,13 +68,6 @@ describe("journey", () => {
       return zoneAt(sampleJourney(ranges, range.start + (range.end - range.start) * 0.32).position[2]);
     });
     expect(zones).toEqual(zoneOrder);
-  });
-  it("defines two poses for every dedicated page", () => {
-    for (const [id, poses] of Object.entries(routePoses)) {
-      expect(poses, id).toHaveLength(2);
-      const zone = zoneAt(poses[0].position[2]);
-      expect(zoneOrder).toContain(zone);
-    }
   });
   it("covers the world without gaps", () => {
     for (let i = 1; i < zoneOrder.length; i++) expect(zoneExtents[zoneOrder[i - 1]!][0]).toBe(zoneExtents[zoneOrder[i]!][1]);

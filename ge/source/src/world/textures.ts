@@ -1,7 +1,7 @@
-import { CanvasTexture, ClampToEdgeWrapping, LinearMipmapLinearFilter, RepeatWrapping, SRGBColorSpace, Texture, TextureLoader } from "three";
+import { CanvasTexture, ClampToEdgeWrapping, ImageBitmapLoader, LinearMipmapLinearFilter, RepeatWrapping, SRGBColorSpace, Texture } from "three";
 
 const cache = new Map<string, Texture>();
-const loader = new TextureLoader();
+const bitmaps = new ImageBitmapLoader().setOptions({ imageOrientation: "flipY", premultiplyAlpha: "none" });
 
 function seeded(seed: number) {
   let state = seed >>> 0;
@@ -93,15 +93,15 @@ export function wallPanels(tone = 30): Texture {
   });
 }
 
-export function asphalt(): Texture {
-  return cached("asphalt", () => {
+export function asphalt(tone = 22): Texture {
+  return cached(`asphalt-${tone}`, () => {
     const size = 512;
     const { element, context } = canvas(size);
     const random = seeded(7);
-    context.fillStyle = "#16191c";
+    context.fillStyle = `rgb(${tone},${tone + 3},${tone + 6})`;
     context.fillRect(0, 0, size, size);
     for (let i = 0; i < 9000; i++) {
-      const shade = 20 + random() * 40;
+      const shade = tone - 2 + random() * 40;
       context.fillStyle = `rgba(${shade},${shade},${shade},${0.5})`;
       context.fillRect(random() * size, random() * size, 1.4, 1.4);
     }
@@ -109,15 +109,15 @@ export function asphalt(): Texture {
   });
 }
 
-export function gravel(): Texture {
-  return cached("gravel", () => {
+export function gravel(tone = 42): Texture {
+  return cached(`gravel-${tone}`, () => {
     const size = 512;
     const { element, context } = canvas(size);
     const random = seeded(11);
-    context.fillStyle = "#2a2b2c";
+    context.fillStyle = `rgb(${tone},${tone + 1},${tone + 2})`;
     context.fillRect(0, 0, size, size);
     for (let i = 0; i < 7000; i++) {
-      const shade = 40 + random() * 70;
+      const shade = tone - 2 + random() * 70;
       context.fillStyle = `rgb(${shade},${shade - 2},${shade - 6})`;
       context.beginPath();
       context.arc(random() * size, random() * size, 0.8 + random() * 2.2, 0, Math.PI * 2);
@@ -154,14 +154,34 @@ export function cornerShade(): Texture {
   });
 }
 
+/**
+ * A photo or logo, decoded off the main thread (fetch + createImageBitmap) and flipped while decoding, which matches
+ * the upside-down upload of an <img> (flipY): uploading the <img> itself decoded and flipped it on the main thread, a
+ * long task per photo. `userData.ready` resolves when the bitmap is in place (or the file failed).
+ */
 export function image(url: string): Texture {
-  return cached(`image-${url}`, () => finish(loader.load(url), false));
+  return cached(`image-${url}`, () => {
+    const texture = finish(new Texture(), false);
+    texture.flipY = false;
+    texture.userData.ready = new Promise<void>((resolve) => {
+      bitmaps.load(
+        url,
+        (bitmap) => {
+          texture.image = bitmap;
+          texture.needsUpdate = true;
+          resolve();
+        },
+        undefined,
+        () => resolve(),
+      );
+    });
+    return texture;
+  });
 }
 
 type Label = { texture: CanvasTexture; aspect: number; redraw: (draw: (context: CanvasRenderingContext2D, width: number, height: number) => void) => void };
 
 type Paint = (context: CanvasRenderingContext2D, width: number, height: number) => void;
-const painted = new Map<string, () => void>();
 
 export function label(key: string, width: number, height: number, draw: Paint): Label {
   const existing = cache.get(`label-${key}`) as CanvasTexture | undefined;
@@ -169,36 +189,35 @@ export function label(key: string, width: number, height: number, draw: Paint): 
   const context = element.getContext("2d") as CanvasRenderingContext2D;
   const texture = existing ?? (finish(new CanvasTexture(element), false) as CanvasTexture);
   if (!existing) cache.set(`label-${key}`, texture);
-  let last = draw;
-  const paint = () => {
+  const redraw = (next: Paint) => {
     context.clearRect(0, 0, width, height);
-    last(context, width, height);
+    next(context, width, height);
     texture.needsUpdate = true;
   };
-  const redraw = (next: Paint) => {
-    last = next;
-    paint();
-  };
-  painted.set(key, paint);
-  paint();
+  redraw(draw);
   return { texture, aspect: width / height, redraw };
 }
 
-export function repaintLabels(): void {
-  for (const paint of painted.values()) paint();
-}
 export const fonts = {
-  display: (size: number, weight = 800) => `${weight} ${size}px "Big Shoulders Display Variable", "Arial Narrow", sans-serif`,
-  sans: (size: number, weight = 500) => `${weight} ${size}px "IBM Plex Sans", "Segoe UI", sans-serif`,
-  mono: (size: number) => `500 ${size}px "IBM Plex Mono", monospace`,
+  display: (size: number, weight = 600) => `${weight} ${size}px "Spectral", "Spectral Fallback", Georgia, serif`,
+  sans: (size: number, weight = 500) => `${weight} ${size}px "Hanken Grotesk Variable", "Hanken Grotesk Fallback", Arial, sans-serif`,
+  /** Small technical labels: the UI face in tracked capitals (set `letterSpacing` on the context for long captions). */
+  mono: (size: number) => `600 ${size}px "Hanken Grotesk Variable", "Hanken Grotesk Fallback", Arial, sans-serif`,
+  script: (size: number) => `400 ${size}px "Parisienne", "Segoe Script", cursive`,
 };
 
+/** Sets the font at `size`, or smaller when `text` would be wider than `maxWidth`. */
+export function fitFont(context: CanvasRenderingContext2D, text: string, maxWidth: number, font: (size: number) => string, size: number): void {
+  context.font = font(size);
+  const width = context.measureText(text).width;
+  if (width > maxWidth) context.font = font(Math.floor((size * maxWidth) / width));
+}
+
 export async function fontsReady(): Promise<void> {
-  await Promise.all([document.fonts.load(fonts.display(64)), document.fonts.load(fonts.sans(32)), document.fonts.load(fonts.mono(24))]).catch(() => undefined);
+  await Promise.all([document.fonts.load(fonts.display(64)), document.fonts.load(fonts.sans(32)), document.fonts.load(fonts.mono(24)), document.fonts.load(fonts.script(48))]).catch(() => undefined);
 }
 
 export function disposeTextures(): void {
-  painted.clear();
   for (const texture of cache.values()) texture.dispose();
   cache.clear();
 }

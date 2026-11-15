@@ -1,6 +1,6 @@
 import { organisation, orgSections, type OrgNode } from "@/content/organisation";
 import { ink, tone } from "../ink";
-import { fonts } from "../textures";
+import { fitFont, fonts } from "../textures";
 
 type Ctx = CanvasRenderingContext2D;
 
@@ -36,11 +36,11 @@ export function plaque(year: string, title: string, body: string, lit: number) {
     context.strokeStyle = tone(ink.accent, 0.25 + lit * 0.6);
     context.lineWidth = 4;
     context.strokeRect(6, 6, w - 12, h - 12);
-    context.fillStyle = tone(ink.accentStrong, 0.35 + lit * 0.65);
-    context.font = fonts.display(150);
+    context.fillStyle = tone(ink.brand, 0.35 + lit * 0.65);
+    fitFont(context, year, w - 80, (size) => fonts.display(size), 150);
     context.fillText(year, 40, 170);
     context.fillStyle = tone(ink.text, 0.4 + lit * 0.6);
-    context.font = fonts.sans(40, 600);
+    fitFont(context, title, w - 88, (size) => fonts.sans(size, 600), 40);
     context.fillText(title, 44, 250);
     context.fillStyle = tone(ink.muted, 0.4 + lit * 0.6);
     context.font = fonts.sans(30, 400);
@@ -55,7 +55,7 @@ export function statScreen(value: string, caption: string, lit: number) {
     gradient.addColorStop(1, ink.screenBottom);
     context.fillStyle = gradient;
     context.fillRect(0, 0, w, h);
-    context.strokeStyle = tone(ink.screenLine, 0.16);
+    context.strokeStyle = tone(ink.screenLine, 0.06);
     context.lineWidth = 1;
     for (let y = 0; y < h; y += 6) {
       context.beginPath();
@@ -65,9 +65,11 @@ export function statScreen(value: string, caption: string, lit: number) {
     }
     context.fillStyle = tone(ink.screenLine, 0.45 + lit * 0.55);
     context.font = fonts.mono(26);
+    context.letterSpacing = "0.12em";
     context.fillText(caption.toUpperCase(), 40, 64);
+    context.letterSpacing = "0px";
     context.fillStyle = tone(ink.screenValue, 0.5 + lit * 0.5);
-    context.font = fonts.display(230);
+    fitFont(context, value, w - 68, fonts.display, 230);
     context.fillText(value, 34, h - 54);
   };
 }
@@ -105,7 +107,7 @@ export function diagram(progress: number) {
       context.lineTo(x1 + (x2 - x1) * t, y1 + (y2 - y1) * t);
       context.stroke();
     });
-    context.fillStyle = tone(ink.screenValue, 0.95);
+    context.fillStyle = tone(ink.accent, 0.95);
     for (const x of [140, 340, 540, 740]) {
       if (drawn > 6) {
         context.beginPath();
@@ -122,20 +124,23 @@ export function sign(text: string, sub = "") {
     context.fillRect(0, 0, w, h);
     context.fillStyle = ink.accent;
     context.fillRect(0, 0, 14, h);
-    context.fillStyle = ink.text;
-    context.font = fonts.display(h * 0.62);
+    context.fillStyle = ink.signText;
+    // The sub-label is script lettering; the title shrinks if it would run into it.
+    context.font = fonts.script(h * 0.4);
+    const subWidth = sub ? context.measureText(sub).width + 30 : 0;
+    fitFont(context, text, w - 74 - subWidth, fonts.display, h * 0.62);
     context.fillText(text, 44, h * 0.72);
     if (sub) {
-      context.fillStyle = ink.dim;
-      context.font = fonts.mono(h * 0.16);
-      context.fillText(sub, w - context.measureText(sub).width - 30, h * 0.72);
+      context.fillStyle = ink.signDim;
+      context.font = fonts.script(h * 0.4);
+      context.fillText(sub, w - subWidth, h * 0.72);
     }
   };
 }
 
 export function hazard() {
   return (context: Ctx, w: number, h: number) => {
-    context.fillStyle = "#f4f2ea";
+    context.fillStyle = ink.panel;
     context.fillRect(0, 0, w, h);
     context.fillStyle = ink.safety;
     context.strokeStyle = "#111";
@@ -169,7 +174,7 @@ function layout(context: Ctx) {
   const placed: Placed[] = [];
   const gap = 14;
   const teamGap = 60;
-  context.font = '400 22px "Segoe UI", Arial, sans-serif';
+  context.font = fonts.sans(22);
   const widthOf = (node: OrgNode) => Math.max(context.measureText(node.name ?? "").width, context.measureText(node.role).width) + 28;
   const span = (node: OrgNode): number => {
     const children = node.children ?? [];
@@ -204,7 +209,7 @@ function layout(context: Ctx) {
 
 export function orgBoard(progress: number) {
   return (context: Ctx, w: number, h: number) => {
-    context.fillStyle = "#ffffff";
+    context.fillStyle = ink.panel;
     context.fillRect(0, 0, w, h);
     const { placed, width, height, teamsTop } = layout(context);
     const scale = Math.min((w - 60) / width, (h - 30) / height);
@@ -213,17 +218,19 @@ export function orgBoard(progress: number) {
     context.scale(scale, scale);
     const visible = Math.floor(progress * placed.length + 0.001);
     const centre = (item: Placed) => item.x + item.w / 2;
-    context.fillStyle = "#2f77b3";
-    context.font = '500 20px "IBM Plex Mono", monospace';
+    context.fillStyle = ink.brand;
+    context.font = fonts.mono(20);
+    context.letterSpacing = "0.14em";
     context.fillText("CORE TEAM", 0, 26);
     context.fillText("PROJECT TEAM", 0, teamsTop - 34);
-    context.strokeStyle = "#e3e7ec";
+    context.letterSpacing = "0px";
+    context.strokeStyle = ink.line;
     context.lineWidth = 3;
     context.beginPath();
     context.moveTo(0, teamsTop - 60);
     context.lineTo(width, teamsTop - 60);
     context.stroke();
-    context.strokeStyle = "#cfcfcf";
+    context.strokeStyle = tone(ink.muted, 0.4);
     placed.slice(0, visible).forEach((item, index) => {
       const children = placed.filter((other, otherIndex) => other.parent === index && otherIndex < visible);
       if (!children.length) return;
@@ -240,22 +247,22 @@ export function orgBoard(progress: number) {
       }
       context.stroke();
     });
-    context.font = '400 22px "Segoe UI", Arial, sans-serif';
+    context.font = fonts.sans(22);
     context.textAlign = "center";
     placed.slice(0, visible).forEach((item) => {
       roundRect(context, item.x, item.y, item.w, BOX, 8);
       if (item.outline) {
-        context.fillStyle = "#ffffff";
+        context.fillStyle = ink.panel;
         context.fill();
-        context.strokeStyle = "#2f77b3";
+        context.strokeStyle = ink.brand;
         context.setLineDash(item.node.group === "team" ? [8, 6] : []);
         context.stroke();
         context.setLineDash([]);
-        context.fillStyle = "#2f77b3";
+        context.fillStyle = ink.brand;
       } else {
-        context.fillStyle = "#2f77b3";
+        context.fillStyle = ink.brand;
         context.fill();
-        context.fillStyle = "#ffffff";
+        context.fillStyle = ink.signText;
       }
       if (item.node.name) {
         context.fillText(item.node.name, centre(item), item.y + 24);
@@ -268,7 +275,7 @@ export function orgBoard(progress: number) {
 }
 export function letterbox(image: HTMLImageElement | null) {
   return (context: Ctx, w: number, h: number) => {
-    context.fillStyle = "#f3f4f1";
+    context.fillStyle = ink.panel;
     context.fillRect(0, 0, w, h);
     if (!image || !image.naturalWidth) return;
     const scale = Math.min((w * 0.72) / image.naturalWidth, (h * 0.62) / image.naturalHeight);

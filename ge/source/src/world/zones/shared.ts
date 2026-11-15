@@ -41,3 +41,9 @@ export function cue(value: number, from: number, to: number): number {
   const t = Math.max(0, Math.min(1, (value - from) / (to - from)));
   return t * t * (3 - 2 * t);
 }
+
+/** Hands the main thread back to the browser (input, scrolling, painting) between two pieces of loading work. */
+export function pause(): Promise<void> {
+  const scheduler = (globalThis as { scheduler?: { yield?: () => Promise<void> } }).scheduler;
+  return scheduler?.yield ? scheduler.yield() : new Promise((resolve) => setTimeout(resolve, 0));
+}

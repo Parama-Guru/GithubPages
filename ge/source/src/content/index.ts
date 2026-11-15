@@ -1,3 +1,4 @@
+import { about, company, newsletter } from "./company";
 import { organisation } from "./organisation";
 import profile from "./profile.json";
 import site from "./site.json";
@@ -28,31 +29,11 @@ const executed = profile.projects.executed;
 const executedCount = executed.reduce((sum, group) => sum + group.rows.length, 0);
 const ongoingCount = profile.projects.ongoing.length;
 
-export const company = {
-  name: "Ganesh Electricals",
-  scope: "230 kV · 110 kV · 33 kV · 11 kV",
-  summary:
-    "Ganesh Electricals, an electrical engineering and contracting company established in 1997 to provide quality, safety, reliability and timely completion of projects.",
-  about: profile.about.introduction[1] ?? "",
-  introduction: profile.about.introduction,
-  founded: profile.about.founded,
-  founderNote: profile.about.note,
-  purpose: profile.about.purpose,
-  capability: profile.about.capability,
-  scopes: ["230 kV & 110 kV EHV substations", "33 kV & 11 kV installation", "Downstream electrical works", "Plant, machinery & office electrification"],
-  address: profile.contact.address,
-  emails: profile.contact.emails,
-  phone: "044-4284 0227",
-  phoneHref: "tel:+914442840227",
-  footerAddress: `${profile.contact.address} · Phone: +91-44 4284 0227 · Email: ${profile.contact.emails[0]}`,
-  logo: image("wganesh3", "Ganesh Electricals"),
-};
-
 const shortServe = ["Client requirement", "Quality & on-time", "Client protocol", "Statutory norms", "Safety norms", "Zero accidents"];
 
 export const whyUs = {
   title: "How do we serve our clients?",
-  lead: profile.about.purpose,
+  lead: about.purpose,
   principles: profile.serve.map((body, index) => ({ title: body, short: shortServe[index] ?? body })),
   statistics: [
     { value: "230", label: "kV — highest substation voltage executed", short: "kV substations" },
@@ -62,16 +43,31 @@ export const whyUs = {
   ],
 };
 
+const gst = (fy: string) => ({ year: fy, title: "GST appreciation", body: `GST certificate of appreciation for FY ${fy}`, date: `FY ${fy}` });
+
 export const timeline = [
-  { year: "2025", title: "GST appreciation", body: "Certificate of appreciation from CBIC for financial year 2024-25", date: "FY 2024-25" },
+  gst("2024–25"),
+  gst("2023–24"),
+  gst("2022–23"),
+  gst("2021–22"),
   { year: "2019", title: "CRISIL MSE 2 rating", body: "High financial strength — high credit worthiness", date: "03/12/2019" },
   { year: "2008", title: "ESA License 283", body: "All electrical works, no limitation in voltage or capacity", date: "29/02/2008" },
-  { year: "1997", title: "Ganesh Electricals established", body: "Founded by Mr. B. Kumareson", date: "06/05/1997" },
+  { year: "1997", title: "Ganesh Electricals established", body: "Founded by Mr. B. Kumareson; incorporated / registered on 06/05/1997", date: "06/05/1997" },
 ];
+
+// For small spaces (the home About chapter, 3D lobby plaques): the four GST appreciations as one entry.
+export const milestoneSummary = [
+  { year: "2021–25", title: "GST appreciation (4 years)", body: "FY 2021–22 · 2022–23 · 2023–24 · 2024–25" },
+  ...timeline.filter((item) => item.title !== "GST appreciation").map(({ year, title, body }) => ({ year, title, body })),
+];
+
+// Widths of the smaller copies of the project photos (tools/build-media.mjs) offered through srcset.
+const photoCopies = [520, 800] as const;
 
 export const projectImages = ["slide3", "hd2", "hd3", "hd4", "hd5"].map((name, index) => ({
   ...image(name, home[index]),
   label: home[index] ?? "",
+  copies: photoCopies,
 }));
 
 export type ProjectRow = { client: string; project: string; location: string; sector?: string; value?: string };
@@ -117,8 +113,8 @@ export const quality = {
 export const leadership = {
   name: "Mr. B. Kumareson",
   title: "Proprietor",
-  paragraphs: [profile.about.founded, profile.about.purpose],
-  note: profile.about.note,
+  paragraphs: [about.founded, about.purpose],
+  note: about.note,
   photo: image("founder", "Mr. B. Kumareson and industrial equipment"),
   personnel: profile.personnel,
   personnelNote: profile.personnelNote,
@@ -126,8 +122,8 @@ export const leadership = {
 };
 
 export const execution = {
-  capability: profile.about.capability,
-  localIssues: profile.about.localIssues,
+  capability: about.capability,
+  localIssues: about.localIssues,
   tneb: profile.tnebTimeline,
   manpower: profile.manpower,
   manpowerTotal: profile.manpower.reduce((sum, entry) => sum + entry.count, 0),
@@ -145,6 +141,4 @@ export const downloads = {
   documents: ["Company profile", "Credentials and certificates"],
 };
 
-export const newsletter = home[30] ?? "";
-
-export { organisation };
+export { company, newsletter, organisation };

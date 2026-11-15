@@ -1,7 +1,8 @@
-import { company } from "@/content";
-import type { World } from "@/world/world";
-import { splitHeading, type Controller } from "./journey";
-import { gsap, ScrollTrigger, type Motion, type SplitText } from "./motion";
+import { company } from "@/content/company";
+import type { Controller } from "./journey";
+
+/* The controls of the pages other than home, the same in the 2D and 3D modes: the enquiry form and the organisation
+   chart's fit. Their animations come from app/flat.ts. */
 
 function enquiry(root: HTMLElement): () => void {
   const form = root.querySelector<HTMLFormElement>("[data-enquiry]");
@@ -27,92 +28,40 @@ function enquiry(root: HTMLElement): () => void {
   return () => form.removeEventListener("submit", submit);
 }
 
+/** Scales a chart slightly wider than the screen down to fit; much wider charts scroll sideways instead. */
 function fitChart(root: HTMLElement): () => void {
   const scroll = root.querySelector<HTMLElement>(".org-scroll");
   const chart = scroll?.querySelector<HTMLElement>(".org-chart");
   if (!scroll || !chart) return () => undefined;
+  let frame = 0;
   const fit = () => {
-    scroll.classList.remove("is-fitted");
-    chart.style.transform = "";
-    scroll.style.height = "";
-    if (window.innerWidth <= 700) return;
+    // Every measurement first, then every write, so a fit costs one layout. A transform does not change these sizes.
     const available = scroll.clientWidth - 56;
-    const scale = Math.min(1, available / chart.scrollWidth);
-    if (scale >= 1 || scale < 0.55) return;
-    scroll.classList.add("is-fitted");
-    chart.style.transform = `translateX(${(available - chart.scrollWidth * scale) / 2}px) scale(${scale})`;
-    scroll.style.height = `${chart.offsetHeight * scale + 80}px`;
+    const natural = chart.scrollWidth;
+    const height = chart.offsetHeight;
+    const scale = Math.min(1, available / natural);
+    const fitted = window.innerWidth > 700 && scale < 1 && scale >= 0.55;
+    scroll.classList.toggle("is-fitted", fitted);
+    chart.style.transform = fitted ? `translateX(${(available - natural * scale) / 2}px) scale(${scale})` : "";
+    scroll.style.height = fitted ? `${height * scale + 80}px` : "";
   };
-  fit();
-  window.addEventListener("resize", fit);
-  return () => window.removeEventListener("resize", fit);
+  const schedule = () => {
+    cancelAnimationFrame(frame);
+    frame = requestAnimationFrame(fit);
+  };
+  schedule();
+  window.addEventListener("resize", schedule);
+  return () => {
+    cancelAnimationFrame(frame);
+    window.removeEventListener("resize", schedule);
+  };
 }
 
-export function initPage(root: HTMLElement, motion: Motion, world: World | null, intro = true): Controller {
-  const cleanups: (() => void)[] = [enquiry(root), fitChart(root)];
-  const tweens: (gsap.core.Tween | gsap.core.Timeline)[] = [];
-  const triggers: ScrollTrigger[] = [];
-  let split: SplitText | null = null;
-  // Without an intro (the 3D world arriving under a page that is already shown), visible content stays put.
-  const settled = (element: Element) => !intro && element.getBoundingClientRect().top < window.innerHeight * 0.94;
-
-  if (motion.enabled) {
-    const heading = root.querySelector<HTMLElement>(".page-title");
-    if (heading && intro) {
-      split = splitHeading(heading);
-      tweens.push(gsap.from(split.chars, { yPercent: 110, stagger: 0.02, duration: 1, ease: "expo.out", delay: 0.2 }));
-    }
-    const heroItems = root.querySelectorAll<HTMLElement>(".page-hero > :not(.page-title)");
-    if (intro) tweens.push(gsap.from(heroItems, { y: 22, opacity: 0, stagger: 0.07, duration: 0.8, ease: "power3.out", delay: 0.35 }));
-    for (const sheet of root.querySelectorAll<HTMLElement>(".sheet")) {
-      if (settled(sheet)) continue;
-      const items = sheet.querySelectorAll<HTMLElement>(".timeline > li, .principles > article, .gallery > li, .year-cards > li, .logo-grid > li, .cards > article, .awards > figure, .documents > li, .commitments > li, .stats > div");
-      const reveal = gsap.timeline({ scrollTrigger: { trigger: sheet, start: "top 94%", once: true } });
-      reveal.from(sheet, { y: 50, opacity: 0, duration: 0.8, ease: "power3.out" });
-      if (items.length) reveal.from(items, { y: 24, opacity: 0, stagger: 0.04, duration: 0.6, ease: "power3.out" }, 0.12);
-      tweens.push(reveal);
-      for (const element of sheet.querySelectorAll<HTMLElement>("[data-count]")) {
-        const final = element.dataset.final ?? "";
-        const target = Number(element.dataset.count);
-        const state = { value: 0 };
-        cleanups.push(() => {
-          if (final) element.textContent = final;
-        });
-        tweens.push(
-          gsap.to(state, {
-            value: target,
-            duration: 1.6,
-            ease: "power2.out",
-            scrollTrigger: { trigger: element, start: "top 90%", once: true },
-            onUpdate: () => {
-              element.textContent = state.value >= target ? final : Math.round(state.value).toLocaleString("en-US");
-            },
-          }),
-        );
-      }
-    }
-  }
-
-  if (world) {
-    triggers.push(
-      ScrollTrigger.create({
-        trigger: root,
-        start: "top top",
-        end: "bottom bottom",
-        onUpdate: (self) => world.setRouteProgress(self.progress),
-      }),
-    );
-  }
-
+export function initPage(root: HTMLElement): Controller {
+  const cleanups = [enquiry(root), fitChart(root)];
   return {
     destroy() {
       for (const cleanup of cleanups) cleanup();
-      for (const tween of tweens) {
-        tween.scrollTrigger?.kill();
-        tween.revert();
-      }
-      for (const trigger of triggers) trigger.kill();
-      split?.revert();
     },
   };
 }

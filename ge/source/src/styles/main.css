@@ -1,124 +1,71 @@
 @import "tailwindcss";
 
+/* Typography (README "Typography"): Spectral display serif for titles and figures, Hanken Grotesk for reading text and
+   controls, the same Hanken Grotesk in tracked capitals for small technical labels (--font-mono, the label face), and
+   Parisienne script only for short accents (the hero's second line, eyebrows, signatures and the footer). Each web font
+   falls back to a local face scaled to its metrics (fonts.css). */
 @theme {
-  --font-display: "Big Shoulders Display Variable", "Arial Narrow", sans-serif;
-  --font-sans: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --font-display: "Spectral", "Spectral Fallback", Georgia, "Times New Roman", serif;
+  --font-sans: "Hanken Grotesk Variable", "Hanken Grotesk Fallback", Arial, system-ui, sans-serif;
+  --font-mono: "Hanken Grotesk Variable", "Hanken Grotesk Fallback", Arial, system-ui, sans-serif;
+  --font-script: "Parisienne", "Segoe Script", cursive;
 }
 
 :root {
   --gutter: max(24px, calc((100vw - 1320px) / 2));
   --header: 84px;
+  --text-column: 600px;
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
-/* Themes. Light is the default (also without JavaScript): white with the blue of the original website. */
-:root,
-html[data-theme="light"] {
-  --bg: #ffffff;
-  --text: #0d2440;
-  --muted: #3f5470;
-  --dim: #56697f;
-  --accent: #004a99;
-  --accent-strong: #00428a;
+/* Colour palette: ivory surfaces, an emerald brand with forest-green header and footer bands, terracotta for
+   figures and labels, marigold for rules and highlights (README "Colour palette"; the 3D world uses the same
+   roles in src/world/look.json). */
+:root {
+  --ivory: #fbf7ef;
+  --paper: #fffdf8;
+  --emerald: #0f5c40;
+  --emerald-deep: #0b4632;
+  --forest: #0c3a2b;
+  --terracotta: #a8492a;
+  --terracotta-deep: #96401f;
+  --marigold: #e9a23b;
+  --bg: var(--ivory);
+  --text: #1b2a22;
+  --muted: #4a5951;
+  --dim: #59655e;
+  --accent: var(--emerald);
+  --accent-strong: var(--emerald-deep);
+  --eyebrow: var(--terracotta-deep);
+  --figure: var(--terracotta);
   --on-accent: #ffffff;
-  --line: rgba(0, 46, 102, 0.14);
-  --line-strong: rgba(0, 46, 102, 0.3);
-  --panel: rgba(255, 255, 255, 0.96);
-  --field: #f4f7fb;
-  --row-hover: rgba(0, 74, 153, 0.04);
-  --glow-a: #dce9f7;
-  --glow-b: #edf3fa;
-  --backdrop: rgba(0, 30, 70, 0.45);
-  --detail-bg: #ffffff;
-  --chrome: #004a99;
-  --chrome-text: #ffffff;
-  --chrome-muted: #d9e8ff;
-  --chrome-dim: #c4dafa;
-  --chrome-accent: #ffffff;
-  --chrome-line: rgba(255, 255, 255, 0.22);
-  --header-top: #004a99;
-  --header-fade: #004a99;
-  --header-solid: #004a99;
-  --footer-bg: #003d80;
-  --footer-text: #d4e4fa;
-  --footer-label: #b3cdf0;
-  --footer-strong: #ffffff;
+  --line: rgba(27, 42, 34, 0.13);
+  --line-strong: rgba(27, 42, 34, 0.3);
+  --panel: rgba(255, 253, 248, 0.96);
+  --field: var(--paper);
+  --row-hover: rgba(15, 92, 64, 0.05);
+  --chip: color-mix(in srgb, var(--marigold) 16%, var(--paper));
+  --glow-a: #f6e8cf;
+  --glow-b: #e3ece4;
+  --detail-bg: var(--paper);
+  --logo-tile: #ffffff;
+  --org-line: #d2c3a6;
+  --chrome: var(--forest);
+  --chrome-text: var(--ivory);
+  --chrome-muted: #cfdcd3;
+  --chrome-accent: var(--marigold);
+  --chrome-line: rgba(233, 162, 59, 0.42);
+  --header-top: var(--forest);
+  --header-fade: var(--forest);
+  --header-solid: var(--forest);
+  --footer-bg: var(--forest);
+  --footer-text: #d5e1d9;
+  --footer-label: #a9c2b4;
+  --footer-strong: var(--marigold);
   --footer-hover: #ffffff;
-  --footer-line: rgba(255, 255, 255, 0.2);
-  --curtain: rgba(0, 74, 153, 0.94);
+  --footer-line: rgba(255, 255, 255, 0.14);
+  --curtain: rgba(251, 247, 239, 0.94);
   color-scheme: light;
-}
-/* The original 3D design: night and copper. */
-html[data-theme="copper"] {
-  --bg: #05080c;
-  --text: #eef2f4;
-  --muted: #aab6c0;
-  --dim: #8796a2;
-  --accent: #e3a56b;
-  --accent-strong: #f2c08f;
-  --on-accent: #05080c;
-  --line: rgba(220, 232, 240, 0.14);
-  --line-strong: rgba(220, 232, 240, 0.28);
-  --panel: rgba(7, 11, 16, 0.94);
-  --field: #070c11;
-  --row-hover: rgba(255, 255, 255, 0.03);
-  --glow-a: #132132;
-  --glow-b: #0d1822;
-  --backdrop: rgba(3, 5, 8, 0.78);
-  --detail-bg: #070b10;
-  --chrome: #05080c;
-  --chrome-text: #eef2f4;
-  --chrome-muted: #aab6c0;
-  --chrome-dim: #8796a2;
-  --chrome-accent: #e3a56b;
-  --chrome-line: rgba(220, 232, 240, 0.14);
-  --header-top: rgba(5, 8, 12, 0.88);
-  --header-fade: rgba(5, 8, 12, 0);
-  --header-solid: rgba(5, 8, 12, 0.96);
-  --footer-bg: #04070a;
-  --footer-text: #aab6c0;
-  --footer-label: #8796a2;
-  --footer-strong: #f2c08f;
-  --footer-hover: #e3a56b;
-  --footer-line: rgba(220, 232, 240, 0.14);
-  --curtain: rgba(5, 8, 12, 0.92);
-  color-scheme: dark;
-}
-/* Signal: petrol teal of industrial switchgear with ISO 7010 safety yellow. */
-html[data-theme="signal"] {
-  --bg: #061b1e;
-  --text: #eef6f4;
-  --muted: #a9c3c0;
-  --dim: #86a3a0;
-  --accent: #f5c400;
-  --accent-strong: #ffd84a;
-  --on-accent: #061b1e;
-  --line: rgba(190, 235, 228, 0.14);
-  --line-strong: rgba(190, 235, 228, 0.28);
-  --panel: rgba(5, 24, 27, 0.94);
-  --field: #04171a;
-  --row-hover: rgba(190, 235, 228, 0.04);
-  --glow-a: #0d3a3c;
-  --glow-b: #082a2c;
-  --backdrop: rgba(2, 12, 14, 0.8);
-  --detail-bg: #05181b;
-  --chrome: #061b1e;
-  --chrome-text: #eef6f4;
-  --chrome-muted: #a9c3c0;
-  --chrome-dim: #86a3a0;
-  --chrome-accent: #f5c400;
-  --chrome-line: rgba(190, 235, 228, 0.14);
-  --header-top: rgba(6, 27, 30, 0.88);
-  --header-fade: rgba(6, 27, 30, 0);
-  --header-solid: rgba(6, 27, 30, 0.96);
-  --footer-bg: #031316;
-  --footer-text: #a9c3c0;
-  --footer-label: #86a3a0;
-  --footer-strong: #ffd84a;
-  --footer-hover: #f5c400;
-  --footer-line: rgba(190, 235, 228, 0.14);
-  --curtain: rgba(6, 27, 30, 0.92);
-  color-scheme: dark;
 }
 
 html {
@@ -128,6 +75,7 @@ html {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   scroll-padding-top: calc(var(--header) + 16px);
+  scrollbar-gutter: stable;
 }
 body {
   min-height: 100svh;
@@ -196,15 +144,64 @@ button {
   width: 100%;
   height: 100%;
   opacity: 0;
-  transition: opacity 1.2s ease;
+  transition: opacity 0.6s ease;
 }
 [data-world="ready"] .world-canvas {
   opacity: 1;
 }
+/* Under the home page's chapter posters the live scene appears at once and the poster lifts off it (below); fading both
+   together blended two half-transparent frames over the ivory backdrop into a washed-out double exposure. */
+html:has(.journey .chapter-poster) .world-canvas {
+  transition: none;
+}
+/* Text over the 3D scene sits on a compact frosted ivory card sized to the chapter text, so the scene stays visible around
+   it (journey.ts fades each chapter's card with its text through --card). Browsers without anchor positioning get a soft
+   veil over the text column instead. */
+@supports not (anchor-name: --chapter-text) {
+  .world-veil,
+  .chapter-poster::after {
+    --veil-edge: calc(var(--gutter) + var(--text-column));
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--bg) 92%, transparent) 0,
+      color-mix(in srgb, var(--bg) 88%, transparent) calc(var(--veil-edge) - 40px),
+      color-mix(in srgb, var(--bg) 0%, transparent) calc(var(--veil-edge) + 10vw)
+    );
+  }
+}
+@supports (anchor-name: --chapter-text) {
+  .chapter-panel {
+    anchor-scope: --chapter-text, --chapter-end;
+  }
+  .chapter-panel > :first-child {
+    anchor-name: --chapter-text;
+  }
+  .chapter-panel > :last-child {
+    anchor-name: --chapter-end;
+  }
+  .chapter-panel::after {
+    --card-x: clamp(16px, calc(var(--gutter) - 16px), 40px);
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: calc(anchor(--chapter-text top) - 32px);
+    bottom: calc(anchor(--chapter-end bottom) - 32px);
+    left: calc(-1 * var(--card-x));
+    right: calc(-1 * var(--card-x));
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--bg) 90%, transparent);
+    box-shadow:
+      0 30px 70px -34px rgba(6, 30, 22, 0.65),
+      0 2px 10px rgba(6, 30, 22, 0.12);
+    backdrop-filter: blur(16px) saturate(1.2);
+    opacity: var(--card, 1);
+    pointer-events: none;
+  }
+}
 .world-veil {
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, color-mix(in srgb, var(--bg) 86%, transparent) 0%, color-mix(in srgb, var(--bg) 62%, transparent) 34%, color-mix(in srgb, var(--bg) 18%, transparent) 50%, color-mix(in srgb, var(--bg) 0%, transparent) 62%);
   opacity: 0;
   transition: opacity 0.8s ease;
 }
@@ -244,8 +241,22 @@ html.is-streaming .loader {
   display: block;
   height: 100%;
   width: 4%;
-  background: var(--chrome-accent);
+  background: var(--marigold);
   transition: width 0.4s ease;
+}
+/* Every page but home leaves the 3D world: it fades out with the home page and stops drawing (main.ts parkWorld), and
+   fades back in on the way home. */
+.world {
+  transition:
+    opacity 0.45s ease,
+    visibility 0s;
+}
+html.is-page :is(.world, .loader, .hover-label) {
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.22s ease,
+    visibility 0s 0.22s;
 }
 
 /* Header */
@@ -293,8 +304,8 @@ html.is-streaming .loader {
   content: "";
   position: absolute;
   inset: auto 0 4px;
-  height: 1px;
-  background: var(--chrome-accent);
+  height: 2px;
+  background: var(--marigold);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.3s ease;
@@ -308,7 +319,7 @@ html.is-streaming .loader {
   align-items: center;
   gap: 14px;
   padding: 10px 16px;
-  border: 1px solid color-mix(in srgb, var(--chrome-accent) 60%, transparent);
+  border: 1px solid color-mix(in srgb, var(--chrome-accent) 75%, transparent);
   font-size: 13px;
   transition:
     background 0.2s,
@@ -319,66 +330,9 @@ html.is-streaming .loader {
   background: var(--chrome-accent);
   color: var(--chrome);
 }
-.site-header :focus-visible {
+.site-header :focus-visible,
+.menu-top :focus-visible {
   outline-color: var(--chrome-accent);
-}
-.theme-switch {
-  display: none;
-  align-items: center;
-  gap: 2px;
-  margin: 0;
-  padding: 3px;
-  border: 1px solid var(--chrome-line);
-  border-radius: 999px;
-  min-inline-size: 0;
-}
-html[data-theme] .theme-switch {
-  display: inline-flex;
-}
-.theme-switch label {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  cursor: pointer;
-}
-.theme-switch input {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  margin: 0;
-  opacity: 0;
-  cursor: pointer;
-}
-.theme-switch .swatch {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  box-shadow: inset 0 0 0 1px rgba(127, 140, 155, 0.55);
-  transition: transform 0.2s ease;
-}
-.theme-switch label:hover .swatch {
-  transform: scale(1.12);
-}
-.theme-switch input:checked + .swatch {
-  box-shadow:
-    0 0 0 2px var(--chrome),
-    0 0 0 4px var(--chrome-accent);
-}
-.theme-switch input:focus-visible + .swatch {
-  outline: 2px solid var(--chrome-accent);
-  outline-offset: 5px;
-}
-.swatch-light {
-  background: linear-gradient(135deg, #ffffff 0 50%, #004a99 50% 100%);
-}
-.swatch-copper {
-  background: linear-gradient(135deg, #0a1017 0 50%, #e3a56b 50% 100%);
-}
-.swatch-signal {
-  background: linear-gradient(135deg, #0b3236 0 50%, #f5c400 50% 100%);
 }
 .menu-button {
   display: inline-flex;
@@ -402,28 +356,48 @@ html[data-theme] .theme-switch {
   margin-top: 8px;
 }
 
-/* Menu */
+/* Menu: every page in two groups (Company, Work) beside a brand card with the contact details and the 3D switch. It
+   opens with its links rising in turn and the card's tower drawing itself, and fades out on closing (reduced motion: at
+   once). On phones the groups sit side by side so the call, email and switch stay on the first screen. */
 .site-menu {
+  --menu-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
   width: 100%;
   max-width: none;
   height: 100dvh;
   max-height: none;
   margin: 0;
-  padding: 0 var(--gutter) 32px;
+  padding: 0;
   border: 0;
   background: var(--bg);
   color: var(--text);
   overflow-y: auto;
+  overscroll-behavior: contain;
+  transition:
+    opacity 0.24s ease,
+    overlay 0.24s allow-discrete,
+    display 0.24s allow-discrete;
+}
+.site-menu[open] {
+  display: flex;
+  flex-direction: column;
+}
+.site-menu:not([open]) {
+  opacity: 0;
+}
+@starting-style {
+  .site-menu[open] {
+    opacity: 0;
+  }
 }
 .site-menu::backdrop {
   background: var(--bg);
 }
 .menu-top {
+  flex: none;
   height: var(--header);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-inline: calc(-1 * var(--gutter));
   padding-inline: var(--gutter);
   border-bottom: 1px solid var(--chrome-line);
   background: var(--chrome);
@@ -445,160 +419,396 @@ html[data-theme] .theme-switch {
 .menu-close span {
   font-size: 28px;
   line-height: 1;
+  transition: transform 0.3s var(--menu-ease);
 }
-.menu-links {
+.menu-close:hover span {
+  transform: rotate(90deg);
+}
+.menu-body {
+  flex: 1 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 400px);
+  align-content: safe center;
+  align-items: start;
+  gap: 32px clamp(40px, 5vw, 96px);
+  padding: clamp(28px, 6vh, 64px) var(--gutter) 40px;
+}
+.menu-groups {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0 64px;
-  margin: 28px 0;
+  gap: 28px clamp(28px, 3.4vw, 56px);
+}
+.menu-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 4px;
+  font: 600 11px/1.4 var(--font-mono);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--eyebrow);
+}
+.menu-heading::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--line-strong);
+}
+.menu-group ul {
+  margin: 0;
   padding: 0;
   list-style: none;
 }
-.menu-links a {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  padding-block: 14px;
+.menu-group a {
+  position: relative;
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 10px;
+  padding: 12px 0;
   border-bottom: 1px solid var(--line);
-  font: 700 34px/1.1 var(--font-display);
-  text-transform: uppercase;
+  font: 600 clamp(20px, 2vw, 30px) / 1.15 var(--font-display);
   transition: color 0.2s;
 }
-.menu-links a span {
-  font: 400 12px var(--font-mono);
+.menu-group a::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 -1px;
+  height: 2px;
+  background: var(--marigold);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s var(--menu-ease);
+}
+.menu-num {
+  font: 600 11px/1 var(--font-mono);
+  letter-spacing: 0.12em;
+  font-variant-numeric: tabular-nums;
   color: var(--dim);
 }
-.menu-links a .icon {
-  margin-left: auto;
-  opacity: 0;
-  transition: opacity 0.2s;
+.menu-label {
+  transition: transform 0.35s var(--menu-ease);
 }
-.menu-links a:hover,
-.menu-links a[aria-current="page"] {
+.menu-group a .icon {
+  align-self: center;
+  color: var(--accent);
+  opacity: 0;
+  transform: translateX(-8px);
+  transition:
+    opacity 0.2s,
+    transform 0.35s var(--menu-ease);
+}
+.menu-group a:is(:hover, :focus-visible) {
+  color: var(--accent-strong);
+}
+.menu-group a:is(:hover, :focus-visible) .menu-label {
+  transform: translateX(6px);
+}
+.menu-group a:is(:hover, :focus-visible) .icon {
+  opacity: 1;
+  transform: none;
+}
+.menu-group a:is(:hover, :focus-visible, [aria-current])::after {
+  transform: scaleX(1);
+}
+.menu-group a[aria-current] {
   color: var(--accent);
 }
-.menu-links a:hover .icon {
-  opacity: 1;
+.menu-group a[aria-current]::after {
+  background: var(--accent);
 }
-.menu-prefs {
+.menu-group a[aria-current] .menu-num {
+  color: var(--accent);
+}
+.menu-group a[aria-current="page"] .menu-label::after {
+  content: "Here" / "";
+  margin-left: 12px;
+  padding: 3px 7px;
+  vertical-align: 0.3em;
+  background: var(--chip);
+  font: 600 10px/1 var(--font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--eyebrow);
+}
+.menu-quick {
   display: flex;
   flex-wrap: wrap;
-  gap: 14px 36px;
-  padding-block: 8px 22px;
-  font-size: 14px;
+  gap: 12px;
+  margin-top: 28px;
 }
-.menu-prefs label {
+.menu-quick a {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+  min-height: 48px;
+  padding: 12px 20px;
+  border: 1px solid var(--line-strong);
+  font: 600 14px/1 var(--font-sans);
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    color 0.2s,
+    transform 0.25s var(--menu-ease);
 }
-.menu-prefs input {
+.menu-quick a:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+.menu-quick a[aria-current="page"] {
+  border-color: var(--accent);
+  color: var(--accent-strong);
+}
+.menu-quick .menu-quick-contact {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--on-accent);
+}
+.menu-quick .menu-quick-contact:hover {
+  background: var(--accent-strong);
+}
+.menu-card {
+  position: relative;
+  display: grid;
+  gap: 18px;
+  padding: 32px;
+  background-color: var(--chrome);
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 28px 28px;
+  color: var(--chrome-text);
+}
+.menu-card::before,
+.menu-card::after {
+  content: "";
+  position: absolute;
   width: 18px;
   height: 18px;
-  accent-color: var(--accent);
+  border: 0 solid var(--marigold);
 }
-.menu-theme {
-  display: none;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px 14px;
-  margin: 0 0 18px;
-  padding: 0;
-  border: 0;
-  min-inline-size: 0;
-  font-size: 14px;
+.menu-card::before {
+  top: -1px;
+  left: -1px;
+  border-width: 3px 0 0 3px;
 }
-html[data-theme] .menu-theme {
-  display: flex;
+.menu-card::after {
+  right: -1px;
+  bottom: -1px;
+  border-width: 0 3px 3px 0;
 }
-.menu-theme legend {
-  float: left;
-  margin-right: 8px;
-  padding: 0;
-  font: 500 11px/1.4 var(--font-mono);
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--dim);
+.menu-card :focus-visible {
+  outline-color: var(--marigold);
 }
-.menu-theme label {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 44px;
-  padding: 6px 16px 6px 8px;
-  border: 1px solid var(--line-strong);
-  border-radius: 999px;
-  cursor: pointer;
+.menu-art {
+  width: 140px;
 }
-.menu-theme input {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
+.menu-card .menu-drawing {
+  color: var(--ivory);
+}
+.menu-drawing .k {
+  stroke: var(--marigold);
+}
+.menu-drawing .d {
+  stroke-dasharray: 1 1;
+}
+.menu-since {
   margin: 0;
-  opacity: 0;
-  cursor: pointer;
+  font: 400 30px/1 var(--font-script);
+  color: var(--marigold);
 }
-.menu-theme .swatch {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  box-shadow: inset 0 0 0 1px rgba(127, 140, 155, 0.55);
-}
-.menu-theme label:has(input:checked) {
-  border-color: var(--accent);
-  box-shadow: inset 0 0 0 1px var(--accent);
-}
-.menu-theme label:has(input:focus-visible) {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
+.menu-tagline {
+  margin: -6px 0 0;
+  font: 500 22px/1.35 var(--font-display);
+  text-wrap: balance;
+  color: var(--ivory);
 }
 .menu-contact {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 28px;
-  padding-top: 20px;
-  border-top: 1px solid var(--line);
-  color: var(--muted);
-  font-size: 14px;
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
 }
-
+.menu-contact div {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  align-items: baseline;
+  gap: 12px;
+}
+.menu-contact dt {
+  font: 600 10px/1.4 var(--font-mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--chrome-muted);
+}
+.menu-contact dd {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--chrome-muted);
+  overflow-wrap: anywhere;
+}
+.menu-contact a {
+  color: var(--ivory);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--marigold) 65%, transparent);
+  text-underline-offset: 4px;
+  transition: color 0.2s;
+}
+.menu-contact a:hover {
+  color: var(--marigold);
+}
+.menu-contact .menu-phone {
+  font: 600 26px/1.1 var(--font-display);
+  font-variant-numeric: tabular-nums;
+}
+.menu-pref {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2px 16px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+}
+.menu-pref label {
+  font: 600 15px/1.3 var(--font-sans);
+  color: var(--ivory);
+  cursor: pointer;
+}
+.menu-pref p {
+  grid-column: 1;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--chrome-muted);
+}
+.menu-pref .switch {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+}
+/* The 3D preference as a switch: a native checkbox (role="switch") drawn as a track and thumb. */
+.switch {
+  appearance: none;
+  position: relative;
+  width: 52px;
+  height: 30px;
+  margin: 0;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  cursor: pointer;
+  transition:
+    background 0.25s,
+    border-color 0.25s;
+}
+.switch::before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--ivory);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  transition:
+    transform 0.3s var(--menu-ease),
+    background 0.25s;
+}
+.switch:checked {
+  border-color: var(--marigold);
+  background: var(--marigold);
+}
+.switch:checked::before {
+  background: var(--forest);
+  transform: translateX(22px);
+}
+.switch:focus-visible {
+  outline: 2px solid var(--marigold);
+  outline-offset: 3px;
+}
+@media (forced-colors: active) {
+  .switch {
+    appearance: auto;
+    width: 22px;
+    height: 22px;
+  }
+  .switch::before {
+    content: none;
+  }
+}
+/* The page behind the open menu holds still. */
+html:has(.site-menu[open]) {
+  overflow: hidden;
+}
+@keyframes menu-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+}
+@keyframes menu-slide {
+  from {
+    opacity: 0;
+    transform: translateX(28px);
+  }
+}
+@keyframes menu-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+}
+.site-menu[open] :is(.menu-heading, .menu-group li, .menu-quick a) {
+  animation: menu-rise 0.6s var(--menu-ease) backwards;
+  animation-delay: calc(60ms + var(--i, 0) * 30ms);
+}
+.site-menu[open] .menu-card {
+  animation: menu-slide 0.7s var(--menu-ease) 0.1s backwards;
+}
+.site-menu[open] .menu-drawing .d {
+  animation: menu-draw 1.4s ease-in-out 0.3s backwards;
+}
+.site-menu[open] .menu-drawing .c {
+  opacity: 1;
+  animation: flat-flow 1.1s linear 1.7s infinite;
+}
 /* Shared type and controls */
 main {
   position: relative;
   z-index: 2;
   outline: none;
 }
+/* Eyebrows are script accents; their chapter numbers stay technical labels. */
 .chapter-label {
   display: flex;
   align-items: center;
   gap: 14px;
-  margin: 0 0 18px;
-  font: 500 12px/1 var(--font-mono);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--accent);
+  margin: 0 0 12px;
+  font: 400 30px/1.25 var(--font-script);
+  color: var(--eyebrow);
 }
 .chapter-label span {
+  font: 600 12px/1 var(--font-mono);
+  letter-spacing: 0.2em;
   color: var(--dim);
 }
+/* The hero eyebrow lists voltages, so it stays a technical label. */
 .chapter-label span:empty {
   width: 28px;
-  height: 1px;
-  background: currentColor;
-  color: var(--accent);
+  height: 2px;
+  background: var(--marigold);
 }
 .hero-title,
 .chapter-title,
 .page-title {
   margin: 0 0 22px;
   font-family: var(--font-display);
-  font-weight: 800;
-  text-transform: uppercase;
-  line-height: 0.9;
+  font-weight: 600;
+  line-height: 1.1;
 }
 .hero-title {
-  font-size: 120px;
+  font-size: 104px;
 }
 .hero-title span {
   display: block;
@@ -607,9 +817,21 @@ main {
 .hero-title > * + * {
   color: var(--accent);
 }
+/* Script lettering inside a title; SplitText keeps it whole so the letters stay joined (app/journey.ts). The taller
+   line box holds the loops inside the line mask. */
+.title-script {
+  margin-top: -0.14em;
+  font-family: var(--font-script);
+  font-weight: 400;
+  font-size: 1.12em;
+  line-height: 1.3;
+}
 .chapter-title,
 .page-title {
-  font-size: 88px;
+  font-size: 72px;
+}
+.page-title {
+  text-wrap: balance;
 }
 .chapter-lead {
   max-width: 560px;
@@ -621,7 +843,7 @@ main {
 .mono-label {
   display: block;
   margin: 0 0 10px;
-  font: 500 11px/1.4 var(--font-mono);
+  font: 600 11px/1.4 var(--font-mono);
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--dim);
@@ -652,6 +874,14 @@ main {
   background: var(--accent-strong);
   transform: translateY(-2px);
 }
+.button .icon,
+.text-link .icon {
+  transition: transform 0.3s var(--ease-out);
+}
+.button:hover .icon,
+.text-link:hover .icon {
+  transform: translateX(4px);
+}
 .button-ghost {
   background: transparent;
   color: var(--text);
@@ -666,7 +896,7 @@ main {
   align-items: center;
   gap: 16px;
   padding-block: 10px;
-  border-bottom: 1px solid color-mix(in srgb, var(--accent) 50%, transparent);
+  border-bottom: 1px solid var(--marigold);
   color: var(--accent-strong);
   font-size: 14px;
   font-weight: 500;
@@ -688,12 +918,12 @@ main {
 }
 .tags li {
   padding: 6px 12px;
-  border: 1px solid var(--line);
-  background: color-mix(in srgb, var(--bg) 50%, transparent);
-  font: 500 11px/1.4 var(--font-mono);
-  letter-spacing: 0.08em;
+  border: 1px solid color-mix(in srgb, var(--marigold) 45%, transparent);
+  background: var(--chip);
+  font: 600 11px/1.4 var(--font-mono);
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--text);
 }
 
 /* Home journey */
@@ -718,7 +948,7 @@ main {
   z-index: 0;
 }
 .chapter-poster img {
-  display: none;
+  display: block;
   position: absolute;
   inset: 0;
   width: 100%;
@@ -726,23 +956,16 @@ main {
   object-fit: cover;
   object-position: 70% 50%;
 }
-:root:not([data-theme]) .chapter-poster img[data-poster-theme="light"],
-html[data-theme="light"] .chapter-poster img[data-poster-theme="light"],
-html[data-theme="copper"] .chapter-poster img[data-poster-theme="copper"],
-html[data-theme="signal"] .chapter-poster img[data-poster-theme="signal"] {
-  display: block;
-}
 .chapter-poster::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, color-mix(in srgb, var(--bg) 92%, transparent) 0%, color-mix(in srgb, var(--bg) 55%, transparent) 45%, color-mix(in srgb, var(--bg) 10%, transparent) 75%);
 }
-/* Until the live scene is ready, each chapter's rendered poster stands in for it, then cross-fades to the canvas. */
+/* Until the live scene is ready, each chapter's rendered poster stands in for it, then lifts off the canvas. */
 html.has-3d .chapter-poster {
   transition:
-    opacity 1.2s ease,
-    display 1.2s allow-discrete;
+    opacity 0.3s ease,
+    display 0.3s allow-discrete;
 }
 html.has-3d .chapter-poster img {
   position: sticky;
@@ -773,6 +996,9 @@ html.has-3d .journey .chapter-panel {
 }
 html.has-3d .journey .chapter:first-child {
   min-height: 160svh;
+  /* The sticky hero card starts where it holds, so on first paint it is already centred and whole (1280 × 720, tablets
+     and phones included) instead of starting a header's height lower with its buttons below the fold. */
+  padding-top: 0;
 }
 html.has-3d .journey .chapter:last-child {
   min-height: 180svh;
@@ -787,7 +1013,7 @@ html.has-3d .journey .chapter:last-child {
   align-items: center;
   gap: 10px;
   margin: 0;
-  font: 500 11px/1 var(--font-mono);
+  font: 600 11px/1 var(--font-mono);
   letter-spacing: 0.24em;
   text-transform: uppercase;
   transition: opacity 0.5s ease;
@@ -812,7 +1038,7 @@ html.is-scrolled .scroll-cue {
 .scroll-cue i {
   width: 1px;
   height: 42px;
-  background: linear-gradient(var(--accent), transparent);
+  background: linear-gradient(var(--marigold), transparent);
   animation: cue 1.8s ease-in-out infinite;
   transform-origin: top;
 }
@@ -839,8 +1065,8 @@ html.is-scrolled .scroll-cue {
 }
 .mini-timeline strong {
   display: block;
-  font: 700 34px/1 var(--font-display);
-  color: var(--accent-strong);
+  font: 600 30px/1.1 var(--font-display);
+  color: var(--figure);
 }
 .mini-timeline span {
   font-size: 12px;
@@ -857,13 +1083,13 @@ html.is-scrolled .scroll-cue {
   display: flex;
   flex-direction: column-reverse;
   padding-left: 16px;
-  border-left: 1px solid var(--line);
+  border-left: 2px solid var(--marigold);
 }
 .stats dd {
   margin: 0;
-  font: 700 64px/1 var(--font-display);
+  font: 600 60px/1.05 var(--font-display);
   font-variant-numeric: tabular-nums;
-  color: var(--accent-strong);
+  color: var(--figure);
 }
 .stats dt {
   margin-top: 8px;
@@ -885,7 +1111,7 @@ html.is-scrolled .scroll-cue {
   display: block;
   padding: 10px 14px;
   border: 1px solid var(--line);
-  font: 500 13px var(--font-mono);
+  font: 600 13px var(--font-mono);
   transition:
     border-color 0.2s,
     color 0.2s;
@@ -931,7 +1157,7 @@ html.is-scrolled .scroll-cue {
   place-items: center;
   min-height: 96px;
   padding: 16px;
-  background: #f3f4f1;
+  background: var(--logo-tile);
 }
 .logo-grid img {
   width: 100%;
@@ -940,48 +1166,61 @@ html.is-scrolled .scroll-cue {
   object-fit: contain;
 }
 
-/* Inner pages */
-.page {
-  padding-bottom: 40px;
-}
+/* Pages other than home: one design in both modes (the 3D world is hidden there, html.is-page). A hero with the page's
+   own line drawing, then full-width bands alternating paper and ivory. Hero and bands share the gutter as their left
+   edge, so Back, eyebrow, title, lead and content line up, and every band has the same vertical padding. */
 .page-hero {
-  min-height: 78svh;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-content: end;
+  column-gap: 24px;
   padding: calc(var(--header) + 40px) var(--gutter) 56px;
+  border-bottom: 1px solid var(--line);
+  background: var(--ivory);
+}
+.page-hero > * {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+.page-hero > .back-link {
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: start;
+}
+.page-hero > .flat-motif {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: start;
 }
 .page-hero .chapter-lead {
   max-width: 640px;
 }
-.breadcrumbs ol {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin: 0 0 26px;
-  padding: 0;
-  list-style: none;
-  font-size: 13px;
-  color: var(--dim);
+/* The About title is the client's three-sentence tagline: about two-thirds of the usual size sets one sentence per
+   line on desktop (three lines instead of five at 72 px) and keeps the hero within a 1280×720 screen. */
+[data-page="about"] .page-title {
+  font-size: clamp(30px, 3.4vw, 56px);
 }
-.breadcrumbs li + li::before {
-  content: "/";
-  margin-right: 10px;
+/* Each title word in its own mask (ui/pages.ts); the mask reaches below the line for descenders. */
+.page-title .w {
+  display: inline-block;
+  vertical-align: top;
+  clip-path: inset(-0.2em -0.12em -0.24em);
 }
-.breadcrumbs a:hover {
-  color: var(--accent);
+.page-title .w > span {
+  display: inline-block;
 }
 .sheet {
   position: relative;
-  margin: 0 var(--gutter) 24px;
-  padding: 56px;
-  border: 1px solid var(--line);
-  background: var(--panel);
+  padding: 64px var(--gutter);
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+}
+.page > .sheet:nth-of-type(even) {
+  background: var(--ivory);
 }
 .sheet h2 {
   margin: 0 0 22px;
-  font: 700 44px/1 var(--font-display);
-  text-transform: uppercase;
+  font: 600 40px/1.12 var(--font-display);
 }
 .sheet h3 {
   margin: 18px 0 10px;
@@ -999,43 +1238,188 @@ html.is-scrolled .scroll-cue {
   font-size: 22px;
   line-height: 1.6;
 }
+/* A page opened by the router enters in sequence: Back and the eyebrow, the title word by word out of its masks, then
+   the lead, the extras and the first band (opacity and transform only; reduced motion: at once). */
+@keyframes enter-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 22px, 0);
+  }
+}
+@keyframes enter-word {
+  from {
+    transform: translate3d(0, 135%, 0);
+  }
+}
+@keyframes enter-fade {
+  from {
+    opacity: 0;
+  }
+}
+main.is-entering .page-hero > :is(.back-link, .chapter-label, .chapter-lead, .tags, .directory, .year-nav),
+main.is-entering .page > .sheet:first-of-type {
+  animation: enter-rise 0.8s var(--ease-out) backwards;
+}
+main.is-entering .page-hero > .chapter-label {
+  animation-delay: 0.06s;
+}
+main.is-entering .page-title .w > span {
+  animation: enter-word 0.9s var(--ease-out) backwards;
+  animation-delay: calc(0.12s + var(--w, 0) * 0.05s);
+}
+main.is-entering .page-hero > .chapter-lead {
+  animation-delay: 0.32s;
+}
+main.is-entering .page-hero > :is(.tags, .directory, .year-nav) {
+  animation-delay: 0.42s;
+}
+main.is-entering .page > .sheet:first-of-type {
+  animation-delay: 0.5s;
+}
+main.is-entering .page-hero > .flat-motif {
+  animation: enter-fade 0.6s ease 0.1s backwards;
+}
+/* Client-approved About Us copy: the tagline under the hero name, the expertise list and the closing brand statement. */
+.hero-tagline {
+  font-family: var(--font-display);
+  font-size: 22px;
+  line-height: 1.35;
+  color: var(--text);
+}
+.expertise {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+/* Six items: three by two on desktop, two by three on tablets, one column on phones. */
+@media (max-width: 900px) {
+  .expertise {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 560px) {
+  .expertise {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.expertise li {
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--marigold);
+  background: var(--paper);
+  font-weight: 600;
+}
+.brand-statement {
+  margin: 0;
+  max-width: 900px;
+}
+.brand-statement p {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(24px, 2.6vw, 34px);
+  line-height: 1.35;
+  color: var(--accent-strong);
+}
 .note {
   font-size: 13px;
   color: var(--dim);
 }
+/* The About milestones as a vertical busbar: app/flat.ts fills it (--fill) down to the reading line as the page scrolls
+   and lights each milestone (--at, its position on the bar) once the fill reaches it; complete without motion. */
 .timeline {
+  position: relative;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 28px;
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 920px;
   margin: 28px 0 0;
-  padding: 26px 0 0;
+  padding: 4px 0 0 40px;
   list-style: none;
-  border-top: 1px solid var(--line);
+}
+.timeline::before,
+.timeline::after {
+  content: "";
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: 8px;
+  width: 2px;
+}
+.timeline::before {
+  background: var(--line-strong);
+}
+.timeline::after {
+  background: linear-gradient(180deg, var(--marigold), var(--emerald) 30%);
+  transform: scaleY(var(--fill, 1));
+  transform-origin: top;
+}
+.timeline li {
+  --lit: clamp(0, (var(--fill, 1) - var(--at, 0)) * 30, 1);
+  position: relative;
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  column-gap: 28px;
+  padding: 16px 0 18px;
+  border-bottom: 1px solid var(--line);
+}
+.timeline li::before,
+.timeline li::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: 26px;
+  left: -39px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+}
+.timeline li::before {
+  border: 2px solid var(--emerald);
+  background: var(--paper);
+  box-shadow: 0 0 0 4px var(--paper);
+}
+.timeline li::after {
+  background: var(--marigold);
+  border: 2px solid var(--emerald);
+  transform: scale(var(--lit));
 }
 .timeline strong {
-  display: block;
-  font: 700 64px/1 var(--font-display);
-  color: var(--accent-strong);
+  grid-row: 1 / span 3;
+  font: 600 44px/1.05 var(--font-display);
+  font-variant-numeric: tabular-nums;
+  color: var(--figure);
+}
+.timeline h3 {
+  margin: 4px 0 2px;
+}
+.timeline p {
+  margin: 0;
 }
 .timeline time {
   display: block;
-  margin-top: 8px;
-  font: 400 12px var(--font-mono);
+  margin-top: 6px;
+  font: 500 12px var(--font-mono);
+  font-variant-numeric: tabular-nums;
   color: var(--dim);
 }
 .principles {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  border-top: 1px solid var(--line);
-  border-left: 1px solid var(--line);
+  gap: 14px;
 }
 .principles article {
   padding: 34px;
-  border-right: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--emerald);
+  background: color-mix(in srgb, var(--emerald) 3%, transparent);
+}
+.principles .mono-label {
+  color: var(--eyebrow);
 }
 .principles h2 {
-  font-size: 32px;
+  font-size: 30px;
 }
 .gallery {
   display: grid;
@@ -1050,18 +1434,24 @@ html.is-scrolled .scroll-cue {
 }
 .gallery figure {
   margin: 0;
+  overflow: hidden;
 }
 .gallery img {
+  display: block;
   width: 100%;
   aspect-ratio: 8 / 3;
   object-fit: cover;
+  transition: transform 1.2s var(--ease-out);
+}
+.gallery figure:hover img {
+  transform: scale(1.04);
 }
 .gallery figcaption {
   padding-top: 10px;
-  font: 500 12px var(--font-mono);
+  font: 600 12px var(--font-mono);
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--eyebrow);
 }
 .year-cards {
   display: grid;
@@ -1075,18 +1465,23 @@ html.is-scrolled .scroll-cue {
   display: flex;
   align-items: center;
   gap: 14px;
+  height: 100%;
   padding: 22px;
   border: 1px solid var(--line);
+  background: var(--paper);
   transition:
     border-color 0.2s,
-    background 0.2s;
+    background 0.2s,
+    transform 0.3s var(--ease-out);
 }
 .year-cards a:hover {
   border-color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  background: color-mix(in srgb, var(--accent) 8%, var(--paper));
+  transform: translateY(-3px);
 }
 .year-cards strong {
-  font: 700 30px/1 var(--font-display);
+  font: 600 28px/1.1 var(--font-display);
+  font-variant-numeric: tabular-nums;
 }
 .year-cards span {
   color: var(--muted);
@@ -1095,6 +1490,10 @@ html.is-scrolled .scroll-cue {
 .year-cards .icon {
   margin-left: auto;
   color: var(--accent);
+  transition: transform 0.3s var(--ease-out);
+}
+.year-cards a:hover .icon {
+  transform: translateX(4px);
 }
 .year-nav ul {
   display: flex;
@@ -1108,7 +1507,7 @@ html.is-scrolled .scroll-cue {
   display: block;
   padding: 10px 16px;
   border: 1px solid var(--line);
-  font: 500 13px var(--font-mono);
+  font: 600 13px var(--font-mono);
 }
 .year-nav a[aria-current="page"] {
   background: var(--accent);
@@ -1135,32 +1534,37 @@ td {
   border-bottom: 1px solid var(--line);
 }
 th {
-  background: color-mix(in srgb, var(--accent) 12%, transparent);
-  font: 500 11px var(--font-mono);
+  background: var(--emerald);
+  font: 600 11px var(--font-mono);
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--accent-strong);
+  color: var(--ivory);
 }
 td {
   color: var(--muted);
+  font-variant-numeric: tabular-nums;
 }
 td:nth-child(2) {
   color: var(--text);
   font-weight: 600;
 }
+tbody tr:nth-child(even) {
+  background: color-mix(in srgb, var(--emerald) 3.5%, transparent);
+}
 tbody tr:hover {
   background: var(--row-hover);
 }
+/* auto-fit: a short row of cards spreads across the width instead of leaving empty columns. */
 .cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  border-top: 1px solid var(--line);
-  border-left: 1px solid var(--line);
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
 }
 .cards article {
   padding: 28px;
-  border-right: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--marigold);
+  background: color-mix(in srgb, var(--emerald) 3%, transparent);
 }
 .voltage-group + .voltage-group {
   margin-top: 26px;
@@ -1234,8 +1638,9 @@ tbody tr:hover {
 }
 .figures dd {
   margin: 0;
-  font: 700 40px/1 var(--font-display);
-  color: var(--accent-strong);
+  font: 600 36px/1.05 var(--font-display);
+  font-variant-numeric: tabular-nums;
+  color: var(--figure);
 }
 .figures dt {
   margin-top: 6px;
@@ -1260,15 +1665,16 @@ tbody tr:hover {
 }
 .steps li::before {
   content: counter(step, decimal-leading-zero);
-  font: 500 12px var(--font-mono);
-  color: var(--accent);
+  font: 600 12px var(--font-mono);
+  color: var(--eyebrow);
 }
 .steps span {
   color: var(--muted);
 }
 .steps strong,
 .steps-total strong {
-  font: 700 24px/1 var(--font-display);
+  font: 600 22px/1.1 var(--font-display);
+  font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 .steps-total {
@@ -1277,17 +1683,18 @@ tbody tr:hover {
 }
 .steps-total span {
   grid-column: 2;
-  font: 500 12px var(--font-mono);
+  font: 600 12px var(--font-mono);
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 .steps-total strong {
   font-size: 34px;
-  color: var(--accent-strong);
+  color: var(--figure);
 }
+/* Twenty roles: five, four or two to a row, so the last row is always full. */
 .manpower {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   margin: 0;
   border-top: 1px solid var(--line);
   border-left: 1px solid var(--line);
@@ -1307,8 +1714,9 @@ tbody tr:hover {
 }
 .manpower dd {
   margin: 0;
-  font: 700 26px/1 var(--font-display);
-  color: var(--accent-strong);
+  font: 600 24px/1.1 var(--font-display);
+  font-variant-numeric: tabular-nums;
+  color: var(--figure);
 }
 .ehs-standards {
   columns: 3 240px;
@@ -1331,9 +1739,10 @@ tbody tr:hover {
 }
 .signature {
   margin-top: 18px;
-  font: 500 12px var(--font-mono);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font: 400 30px/1.3 var(--font-script);
+}
+.sheet .signature {
+  color: var(--accent-strong);
 }
 .roles {
   border-top: 1px solid var(--line);
@@ -1355,21 +1764,20 @@ tbody tr:hover {
 .roles summary::after {
   content: "+";
   margin-left: auto;
-  font: 500 20px var(--font-mono);
+  font: 600 20px var(--font-mono);
   color: var(--accent);
 }
 .roles details[open] summary::after {
   content: "−";
 }
 .roles summary strong {
-  font: 700 26px/1 var(--font-display);
-  text-transform: uppercase;
+  font: 600 24px/1.1 var(--font-display);
 }
 .roles summary span {
-  font: 500 12px var(--font-mono);
+  font: 600 12px var(--font-mono);
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--eyebrow);
 }
 .roles-body {
   display: grid;
@@ -1403,6 +1811,7 @@ tbody tr:hover {
   align-items: center;
 }
 .photo {
+  display: block;
   width: 100%;
   border: 1px solid var(--line);
 }
@@ -1416,7 +1825,7 @@ tbody tr:hover {
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 4px 24px;
-  padding-block: 26px;
+  padding: 26px 4px;
   border-bottom: 1px solid var(--line);
 }
 .documents li > :not(a) {
@@ -1428,7 +1837,7 @@ tbody tr:hover {
 }
 .documents h2 {
   margin: 0;
-  font-size: 30px;
+  font-size: 28px;
 }
 .documents p {
   margin: 0;
@@ -1462,11 +1871,15 @@ tbody tr:hover {
   background: var(--field);
   color: var(--text);
   font: inherit;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 .fields input:focus,
 .fields textarea:focus {
   border-color: var(--accent);
   outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--emerald) 18%, transparent);
 }
 .form-status {
   min-height: 24px;
@@ -1476,7 +1889,7 @@ tbody tr:hover {
 /* Organisation chart (format of the published chart) */
 .sheet-chart {
   padding: 0;
-  background: #ffffff;
+  background: var(--detail-bg);
 }
 .org-scroll {
   overflow-x: auto;
@@ -1486,7 +1899,7 @@ tbody tr:hover {
   width: max-content;
   min-width: 100%;
   margin-inline: auto;
-  color: #ffffff;
+  color: var(--on-accent);
   font: 400 14px/1.45 "Segoe UI", Arial, sans-serif;
 }
 .org-chart ul {
@@ -1515,12 +1928,12 @@ tbody tr:hover {
   right: 50%;
   width: 50%;
   height: 20px;
-  border-top: 2px solid #cfcfcf;
+  border-top: 2px solid var(--org-line);
 }
 .org-chart li::after {
   right: auto;
   left: 50%;
-  border-left: 2px solid #cfcfcf;
+  border-left: 2px solid var(--org-line);
 }
 .org-chart li:only-child::before,
 .org-chart li:only-child::after {
@@ -1534,7 +1947,7 @@ tbody tr:hover {
   border: 0;
 }
 .org-chart li:last-child::before {
-  border-right: 2px solid #cfcfcf;
+  border-right: 2px solid var(--org-line);
   border-radius: 0 6px 0 0;
 }
 .org-chart li:first-child::after {
@@ -1546,7 +1959,7 @@ tbody tr:hover {
   top: 0;
   left: 50%;
   height: 20px;
-  border-left: 2px solid #cfcfcf;
+  border-left: 2px solid var(--org-line);
 }
 .org-tree > li {
   padding-top: 0;
@@ -1562,25 +1975,25 @@ tbody tr:hover {
   max-width: 148px;
   padding: 7px 10px;
   border-radius: 6px;
-  background: #2f77b3;
+  background: var(--accent);
   text-align: center;
   transition:
     background 0.2s,
     transform 0.2s;
 }
 .org-box:hover {
-  background: #24659c;
+  background: var(--accent-strong);
   transform: translateY(-2px);
 }
 .org-box-lead,
 .org-box-team {
-  background: #ffffff;
-  border: 2px solid #2f77b3;
-  color: #2f77b3;
+  background: var(--detail-bg);
+  border: 2px solid var(--accent);
+  color: var(--accent);
 }
 .org-box-lead:hover,
 .org-box-team:hover {
-  background: #eef5fb;
+  background: color-mix(in srgb, var(--accent) 7%, var(--paper));
 }
 .org-box-team {
   border-style: dashed;
@@ -1595,12 +2008,12 @@ tbody tr:hover {
 .org-section + .org-section {
   margin-top: 36px;
   padding-top: 28px;
-  border-top: 2px solid #e3e7ec;
+  border-top: 2px solid var(--line);
 }
 .org-chart .org-section-label {
   margin: 0 0 18px;
-  color: #2f77b3;
-  font: 500 12px var(--font-mono);
+  color: var(--eyebrow);
+  font: 600 12px var(--font-mono);
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
@@ -1624,12 +2037,15 @@ tbody tr:hover {
   display: grid;
   grid-template-columns: 1.4fr 1fr 1fr 1fr;
   gap: 40px;
-  margin-top: 40px;
   padding: 64px var(--gutter) 32px;
   border-top: 1px solid var(--footer-line);
   background: var(--footer-bg);
   color: var(--footer-text);
   font-size: 14px;
+}
+/* The 3D home's last chapter keeps the scene in view for a moment above the footer. */
+html.has-3d:not(.is-page) .site-footer {
+  margin-top: 40px;
 }
 .site-footer .mono-label {
   color: var(--footer-label);
@@ -1645,6 +2061,11 @@ tbody tr:hover {
   width: 240px;
   margin-bottom: 18px;
 }
+.footer-signature {
+  margin: -6px 0 10px;
+  font: 400 30px/1.3 var(--font-script);
+  color: var(--footer-strong);
+}
 .site-footer ul {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1658,6 +2079,12 @@ tbody tr:hover {
 }
 .site-footer address {
   font-style: normal;
+}
+.site-footer address p {
+  margin: 0 0 8px;
+}
+.site-footer address a {
+  overflow-wrap: anywhere;
 }
 .copyright {
   grid-column: 1 / -1;
@@ -1673,7 +2100,7 @@ tbody tr:hover {
   padding: 8px 12px;
   background: var(--accent);
   color: var(--on-accent);
-  font: 500 11px/1 var(--font-mono);
+  font: 600 11px/1 var(--font-mono);
   letter-spacing: 0.14em;
   text-transform: uppercase;
   pointer-events: none;
@@ -1692,22 +2119,56 @@ tbody tr:hover {
   background: radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--bg) 0%, transparent) 0%, color-mix(in srgb, var(--bg) 90%, transparent) 70%);
   opacity: 0;
 }
+/* Page changes: the outgoing page fades out (main.ts LEAVE_MS) and the new one enters with its own sequence. */
 main.is-leaving {
   opacity: 0;
-  transform: translateY(12px);
+  transform: translate3d(0, 10px, 0);
   transition:
-    opacity 0.35s ease,
-    transform 0.35s ease;
+    opacity 0.22s ease,
+    transform 0.22s ease;
 }
 
 /* Responsive */
+@media (min-width: 901px) {
+  .page-hero {
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 380px);
+    column-gap: clamp(40px, 6vw, 112px);
+    padding-top: calc(var(--header) + 56px);
+    padding-bottom: 72px;
+  }
+  .page-hero > *,
+  .page-hero > .back-link {
+    grid-column: 1;
+  }
+  .page-hero > .flat-motif {
+    grid-column: 2;
+    grid-row: 1 / span 8;
+    align-self: center;
+    width: 100%;
+    margin: 0;
+    padding: 28px;
+  }
+  .sheet {
+    padding-block: 88px;
+  }
+  .sheet > h2 {
+    font-size: 46px;
+  }
+  .stats:not(.stats-compact) dd {
+    font-size: 72px;
+  }
+}
+
 @media (min-width: 1800px) {
+  :root {
+    --text-column: 680px;
+  }
   .hero-title {
-    font-size: 150px;
+    font-size: 128px;
   }
   .chapter-title,
   .page-title {
-    font-size: 104px;
+    font-size: 86px;
   }
   .chapter-lead {
     font-size: 19px;
@@ -1719,19 +2180,22 @@ main.is-leaving {
 }
 
 @media (max-width: 1180px) {
+  .site-header {
+    gap: 24px;
+  }
   .header-nav {
-    gap: 18px;
+    gap: 16px;
     font-size: 12px;
   }
   .brand {
-    width: 190px;
+    width: 180px;
   }
   .hero-title {
-    font-size: 96px;
+    font-size: 88px;
   }
   .chapter-title,
   .page-title {
-    font-size: 72px;
+    font-size: 62px;
   }
   .principles {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1755,12 +2219,6 @@ main.is-leaving {
   .menu-button {
     margin-left: auto;
   }
-  .theme-switch {
-    margin-left: auto;
-  }
-  html[data-theme] .menu-button {
-    margin-left: 0;
-  }
   .site-header {
     gap: 20px;
   }
@@ -1768,14 +2226,10 @@ main.is-leaving {
   .menu-top img {
     width: 200px;
   }
-  .menu-links {
-    grid-template-columns: 1fr;
-  }
-  .menu-links a {
-    font-size: 28px;
-  }
-  .world-veil {
-    background: linear-gradient(180deg, color-mix(in srgb, var(--bg) 0%, transparent) 30%, color-mix(in srgb, var(--bg) 70%, transparent) 60%, color-mix(in srgb, var(--bg) 92%, transparent) 100%);
+  .menu-body {
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    padding-top: 24px;
   }
   .chapter {
     align-items: flex-end;
@@ -1784,39 +2238,47 @@ main.is-leaving {
     justify-content: flex-end;
     padding-bottom: 32px;
   }
-  .chapter-poster::after {
-    background: linear-gradient(180deg, color-mix(in srgb, var(--bg) 10%, transparent) 20%, color-mix(in srgb, var(--bg) 92%, transparent) 70%);
+  @supports not (anchor-name: --chapter-text) {
+    .world-veil {
+      background: linear-gradient(180deg, color-mix(in srgb, var(--bg) 0%, transparent) 30%, color-mix(in srgb, var(--bg) 70%, transparent) 60%, color-mix(in srgb, var(--bg) 92%, transparent) 100%);
+    }
+    .chapter-poster::after {
+      background: linear-gradient(180deg, color-mix(in srgb, var(--bg) 10%, transparent) 20%, color-mix(in srgb, var(--bg) 92%, transparent) 70%);
+    }
+  }
+  /* Below the scene, chapter text sits on a frosted card that starts just above its first line. */
+  @supports (anchor-name: --chapter-text) {
+    .chapter-panel::after {
+      top: calc(anchor(--chapter-text top) - 20px);
+      bottom: calc(anchor(--chapter-end bottom) - 18px);
+      left: -14px;
+      right: -14px;
+      border-radius: 10px;
+      backdrop-filter: blur(12px) saturate(1.2);
+    }
   }
   .hero-title {
-    font-size: 72px;
+    font-size: 68px;
   }
   .chapter-title,
   .page-title {
-    font-size: 56px;
+    font-size: 50px;
   }
   .chapter-lead {
     font-size: 15px;
   }
   .stats,
-  .mini-timeline,
-  .timeline {
+  .mini-timeline {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .stats dd {
-    font-size: 48px;
+    font-size: 46px;
   }
   .stats-compact dd {
     font-size: 36px;
   }
-  .page-hero {
-    min-height: 64svh;
-  }
-  .sheet {
-    margin-inline: 12px;
-    padding: 28px 20px;
-  }
   .sheet h2 {
-    font-size: 34px;
+    font-size: 30px;
   }
   .gallery,
   .policy,
@@ -1829,6 +2291,12 @@ main.is-leaving {
   }
   .figures {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .figures > div:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+  .manpower {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
   .logo-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1847,10 +2315,6 @@ main.is-leaving {
   }
   .brand {
     width: 150px;
-  }
-  .theme-switch label {
-    width: 28px;
-    height: 28px;
   }
 }
 
@@ -1877,11 +2341,26 @@ main.is-leaving {
 
 @media (max-width: 560px) {
   .hero-title {
-    font-size: 58px;
+    font-size: 54px;
   }
   .chapter-title,
   .page-title {
-    font-size: 46px;
+    font-size: 42px;
+  }
+  /* The About chapter's milestones stay a compact 2 × 2 grid so the card leaves the lobby plaques in view. */
+  html.has-3d .journey .mini-timeline {
+    gap: 10px 14px;
+    margin-bottom: 18px;
+    padding-top: 14px;
+  }
+  html.has-3d .journey .mini-timeline span {
+    display: block;
+    line-height: 1.3;
+  }
+  .chapter-label,
+  .signature,
+  .footer-signature {
+    font-size: 26px;
   }
   .chapter .chapter-lead {
     display: -webkit-box;
@@ -1894,7 +2373,7 @@ main.is-leaving {
     padding: 10px;
   }
   .mini-timeline strong {
-    font-size: 26px;
+    font-size: 24px;
   }
   .button {
     min-height: 48px;
@@ -1906,10 +2385,33 @@ main.is-leaving {
   .documents li {
     grid-template-columns: 1fr;
   }
+  .manpower {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
   .documents li a {
     grid-column: 1;
     grid-row: auto;
     justify-self: start;
+  }
+  .page-hero {
+    padding-bottom: 44px;
+  }
+  .sheet {
+    padding-block: 52px;
+  }
+  .timeline {
+    padding-left: 34px;
+  }
+  .timeline li {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .timeline li::before,
+  .timeline li::after {
+    left: -33px;
+  }
+  .timeline strong {
+    grid-row: auto;
+    font-size: 34px;
   }
   .year-nav ul {
     display: grid;
@@ -1928,7 +2430,7 @@ main.is-leaving {
     display: block;
   }
   tr {
-    padding: 12px 0;
+    padding: 12px 10px;
     border-bottom: 1px solid var(--line);
   }
   td {
@@ -1940,10 +2442,75 @@ main.is-leaving {
   }
   td::before {
     content: attr(data-label);
-    font: 400 11px/2 var(--font-mono);
+    font: 500 11px/2 var(--font-mono);
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--dim);
+  }
+}
+
+@media (max-width: 400px) {
+  .hero-title {
+    font-size: 48px;
+  }
+  .chapter-title,
+  .page-title {
+    font-size: 38px;
+  }
+  .sheet h2 {
+    font-size: 26px;
+  }
+}
+
+/* The menu on phones: both groups side by side and a compact card, so call, email and the 3D switch fit the first screen. */
+@media (max-width: 700px) {
+  .menu-body {
+    gap: 24px;
+    padding-bottom: 24px;
+  }
+  .menu-groups {
+    gap: 20px 18px;
+  }
+  .menu-group a {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 9px 0;
+    font-size: 19px;
+  }
+  .menu-num,
+  .menu-group a .icon,
+  .menu-group a[aria-current="page"] .menu-label::after {
+    display: none;
+  }
+  .menu-quick {
+    margin-top: 20px;
+  }
+  .menu-quick a {
+    flex: 1 1 0;
+    justify-content: center;
+    min-height: 44px;
+    padding: 10px 14px;
+  }
+  .menu-card {
+    gap: 14px;
+    padding: 20px;
+  }
+  .menu-art,
+  .menu-since,
+  .menu-tagline,
+  .menu-contact .menu-address {
+    display: none;
+  }
+  .menu-contact {
+    padding-top: 0;
+    border-top: 0;
+  }
+  .menu-contact .menu-phone {
+    font-size: 22px;
+  }
+}
+@media (max-width: 340px) {
+  .menu-groups {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -1970,6 +2537,12 @@ html.is-poster .world-canvas {
 }
 .split-char {
   will-change: transform;
+}
+/* SplitText line masks reach below the line box so serif descenders (y, j, p) are not cut off at rest; RISE in
+   app/journey.ts moves characters far enough to hide them, descenders included. */
+.split-line-mask {
+  padding-bottom: 0.3em;
+  margin-bottom: -0.3em;
 }
 
 .org-scroll.is-fitted {
@@ -2006,7 +2579,7 @@ html.is-poster .world-canvas {
     width: 0;
     height: 100%;
     border: 0;
-    border-left: 2px solid #cfcfcf;
+    border-left: 2px solid var(--org-line);
     border-radius: 0;
   }
   .org-chart li::after {
@@ -2016,7 +2589,7 @@ html.is-poster .world-canvas {
     width: 16px;
     height: 0;
     border: 0;
-    border-top: 2px solid #cfcfcf;
+    border-top: 2px solid var(--org-line);
     border-radius: 0;
   }
   .org-chart li:only-child,
@@ -2030,12 +2603,12 @@ html.is-poster .world-canvas {
   .org-chart li:last-child::after {
     display: block;
     border-top: 0;
-    border-left: 2px solid #cfcfcf;
+    border-left: 2px solid var(--org-line);
   }
   .org-chart li:only-child::after,
   .org-chart li:last-child::after {
     border-left: 0;
-    border-top: 2px solid #cfcfcf;
+    border-top: 2px solid var(--org-line);
   }
   .org-chart li:last-child::before {
     height: 27px;
@@ -2068,126 +2641,35 @@ html.is-poster .world-canvas {
   }
 }
 
-.more-button {
+/* Back to the tour: the first item of every page hero, in the flow above the eyebrow so it never covers the title. */
+.back-link {
+  align-self: flex-start;
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  min-height: 48px;
-  padding: 12px 18px;
-  border: 1px solid var(--line);
-  background: color-mix(in srgb, var(--bg) 60%, transparent);
+  min-height: 44px;
+  margin: 0 0 26px;
+  padding: 10px 16px 10px 12px;
+  border: 1px solid var(--line-strong);
+  background: var(--paper);
   color: var(--text);
-  font: 500 12px/1 var(--font-mono);
+  font: 600 12px/1 var(--font-mono);
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  transition: border-color 0.2s, background 0.2s;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
 }
-.more-button span {
+.back-link .icon {
   color: var(--accent);
-  font-size: 16px;
+  transition: transform 0.3s var(--ease-out);
 }
-.more-button:hover {
+.back-link:hover {
   border-color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  background: color-mix(in srgb, var(--accent) 8%, var(--paper));
 }
-.detail {
-  width: min(880px, calc(100% - 32px));
-  max-height: calc(100dvh - 64px);
-  padding: 0;
-  border: 1px solid var(--line);
-  background: var(--detail-bg);
-  color: var(--text);
-  overflow-y: auto;
-  overscroll-behavior: contain;
-}
-.detail::backdrop {
-  background: var(--backdrop);
-  backdrop-filter: blur(6px);
-}
-.detail[open] {
-  animation: detail-in 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-@keyframes detail-in {
-  from {
-    opacity: 0;
-    transform: translateY(24px) scale(0.98);
-  }
-}
-.detail-inner {
-  position: relative;
-  padding: 48px 52px 40px;
-}
-.detail h2 {
-  margin: 0 0 22px;
-  font: 800 56px/0.95 var(--font-display);
-  text-transform: uppercase;
-}
-.detail h3 {
-  margin: 26px 0 8px;
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--accent-strong);
-}
-.detail p,
-.detail li {
-  color: var(--muted);
-}
-.detail .detail-name {
-  color: var(--text);
-  font-weight: 600;
-}
-.detail blockquote {
-  margin: 0 0 18px;
-  padding-left: 18px;
-  border-left: 2px solid var(--accent);
-  color: var(--text);
-}
-.detail blockquote footer {
-  margin-top: 8px;
-  font-size: 13px;
-  color: var(--dim);
-}
-.detail-timeline {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px 28px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.detail-timeline strong {
-  display: block;
-  font: 700 40px/1 var(--font-display);
-  color: var(--accent-strong);
-}
-.detail-timeline span {
-  font-weight: 600;
-  color: var(--text);
-}
-.detail-timeline p {
-  margin: 4px 0;
-}
-.detail-timeline time {
-  font: 400 12px var(--font-mono);
-  color: var(--dim);
-}
-.detail-close {
-  position: absolute;
-  top: 18px;
-  right: 18px;
-  width: 44px;
-  height: 44px;
-  border: 1px solid var(--line);
-  background: none;
-  color: var(--text);
-  font-size: 26px;
-  line-height: 1;
-}
-.detail-close:hover {
-  border-color: var(--accent);
-}
-.detail .logo-grid {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+.back-link:hover .icon {
+  transform: translateX(-4px);
 }
 .route-curtain {
   display: grid;
@@ -2207,26 +2689,14 @@ html.is-poster .world-canvas {
 }
 .route-curtain p {
   margin: 0;
-  font: 500 11px/1 var(--font-mono);
+  font: 600 11px/1 var(--font-mono);
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: var(--chrome-dim);
+  color: var(--dim);
 }
 @keyframes curtain-pulse {
   50% {
     opacity: 0.45;
     transform: scale(0.94);
-  }
-}
-@media (max-width: 700px) {
-  .detail-inner {
-    padding: 56px 20px 28px;
-  }
-  .detail h2 {
-    font-size: 40px;
-  }
-  .detail-timeline,
-  .detail .logo-grid {
-    grid-template-columns: 1fr 1fr;
   }
 }
