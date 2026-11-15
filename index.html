@@ -233,23 +233,6 @@
         outline: 2px solid var(--ink);
         outline-offset: 3px;
       }
-      .sub {
-        display: grid;
-        grid-template-rows: 0fr;
-        opacity: 0;
-        margin-top: -14px;
-        transition: grid-template-rows 0.6s var(--ease), opacity 0.45s, margin-top 0.6s var(--ease);
-      }
-      .sub > div {
-        overflow: hidden;
-        padding: 2px 0 2px 14px;
-        border-left: 1px solid var(--sand-line);
-      }
-      .sub.is-open {
-        grid-template-rows: 1fr;
-        opacity: 1;
-        margin-top: 0;
-      }
       .filter-row {
         display: flex;
         flex-wrap: wrap;
@@ -405,8 +388,7 @@
       }
       @media (prefers-reduced-motion: reduce) {
         a.card,
-        .chip span,
-        .sub {
+        .chip span {
           transition: none;
         }
         html.js .intro > *,
@@ -440,14 +422,10 @@
           <legend>Product</legend>
           <div class="chips" data-chips="product"></div>
         </fieldset>
-        <div class="sub" data-sub>
-          <div>
-            <fieldset class="group">
-              <legend>Presentation type</legend>
-              <div class="chips" data-chips="type"></div>
-            </fieldset>
-          </div>
-        </div>
+        <fieldset class="group">
+          <legend>Type</legend>
+          <div class="chips" data-chips="type"></div>
+        </fieldset>
         <div class="filter-row">
           <fieldset class="group">
             <legend>Year</legend>
@@ -477,12 +455,13 @@
         </p>
       </a>
 
-      <a class="card" href="https://parama-guru.github.io/Solari/" data-product="application" data-year="2026">
-        <p class="card-meta">Solari hackathon / 2026</p>
+      <a class="card" href="https://parama-guru.github.io/Solari/" data-product="application" data-type="hackathon" data-year="2026">
+        <p class="card-meta">Solari Hackathon / 2026</p>
         <h2>Openable — built on Solari</h2>
         <p>
-          Opens dead files inside a disposable virtual machine using real desktop
-          applications, and returns a readable PDF, the text, and proof that it rendered.
+          Opens files nothing else will: corrupt PDFs, legacy Word/Excel, metafiles, PostScript and scans.
+          Each upload runs in a disposable Solari microVM with real LibreOffice, Ghostscript and Tesseract.
+          Recovered 18 of 18 damaged and legacy test files.
         </p>
       </a>
 
@@ -579,7 +558,7 @@
     </main>
     <script>
       (() => {
-        // Products and presentation types live only here and in each card's data-* attributes.
+        // Products and types live only here and in each card's data-* attributes; a type (e.g. hackathon) can apply to any product.
         const PRODUCTS = [
           { id: "website", label: "Websites" },
           { id: "application", label: "Applications" },
@@ -598,7 +577,6 @@
 
         const form = document.querySelector("[data-filters]");
         const list = document.querySelector("[data-cards]");
-        const sub = document.querySelector("[data-sub]");
         const status = document.querySelector("[data-status]");
         const empty = document.querySelector("[data-empty]");
         const clearButtons = document.querySelectorAll("[data-clear]");
@@ -623,10 +601,9 @@
         const params = new URLSearchParams(location.search);
         const state = { ...defaults };
         for (const key of Object.keys(state)) if (valid[key].includes(params.get(key))) state[key] = params.get(key);
-        if (state.product !== "presentation") state.type = "all";
 
         const productOk = (card, product = state.product, type = state.type) =>
-          product === "all" || (card.dataset.product === product && (product !== "presentation" || type === "all" || card.dataset.type === type));
+          (product === "all" || card.dataset.product === product) && (type === "all" || card.dataset.type === type);
         const yearOk = (card, year = state.year) => year === "all" || card.dataset.year === year;
 
         function chips(name, options) {
@@ -639,16 +616,17 @@
             .join("");
         }
         chips("product", [{ id: "all", label: "All" }, ...PRODUCTS]);
-        chips("type", [{ id: "all", label: "All presentations" }, ...TYPES]);
+        chips("type", [{ id: "all", label: "All types" }, ...TYPES]);
         chips("year", [{ id: "all", label: "All years" }, ...years.map((y) => ({ id: y, label: y }))]);
         chips("sort", SORTS);
 
         function counts() {
           const set = (key, value) => (document.querySelector(`[data-count="${key}"]`).textContent = value);
-          set("product:all", cards.filter((c) => yearOk(c)).length);
-          for (const p of PRODUCTS) set(`product:${p.id}`, cards.filter((c) => productOk(c, p.id, "all") && yearOk(c)).length);
-          set("type:all", cards.filter((c) => productOk(c, "presentation", "all") && yearOk(c)).length);
-          for (const t of TYPES) set(`type:${t.id}`, cards.filter((c) => productOk(c, "presentation", t.id) && yearOk(c)).length);
+          // Each group's counts reflect the other groups' choices.
+          set("product:all", cards.filter((c) => productOk(c, "all") && yearOk(c)).length);
+          for (const p of PRODUCTS) set(`product:${p.id}`, cards.filter((c) => productOk(c, p.id) && yearOk(c)).length);
+          set("type:all", cards.filter((c) => productOk(c, state.product, "all") && yearOk(c)).length);
+          for (const t of TYPES) set(`type:${t.id}`, cards.filter((c) => productOk(c, state.product, t.id) && yearOk(c)).length);
           set("year:all", cards.filter((c) => productOk(c)).length);
           for (const y of years) set(`year:${y}`, cards.filter((c) => productOk(c) && yearOk(c, y)).length);
         }
@@ -670,9 +648,6 @@
             list.append(card);
           }
 
-          const open = state.product === "presentation";
-          sub.classList.toggle("is-open", open);
-          sub.inert = !open;
           counts();
           const filtered = Object.keys(defaults).some((key) => state[key] !== defaults[key]);
           status.textContent = shown.length === cards.length ? `Showing all ${cards.length} projects` : `Showing ${shown.length} of ${cards.length} projects`;
@@ -705,10 +680,6 @@
           if (!(input instanceof HTMLInputElement)) return;
           state[input.name] = input.value;
           input.closest(".chip")?.scrollIntoView({ block: "nearest", inline: "nearest", behavior: reduce.matches ? "auto" : "smooth" });
-          if (input.name === "product" && input.value !== "presentation") {
-            state.type = "all";
-            form.querySelector('input[name="type"][value="all"]').checked = true;
-          }
           apply(true);
         });
         form.addEventListener("submit", (event) => event.preventDefault());
