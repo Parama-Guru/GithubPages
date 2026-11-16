@@ -801,6 +801,24 @@ html:not(.has-3d) #contact .button:hover {
   }
 }
 
+/* Short desktop screens (1280 × 640, 1366 × 657): less air around the hero, a smaller tagline and tighter spacing so
+   its buttons are on the first screen, as in 3D (main.css also caps the name by the height). */
+@media (min-width: 901px) and (max-height: 820px) {
+  html:not(.has-3d) #welcome {
+    padding-top: calc(var(--header) + 20px);
+    padding-bottom: 32px;
+  }
+  html:not(.has-3d) #welcome .hero-tagline {
+    font-size: 22px;
+  }
+  html:not(.has-3d) #welcome .hero-tagline::before {
+    margin-bottom: 12px;
+  }
+  html:not(.has-3d) #welcome .tags {
+    margin-bottom: 18px;
+  }
+}
+
 @media (max-width: 1099px) {
   .flat-timeline {
     grid-template-columns: minmax(0, 1fr);

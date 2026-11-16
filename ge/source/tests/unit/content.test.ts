@@ -87,16 +87,16 @@ describe("company profile content", () => {
     expect(countNodes(organisation)).toBe(43);
     expect(depth(organisation)).toBe(8);
     expect(labels(organisation).slice(0, 12)).toEqual([
-      "Mr.B.Kumareson Proprietor",
-      "Mr.C.Jagan Liasioning TNEB",
-      "Mr.G.Saravanan Liasioning CEIG",
-      "Mr.S.Krishnan Technical Manager",
-      "Mr.P.Pravinkumar Design Engineer",
+      "Mr. B. Kumareson Proprietor",
+      "Mr. C. Jagan Liaisoning TNEB",
+      "Mr. G. Saravanan Liaisoning CEIG",
+      "Mr. S. Krishnan Technical Manager",
+      "Mr. P. Pravinkumar Design Engineer",
       "Draftsman (2 Nos)",
-      "Mr.K.Senthil Quality",
-      "Mr.R.Sethuraman Head Business Development",
-      "Mr.Mahaveer Head Finance",
-      "Mr.B.Muthukumar Head Projects/Technical",
+      "Mr. K. Senthil Quality",
+      "Mr. R. Sethuraman Head Business Development",
+      "Mr. Mahaveer Head Finance",
+      "Mr. B. Muthukumar Head Projects/Technical",
       "Factory Team",
       "Quality Engineer",
     ]);

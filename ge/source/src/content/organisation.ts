@@ -6,18 +6,18 @@ const crew = (supervisors: string, technicians: string, electricians: string): O
 });
 
 export const organisation: OrgNode = {
-  name: "Mr.B.Kumareson",
+  name: "Mr. B. Kumareson",
   role: "Proprietor",
   children: [
-    { name: "Mr.C.Jagan", role: "Liasioning TNEB" },
-    { name: "Mr.G.Saravanan", role: "Liasioning CEIG" },
-    { name: "Mr.S.Krishnan", role: "Technical Manager" },
-    { name: "Mr.P.Pravinkumar", role: "Design Engineer", children: [{ role: "Draftsman (2 Nos)" }] },
-    { name: "Mr.K.Senthil", role: "Quality" },
-    { name: "Mr.R.Sethuraman", role: "Head Business Development" },
-    { name: "Mr.Mahaveer", role: "Head Finance" },
+    { name: "Mr. C. Jagan", role: "Liaisoning TNEB" },
+    { name: "Mr. G. Saravanan", role: "Liaisoning CEIG" },
+    { name: "Mr. S. Krishnan", role: "Technical Manager" },
+    { name: "Mr. P. Pravinkumar", role: "Design Engineer", children: [{ role: "Draftsman (2 Nos)" }] },
+    { name: "Mr. K. Senthil", role: "Quality" },
+    { name: "Mr. R. Sethuraman", role: "Head Business Development" },
+    { name: "Mr. Mahaveer", role: "Head Finance" },
     {
-      name: "Mr.B.Muthukumar",
+      name: "Mr. B. Muthukumar",
       role: "Head Projects/Technical",
       children: [
         {
@@ -36,14 +36,14 @@ export const organisation: OrgNode = {
         },
       ],
     },
-    { name: "Mr.N.Ganeshan", role: "Procurement", children: [{ role: "Contract" }, { role: "Logistics" }] },
+    { name: "Mr. N. Ganeshan", role: "Procurement", children: [{ role: "Contract" }, { role: "Logistics" }] },
     {
-      name: "Mr.D.Prabhu",
+      name: "Mr. D. Prabhu",
       role: "Head Civil",
       children: [{ role: "Civil Engineer", children: [{ role: "Civil Supervisor", children: [{ role: "Labour (25 Nos)" }] }] }],
     },
     {
-      name: "Mr.S.Sivaraman",
+      name: "Mr. S. Sivaraman",
       role: "Administration",
       children: [
         { role: "Human Resources", children: [{ role: "Environment Staff" }] },

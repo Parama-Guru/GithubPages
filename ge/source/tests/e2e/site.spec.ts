@@ -191,7 +191,7 @@ test.describe("navigation", () => {
     await page.keyboard.press("Enter");
     const dialog = page.getByRole("dialog", { name: "Website menu" });
     await expect(dialog).toBeVisible();
-    await expect(dialog.getByRole("list", { name: "Company" }).getByRole("link")).toHaveText(["01About", "02How we serve", "03How we work", "04Leadership", "05Organisation"]);
+    await expect(dialog.getByRole("list", { name: "Company" }).getByRole("link")).toHaveText(["01About", "02How We Serve", "03How We Work", "04Leadership", "05Organisation"]);
     await expect(dialog.getByRole("list", { name: "Work" }).getByRole("link")).toHaveText(["06Projects", "07Clients", "08Quality & Safety", "09Downloads"]);
     await expect(dialog.getByRole("link", { name: "About" })).toHaveAttribute("aria-current", "page");
     await expect(dialog.getByRole("link", { name: "Home" })).toBeVisible();
@@ -232,7 +232,7 @@ test.describe("navigation", () => {
     await expect(page.locator(".org-core .org-box")).toHaveCount(13);
     await expect(page.locator(".org-project .org-box")).toHaveCount(34);
     await expect(page.locator(".org-project .org-box-lead")).toHaveCount(4);
-    await expect(page.locator(".org-box").first()).toHaveText(/Mr\.B\.Kumareson\s*Proprietor/);
+    await expect(page.locator(".org-box").first()).toHaveText(/Mr\. B\. Kumareson\s*Proprietor/);
     await expect(page.locator(".org-box").first()).toHaveCSS("background-color", "rgb(15, 92, 64)");
     await expect(page.locator(".org-core > .org-tree > li > ul > li")).toHaveCount(11);
   });

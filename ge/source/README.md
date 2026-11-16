@@ -131,7 +131,7 @@ palette run `build`, `serve`, `posters` and `build` again (one poster per chapte
 
 ## Navigation
 
-- The header lists **Home**, About, How we serve, Projects, Clients and Quality & Safety, then Contact and the Menu
+- The header lists **Home**, About, How We Serve, Projects, Clients and Quality & Safety, then Contact and the Menu
   (`headerLinks` in `src/routes/routes.ts`). Home always opens the home page at its start; on the home page Home, the
   logo and the Menu's Home rewind the tour to the top.
 - Pages show no breadcrumb trail; the BreadcrumbList structured data stays in the head for search engines. Instead every
@@ -141,7 +141,7 @@ palette run `build`, `serve`, `posters` and `build` again (one poster per chapte
   remembered, or without JavaScript, Back opens the home page at the start.
 - Each home chapter links to its own page (there are no "Read more" pop-ups). Page changes fade `<main>` out and in
   (opacity and transform only) and keep focus management and the scroll position.
-- The Menu (round 5) groups the pages as Company (About, How we serve, How we work, Leadership, Organisation) and Work
+- The Menu (round 5) groups the pages as Company (About, How We Serve, How We Work, Leadership, Organisation) and Work
   (Projects, Clients, Quality & Safety, Downloads) with Home and Contact below, marks the current page, and has a forest
   brand card (tower drawing, "Since 1997", tagline, click-to-call, email, address). Its one preference is a switch,
   **3D experience** with motion and sound (`ge-3d`): with 3D on, the home page's ambient animation runs and the sound is
@@ -183,6 +183,25 @@ single-line diagram, transformer, factory, shield, org chart, document, tower, a
   `tests/e2e/pages.spec.ts` cover the 2D home and the shared pages (same layout in both modes within 2 px, no world on
   direct entry, no long tasks during page changes, menu accessibility).
 
+## Desktop sizes and consistency (round 6)
+
+Checked at 14 desktop viewports from 1024 × 768 and short laptop browsers (1280 × 640, 1366 × 657, 1536 × 730) to 1920 × 1080,
+2560 × 1305, ultrawide 3440 × 1305 and 4K 3840 × 2000: the 3D home (every chapter hold), the 2D home and all 15 other
+pages, with the page text, overlaps, text cut at the screen edge, blurred images, alignment, fonts and the header measured
+on each, and the inner pages compared between the two modes (identical within 2 px).
+
+- Content is at most 1320 px wide (`--gutter`); on ultrawide and 4K screens it stays centred and the 3D scene fills the
+  rest of the screen.
+- Short screens: on desktops lower than 820 px the hero name is capped at 12.5 % of the viewport height (`--hero-cap`), and
+  the 2D hero has less padding, so the name, tagline, expertise and buttons fit the first screen in both modes (down to
+  1280 × 600; the 2D hero at 1024 × 600 still scrolls).
+- Narrow desktops (901–1280 px): the footer's brand sits on its own row above three columns, so link names and the email
+  address do not wrap.
+- Units keep their case inside capitalised labels and on the 3D screens (`units()` in `src/ui/html.ts`: kV, not KV).
+- Award photos (small originals) use `object-fit: scale-down` and are never enlarged.
+- Consistent wording: page names in title case (How We Serve, How We Work, On-going Projects, Organisation Chart); the
+  client's data cleaned once for units (230 kV), Tamil Nadu, name initials (Mr. B. Kumareson), "M/s.", "Pvt. Ltd", comma
+  spacing, "yrs" and clear typos, without changing facts. `tests/e2e/desktop.spec.ts` keeps the hero and footer checks.
 ## Loading on slow connections
 
 The prerendered page is usable immediately; the 3D world streams in behind it (`bootWorld()` in `src/main.ts`).

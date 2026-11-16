@@ -9,7 +9,7 @@
  ],
  "personnel": [
   {
-   "name": "B.Kumareson",
+   "name": "B. Kumareson",
    "designation": "Proprietor",
    "education": "DEE",
    "experience": "30 yrs",
@@ -30,7 +30,7 @@
    "email": "designengineer@ganeshelectricals.in"
   },
   {
-   "name": "B.Muthu kumar",
+   "name": "B. Muthu Kumar",
    "designation": "Head Projects",
    "education": "BE EEE",
    "experience": "30 yrs",
@@ -40,25 +40,25 @@
    "name": "D. Prabhu",
    "designation": "Project Manager – Civil",
    "education": "Dip-Civil",
-   "experience": "18 Yrs",
+   "experience": "18 yrs",
    "email": "project.civil@ganeshelectricals.in"
   },
   {
-   "name": "K.Elumalai",
+   "name": "K. Elumalai",
    "designation": "Procurement Manager",
    "education": "BE EEE",
    "experience": "13 yrs",
    "email": "enquiry@ganeshelectricals.in"
   },
   {
-   "name": "V.Baskar",
+   "name": "V. Baskar",
    "designation": "Safety Engineer",
    "education": "DEE ISM",
    "experience": "15 yrs",
    "email": "safety@ganeshelectricals.in"
   },
   {
-   "name": "K.Senthil Kumar",
+   "name": "K. Senthil Kumar",
    "designation": "Quality",
    "education": "BE ECE",
    "experience": "15 yrs",
@@ -180,70 +180,70 @@
   "ongoing": [
    {
     "client": "M/s. India Yamaha Motors Private Limited",
-    "project": "Electrical Installation warehouse works",
+    "project": "Electrical installation warehouse works",
     "location": "Vallam Vadagal, Taluk, Sriperumbudur, Tamil Nadu 602105",
     "sector": "Industrial",
     "value": "2.8 Crore"
    },
    {
-    "client": "M/s Tube Products of India, Avadi",
-    "project": "Electrical Installation works",
+    "client": "M/s. Tube Products of India, Avadi",
+    "project": "Electrical installation works",
     "location": "MTH Road in Avadi, Chennai, Tamil Nadu, 600054",
     "sector": "Industrial",
     "value": "1.05 crore"
    },
    {
     "client": "M/s. Ashok Leyland Ltd - Foundry Division",
-    "project": "Electrical Installation works",
+    "project": "Electrical installation works",
     "location": "Ennore, Tamil Nadu",
     "sector": "Industrial",
     "value": "0.80 Crores"
    },
    {
-    "client": "M/s. Michelin India Tamilnadu Tyres Pvt Ltd,",
-    "project": "Electrical Installation works",
+    "client": "M/s. Michelin India Tamil Nadu Tyres Pvt. Ltd",
+    "project": "Electrical installation works",
     "location": "Thervoykandigai, Gummidipoondi",
     "sector": "Industrial",
     "value": "0.50 Crore"
    },
    {
-    "client": "M/s Asahi India Glass Ltd",
-    "project": "Construction of 110 kv Switch yard with civil and Electrical Installation works",
+    "client": "M/s. Asahi India Glass Ltd",
+    "project": "Construction of 110 kV switchyard with civil and Electrical installation works",
     "location": "Sriperumbudur, Tamil Nadu",
     "sector": "Industrial",
     "value": "5.85 Crore"
    },
    {
     "client": "M/s. India Jappan Lighting",
-    "project": "Electrical Installation works",
+    "project": "Electrical installation works",
     "location": "Tiruvallur High Road, Puduchatram (PO), Via Thirumazhisai, Chennai, Thiruvallur, Tamil Nadu",
     "sector": "Industrial",
     "value": "0.26 Crore"
    },
    {
-    "client": "M/s Sekisui DLJM Molding Pvt Ltd",
-    "project": "Electrical Installation works",
+    "client": "M/s. Sekisui DLJM Molding Pvt. Ltd",
+    "project": "Electrical installation works",
     "location": "Sipcot Industrial Park, Vallam Vadagal, Boodhanur, Tamil Nadu 631604",
     "sector": "Industrial",
     "value": "1.99 Crore"
    },
    {
-    "client": "M/s Uno Minda Ltd",
-    "project": "Electrical Installation works",
+    "client": "M/s. Uno Minda Ltd",
+    "project": "Electrical installation works",
     "location": "Vengadu Village, Pillaipakkam Post, Sriperumbudur Taluk, Kancheepuram, Tamil Nadu - 602105",
     "sector": "Industrial",
     "value": "1.63 Crore"
    },
    {
-    "client": "M/s Delphi -TVS Technologies Limited",
-    "project": "Electrical Installation works",
+    "client": "M/s. Delphi-TVS Technologies Limited",
+    "project": "Electrical installation works",
     "location": "Mannur, Thodukadu Post, Sriperumbudur, Tamil Nadu 602105",
     "sector": "Industrial",
     "value": "0.60 Crore"
    },
    {
     "client": "CEAT LIMITED",
-    "project": "Electrical Installation works",
+    "project": "Electrical installation works",
     "location": "Kannanthangal Village, Madhuramangalam Post, Sriperumbudur Taluk, Kanchipuram District, Tamil Nadu – 602108",
     "sector": "Industrial",
     "value": "9.87 crores"
@@ -254,44 +254,44 @@
     "period": "2026",
     "rows": [
      {
-      "client": "M/s Delphi -TVS Technologies Limited",
-      "project": "Construction of 110 kv Switch yard with civil and Electrical Installation works",
-      "location": "SIPCOT INDUSTRIAL PARK,Oragadam Kancheepuram District, Tamil nadu."
+      "client": "M/s. Delphi-TVS Technologies Limited",
+      "project": "Construction of 110 kV switchyard with civil and Electrical installation works",
+      "location": "SIPCOT INDUSTRIAL PARK, Oragadam Kancheepuram District, Tamil Nadu."
      },
      {
       "client": "M/s. Ashok Leyland Ltd - Foundry Division",
-      "project": "Electrical Installation works",
+      "project": "Electrical installation works",
       "location": "Sriperumbudur, Tamil Nadu"
      },
      {
-      "client": "M/s. Michelin India Tamilnadu Tyres Pvt Ltd,",
-      "project": "Electrical Installation works",
+      "client": "M/s. Michelin India Tamil Nadu Tyres Pvt. Ltd",
+      "project": "Electrical installation works",
       "location": "Thervoykandigai, Gummidipoondi"
      },
      {
-      "client": "M/s Sanmina SCI Technology India Private Limited",
-      "project": "Electrical Installation works",
+      "client": "M/s. Sanmina SCI Technology India Private Limited",
+      "project": "Electrical installation works",
       "location": "SIPCOT Hi-Tech SEZ, Oragadam, Sriperumbudur Taluk, Tamil Nadu"
      },
      {
       "client": "M/s. India Jappan Lighting",
-      "project": "Electrical Installation works",
+      "project": "Electrical installation works",
       "location": "Tiruvallur High Road, Puduchatram (PO), Via Thirumazhisai, Chennai, Thiruvallur, Tamil Nadu"
      },
      {
       "client": "M/s. India Yamaha Motors Private Limited",
-      "project": "Electrical Installation DG works",
+      "project": "Electrical installation DG works",
       "location": "Vallam Vadagal, Taluk, Sriperumbudur, Tamil Nadu 602105"
      },
      {
-      "client": "M/s Belrise Industries Limited",
-      "project": "Electrical Installation works",
+      "client": "M/s. Belrise Industries Limited",
+      "project": "Electrical installation works",
       "location": "Vengadu Village, Pillaipakkam Post, Sriperumbudur Taluk, Kancheepuram, Tamil Nadu - 602105"
      },
      {
-      "client": "M/s Gurit Wind Private Limited",
-      "project": "Electrical Installation works",
-      "location": "Sriperumpudur Taluk, Vadakkupattu and Padharvadi Village, via, Oragaram,"
+      "client": "M/s. Gurit Wind Private Limited",
+      "project": "Electrical installation works",
+      "location": "Sriperumpudur Taluk, Vadakkupattu and Padharvadi Village, via, Oragaram"
      }
     ]
    },
@@ -300,42 +300,42 @@
     "rows": [
      {
       "client": "M/s. Mahindra World City Developers Limited",
-      "project": "Electrical Installation works",
+      "project": "Electrical installation works",
       "location": "Mahindra World City, Chengalpattu"
      },
      {
-      "client": "M/s United Industries Plastic Anantapur private limited",
-      "project": "Electrical Installation works",
-      "location": "Gudipalli Industrial park,Ananthapur,Andhra Pradesh-515122"
+      "client": "M/s. United Industries Plastic Anantapur Private Limited",
+      "project": "Electrical installation works",
+      "location": "Gudipalli Industrial Park, Ananthapur, Andhra Pradesh-515122"
      },
      {
-      "client": "M/s. Sekisui DLJM Molding Pvt Ltd ( Plant-II )",
-      "project": "Electrical Installation works",
-      "location": "Vallam Vadagal Village, Sriperumbudur Taluk,Kanchipuram Dist."
+      "client": "M/s. Sekisui DLJM Molding Pvt. Ltd (Plant-II)",
+      "project": "Electrical installation works",
+      "location": "Vallam Vadagal Village, Sriperumbudur Taluk, Kanchipuram Dist."
      },
      {
-      "client": "M/s. Asian Sealing Products Pvt Ltd",
-      "project": "Electrical Installation works",
+      "client": "M/s. Asian Sealing Products Pvt. Ltd",
+      "project": "Electrical installation works",
       "location": "Pillaipakkam, Sriperumbudur, Tamil Nadu"
      },
      {
-      "client": "M/s Omni Active Healthcare Private Limited",
-      "project": "Electrical Installation works",
+      "client": "M/s. Omni Active Healthcare Private Limited",
+      "project": "Electrical installation works",
       "location": "Hosur"
      },
      {
-      "client": "M/s. Michelin India Tamilnadu Tyres Pvt Ltd,",
-      "project": "Electrical Installation works",
+      "client": "M/s. Michelin India Tamil Nadu Tyres Pvt. Ltd",
+      "project": "Electrical installation works",
       "location": "Thervoykandigai, Gummidipoondi"
      },
      {
-      "client": "M/s Kcaltech System India Private Limited",
-      "project": "Electrical Installation works",
+      "client": "M/s. Kcaltech System India Private Limited",
+      "project": "Electrical installation works",
       "location": "Mamandur Village, Thiruthni, Tamil Nadu"
      },
      {
       "client": "M/s. Novares India Automotive Private Limited",
-      "project": "Electrical Installation works",
+      "project": "Electrical installation works",
       "location": "Mahindra World City, Chengalpattu"
      }
     ]
@@ -345,46 +345,46 @@
     "rows": [
      {
       "client": "M/s. Mahindra World City Developers Limited",
-      "project": "Electrical Installation works",
+      "project": "Electrical installation works",
       "location": "Mahindra World City, Chengalpattu"
      },
      {
-      "client": "M/s ENEXIO Power Cooling Solutions India Pvt. Ltd",
-      "project": "Electrical Installation & Electrical related civil works",
+      "client": "M/s. ENEXIO Power Cooling Solutions India Pvt. Ltd",
+      "project": "Electrical installation & Electrical related civil works",
       "location": "Kandamangalam Village Kancheepuram District, Sriperumbudur, Kancheepuram, Tamil Nadu, 602105"
      },
      {
-      "client": "M/s. M/s.Origins by Mahindra,",
-      "project": "Electrical Installation works",
+      "client": "M/s. Origins by Mahindra",
+      "project": "Electrical installation works",
       "location": "Peruvoyal Village, Gummidipoondi Tluk, Thiruvallur District"
      },
      {
       "client": "M/s. Suja Shoei Industries Private Limited",
-      "project": "Electrical Installation works",
+      "project": "Electrical installation works",
       "location": "Thindivanam"
      },
      {
-      "client": "M/s Caterpillar india private limited",
-      "project": "Electrical Installation works",
-      "location": "BCP Plant Melnallathur,Thiruvallur,Tamilnadu"
+      "client": "M/s. Caterpillar India Private Limited",
+      "project": "Electrical installation works",
+      "location": "BCP Plant Melnallathur, Thiruvallur, Tamil Nadu"
      },
      {
       "client": "M/s. Novares India Automotive Private Limited",
-      "project": "Electrical Installation works",
+      "project": "Electrical installation works",
       "location": "Mahindra World City, Chengalpattu"
      },
      {
-      "client": "M/s India Japan Lighting Pvt Ltd",
-      "project": "Electrical Installation works",
-      "location": "Tiruvallur High Rd, near Arunachaleshwar Shiva Temple, Puduchatram,Tamil Nadu 600124"
+      "client": "M/s. India Japan Lighting Pvt. Ltd",
+      "project": "Electrical installation works",
+      "location": "Tiruvallur High Rd, near Arunachaleshwar Shiva Temple, Puduchatram, Tamil Nadu 600124"
      },
      {
-      "client": "M/s Pravartaka Tooling Services Private Limited",
+      "client": "M/s. Pravartaka Tooling Services Private Limited",
       "project": "Electrical installation works",
       "location": "Sriperumbudur, Kancheepuram, Tamil Nadu"
      },
      {
-      "client": "M/s Sanmina SCI Technology India Private Limited",
+      "client": "M/s. Sanmina SCI Technology India Private Limited",
       "project": "Electrical installation works",
       "location": "SIPCOT Hi-Tech SEZ, Sriperumbudur"
      }
@@ -394,58 +394,58 @@
     "period": "2023",
     "rows": [
      {
-      "client": "M/s. United Industries Plastics Pvt Ltd",
-      "project": "Electrical Installation works",
-      "location": "pochampalli,Krishnagiri Tamil Nadu"
+      "client": "M/s. United Industries Plastics Pvt. Ltd",
+      "project": "Electrical installation works",
+      "location": "Pochampalli, Krishnagiri Tamil Nadu"
      },
      {
-      "client": "M/s SFC Solutions India (Sealing) Pvt. Ltd",
-      "project": "Electrical Installation works",
+      "client": "M/s. SFC Solutions India (Sealing) Pvt. Ltd",
+      "project": "Electrical installation works",
       "location": "Plot No-3A Ford Supplier Park, Singaperumal Koil, Tamil Nadu 603204"
      },
      {
-      "client": "M/s Pravartaka Tooling Services Private Limited",
-      "project": "Electrical Installation works",
+      "client": "M/s. Pravartaka Tooling Services Private Limited",
+      "project": "Electrical installation works",
       "location": "Sriperumbudur"
      },
      {
-      "client": "M/s Daimler India Commercial Vehicles Private Limited",
-      "project": "Electrical Installation works",
+      "client": "M/s. Daimler India Commercial Vehicles Private Limited",
+      "project": "Electrical installation works",
       "location": "Oragadam"
      },
      {
-      "client": "M/s Cellestial E-Trac Private Limited",
-      "project": "Electrical Installation works",
-      "location": "kuthambakkam village,Chembarambakkam chennai Tamil Nadu 600124"
+      "client": "M/s. Cellestial E-Trac Private Limited",
+      "project": "Electrical installation works",
+      "location": "Kuthambakkam Village, Chembarambakkam Chennai Tamil Nadu 600124"
      },
      {
       "client": "M/s. Ashok Leyland Ltd - Foundry Division",
-      "project": "Electrical Installation works",
+      "project": "Electrical installation works",
       "location": "Ennore"
      },
      {
       "client": "M/s. Novares India Automotive Private Limited",
-      "project": "Electrical Installation works",
+      "project": "Electrical installation works",
       "location": "Mahindra World City, Chengalpattu"
      },
      {
-      "client": "M/s Mechatronics Control Equipments Private Limited",
-      "project": "Electrical Installation works",
+      "client": "M/s. Mechatronics Control Equipments Private Limited",
+      "project": "Electrical installation works",
       "location": "Pillaipakkam, Sriperumbudur, Tamil Nadu"
      },
      {
-      "client": "M/s FUSO Glass India Pvt Ltd",
-      "project": "Electrical Installation works",
-      "location": "Sipcot, Irunkattukotai, Sriperambudur,Tamil Nadu"
+      "client": "M/s. FUSO Glass India Pvt. Ltd",
+      "project": "Electrical installation works",
+      "location": "Sipcot, Irunkattukotai, Sriperumbudur, Tamil Nadu"
      },
      {
-      "client": "M/s Grasim Industries Limited",
-      "project": "Electrical Installation works",
-      "location": "Magajanapakkam,cheyyar, Tamilnadu"
+      "client": "M/s. Grasim Industries Limited",
+      "project": "Electrical installation works",
+      "location": "Magajanapakkam, Cheyyar, Tamil Nadu"
      },
      {
-      "client": "M/s Omni Active Healthcare Private Limited",
-      "project": "Electrical Installation works",
+      "client": "M/s. Omni Active Healthcare Private Limited",
+      "project": "Electrical installation works",
       "location": "Hosur"
      }
     ]
@@ -455,28 +455,28 @@
     "rows": [
      {
       "client": "M/s. BAETTR India Private Limited",
-      "project": "Electrical Installation works",
+      "project": "Electrical installation works",
       "location": "Sipcot Industrial Park, Theryvoykandigai, Gummidipoondi"
      },
      {
-      "client": "M/s United industries plastic pvt ltd in Pillaipakkam",
-      "project": "Electrical Installation works",
-      "location": "Sipcot Industrial Estate, Pillaipakkam, Kancheepuram Districit, Sriperumbudur,"
+      "client": "M/s. United Industries Plastic Pvt. Ltd in Pillaipakkam",
+      "project": "Electrical installation works",
+      "location": "Sipcot Industrial Estate, Pillaipakkam, Kancheepuram District, Sriperumbudur"
      },
      {
-      "client": "M/s Caterpillar india private limited",
-      "project": "Electrical Installation works",
-      "location": "Melnallathur,Thiruvallur,Tamilnadu"
+      "client": "M/s. Caterpillar India Private Limited",
+      "project": "Electrical installation works",
+      "location": "Melnallathur, Thiruvallur, Tamil Nadu"
      },
      {
-      "client": "M/s Omni Active Healthcare Private Limited",
-      "project": "Electrical Installation works",
+      "client": "M/s. Omni Active Healthcare Private Limited",
+      "project": "Electrical installation works",
       "location": "Hosur"
      },
      {
-      "client": "M/s India Japan Lighting Pvt Ltd",
-      "project": "Electrical Installation works",
-      "location": "Tiruvallur High Rd, near Arunachaleshwar Shiva Temple, Puduchatram,Tamil Nadu 600124."
+      "client": "M/s. India Japan Lighting Pvt. Ltd",
+      "project": "Electrical installation works",
+      "location": "Tiruvallur High Rd, near Arunachaleshwar Shiva Temple, Puduchatram, Tamil Nadu 600124."
      }
     ]
    },
@@ -484,23 +484,23 @@
     "period": "2021",
     "rows": [
      {
-      "client": "M/s Gurit Wind Private Limited",
-      "project": "Electrical Installation works",
-      "location": "Sriperumpudur Taluk, Vadakkupattu and Padharvadi Village, via, Oragaram,"
+      "client": "M/s. Gurit Wind Private Limited",
+      "project": "Electrical installation works",
+      "location": "Sriperumpudur Taluk, Vadakkupattu and Padharvadi Village, via, Oragaram"
      },
      {
       "client": "M/s. Novares India Automotive Private Limited",
-      "project": "Electrical Installation works",
+      "project": "Electrical installation works",
       "location": "Mahindra World City, Chengalpattu"
      },
      {
       "client": "M/s. Ashok Leyland Ltd - Foundry Division",
-      "project": "Electrical Installation works",
+      "project": "Electrical installation works",
       "location": "Ennore"
      },
      {
       "client": "M/s. Suja Shoei Rubber Industries Pvt. Ltd",
-      "project": "Electrical Installation works",
+      "project": "Electrical installation works",
       "location": "Pathiri,, Tindivanam, Tamil Nadu"
      }
     ]
@@ -509,43 +509,43 @@
     "period": "2020",
     "rows": [
      {
-      "client": "M/s.Project Implimentation Agency - Puducherry",
-      "project": "Rural Development Electrical Installation works (Package - 12)",
+      "client": "M/s. Project Implementation Agency - Puducherry",
+      "project": "Rural Development Electrical installation works (Package - 12)",
       "location": "Thavalakuppam O & M"
      },
      {
-      "client": "M/s.Project Implimentation Agency - Puducherry",
-      "project": "Rural Development Electrical Installation works (Package - 14)",
+      "client": "M/s. Project Implementation Agency - Puducherry",
+      "project": "Rural Development Electrical installation works (Package - 14)",
       "location": "Kirumambakkam O & M"
      },
      {
-      "client": "M/s.Ruhrpumpen India Pvt Ltd",
-      "project": "Electrical Installation works",
-      "location": "Vallam Vadagal Village, Sriperumbudur Taluk,Kanchipuram Dist."
+      "client": "M/s. Ruhrpumpen India Pvt. Ltd",
+      "project": "Electrical installation works",
+      "location": "Vallam Vadagal Village, Sriperumbudur Taluk, Kanchipuram Dist."
      },
      {
-      "client": "M/s. Sekisui DLJM Molding Pvt Ltd ( Plant-I Modification )",
-      "project": "Electrical Installation works",
-      "location": "Vallam Vadagal Village, Sriperumbudur Taluk,Kanchipuram Dist."
+      "client": "M/s. Sekisui DLJM Molding Pvt. Ltd (Plant-I Modification)",
+      "project": "Electrical installation works",
+      "location": "Vallam Vadagal Village, Sriperumbudur Taluk, Kanchipuram Dist."
      },
      {
       "client": "M/s. Mangal Industries",
-      "project": "Electrical Installation works",
-      "location": "Oragadam, Sriperumbudur Taluk,Kanchipuram Dist."
+      "project": "Electrical installation works",
+      "location": "Oragadam, Sriperumbudur Taluk, Kanchipuram Dist."
      },
      {
       "client": "M/s. Michelin India Private Limited",
-      "project": "Electrical Installation works",
-      "location": "Thervoy Kandigai, Gummidipundi Taluk,"
+      "project": "Electrical installation works",
+      "location": "Thervoy Kandigai, Gummidipundi Taluk"
      },
      {
       "client": "M/s. Suja Shoei Rubber Industries Pvt. Ltd",
-      "project": "Electrical Installation works",
+      "project": "Electrical installation works",
       "location": "Tindivanam"
      },
      {
       "client": "M/s. Novares India Automotive Private Limited",
-      "project": "Electrical Installation works",
+      "project": "Electrical installation works",
       "location": "Mahindra World City, Chengalpattu"
      }
     ]
@@ -555,47 +555,47 @@
     "rows": [
      {
       "client": "M/s. Corteco India Private Limited",
-      "project": "33KV & Downstream Electrical & IT Network installation works",
-      "location": "Vallam Vadagal Village, Sriperumbudur Taluk,Kanchipuram Dist."
+      "project": "33 kV & Downstream Electrical & IT Network installation works",
+      "location": "Vallam Vadagal Village, Sriperumbudur Taluk, Kanchipuram Dist."
      },
      {
       "client": "M/s. Sintex BAPL",
-      "project": "11KV Electrical installation works",
+      "project": "11 kV Electrical installation works",
       "location": "Hosur"
      },
      {
       "client": "M/s. Malladi",
-      "project": "33KV Electrical installation works",
+      "project": "33 kV Electrical installation works",
       "location": "Renikunta"
      },
      {
       "client": "M/s. Suja Shoei Industries Private Limited",
-      "project": "Electrical Installation works",
+      "project": "Electrical installation works",
       "location": "Thindivanam"
      },
      {
-      "client": "M/s. Sekisui DLJM Molding Pvt Ltd ( Plant-II Expansion )",
-      "project": "11KV & Downstream Electrical installation works",
-      "location": "Vallam Vadagal Village, Sriperumbudur Taluk,Kanchipuram Dist."
+      "client": "M/s. Sekisui DLJM Molding Pvt. Ltd (Plant-II Expansion)",
+      "project": "11 kV & Downstream Electrical installation works",
+      "location": "Vallam Vadagal Village, Sriperumbudur Taluk, Kanchipuram Dist."
      },
      {
-      "client": "M/s. United Industries Plastics Pvt Ltd ( Plant-II )",
-      "project": "Electrical Installation works",
+      "client": "M/s. United Industries Plastics Pvt. Ltd (Plant-II)",
+      "project": "Electrical installation works",
       "location": "Pillaipakkam, Sriperumbudur, Tamil Nadu"
      },
      {
-      "client": "M/s. Sand Craft Industries Pvt Ltd",
-      "project": "11KV & Downstream Electrical installation works",
+      "client": "M/s. Sand Craft Industries Pvt. Ltd",
+      "project": "11 kV & Downstream Electrical installation works",
       "location": "Oragadam, Sriperumbudur, Tamil Nadu"
      },
      {
-      "client": "M/s. Sri Gotec india Pvt Ltd",
+      "client": "M/s. Sri Gotec India Pvt. Ltd",
       "project": "Electrical installation works",
       "location": "Mappedu, Thiruvallur, Tamil Nadu"
      },
      {
-      "client": "M/s. United Industries Automotive Plastics Pvt Ltd",
-      "project": "33KV & Downstream Electrical",
+      "client": "M/s. United Industries Automotive Plastics Pvt. Ltd",
+      "project": "33 kV & Downstream Electrical",
       "location": "Ananthapur"
      }
     ]
@@ -604,9 +604,9 @@
     "period": "2017–2018",
     "rows": [
      {
-      "client": "M/s.IYM Private Limited",
-      "project": "110kV/ BAY-2 Expansion works",
-      "location": "Vallam Vadagal Village, Sriperumbudur Taluk,Kanchipuram Dist."
+      "client": "M/s. IYM Private Limited",
+      "project": "110 kV/ BAY-2 Expansion works",
+      "location": "Vallam Vadagal Village, Sriperumbudur Taluk, Kanchipuram Dist."
      },
      {
       "client": "M/s. Daimler India Commercial Vehicles Pvt. Ltd",
@@ -614,44 +614,44 @@
       "location": "Oragadam, Sriperumbudur, Tamil Nadu"
      },
      {
-      "client": "M/s. United Industries Plastics Pvt Ltd",
-      "project": "11kVHT/LT Electrical Installation works",
+      "client": "M/s. United Industries Plastics Pvt. Ltd",
+      "project": "11 kV HT/LT Electrical installation works",
       "location": "Pillaipakkam, Sriperumbudur, Tamil Nadu"
      },
      {
-      "client": "M/s.SM Exhaust Technologies P.Ltd",
-      "project": "11kVHT/LT Electrical Installation works",
-      "location": "Vallam Vadagal Village, Sriperumbudur Taluk,Kanchipuram Dist."
+      "client": "M/s. SM Exhaust Technologies Pvt. Ltd",
+      "project": "11 kV HT/LT Electrical installation works",
+      "location": "Vallam Vadagal Village, Sriperumbudur Taluk, Kanchipuram Dist."
      },
      {
       "client": "M/s. PPAP AUTOMOTIVE LIMITED",
-      "project": "11kVHT/LT Electrical Installation works",
-      "location": "Plot No: G-24,Sipcot Industrial Park ,Vallam Vadagal Village, Sriperumbudur Taluk,Kanchipuram Dist."
+      "project": "11 kV HT/LT Electrical installation works",
+      "location": "Plot No: G-24, Sipcot Industrial Park, Vallam Vadagal Village, Sriperumbudur Taluk, Kanchipuram Dist."
      },
      {
       "client": "M/s. SWAAMY INDUSTRIES",
-      "project": "11kVHT/LT Electrical Installation works",
-      "location": "Vallam Vadagal Village, Sriperumbudur Taluk,Kanchipuram Dist."
+      "project": "11 kV HT/LT Electrical installation works",
+      "location": "Vallam Vadagal Village, Sriperumbudur Taluk, Kanchipuram Dist."
      },
      {
-      "client": "M/s KAPPA ELECTRICALS",
-      "project": "HT/LT Electrical Installation works",
-      "location": "PLOT NO: G32A,G32B Vallam Vadagal Village, Sriperumbudur Taluk,Kanchipuram Dist."
+      "client": "M/s. KAPPA ELECTRICALS",
+      "project": "HT/LT Electrical installation works",
+      "location": "PLOT NO: G32A, G32B Vallam Vadagal Village, Sriperumbudur Taluk, Kanchipuram Dist."
      },
      {
       "client": "M/s. SANDHAR TECHNOLOGIES LIMITED-HOSUR",
-      "project": "11kVHT/LT Electrical Installation works",
-      "location": "PLOT No. 758/B2, OF POONAPALLI VILLAGE, HOSUR TALUK, KRISHNAGIRI DISTRICT,"
+      "project": "11 kV HT/LT Electrical installation works",
+      "location": "PLOT No. 758/B2, OF POONAPALLI VILLAGE, HOSUR TALUK, KRISHNAGIRI DISTRICT"
      },
      {
       "client": "M/s. SANDHAR TECHNOLOGIES LIMITED- oragadam",
-      "project": "11kVHT/LT Electrical Installation works",
-      "location": "PLOT NO : B2,ORAGADAM-CHENNAI"
+      "project": "11 kV HT/LT Electrical installation works",
+      "location": "PLOT NO : B2, ORAGADAM-CHENNAI"
      },
      {
       "client": "M/s. SANDHAR TECHNOLOGIES LIMITED- oragadam",
       "project": "Supply of LT Panels",
-      "location": "PLOT NO : B2,ORAGADAM-CHENNAI"
+      "location": "PLOT NO : B2, ORAGADAM-CHENNAI"
      }
     ]
    },
@@ -659,13 +659,13 @@
     "period": "2016–2017",
     "rows": [
      {
-      "client": "M/s. Asian Sealing Products Pvt Ltd",
-      "project": "11kVHT/LT Electrical Installation works",
+      "client": "M/s. Asian Sealing Products Pvt. Ltd",
+      "project": "11 kV HT/LT Electrical installation works",
       "location": "Pillaipakkam, Sriperumbudur, Tamil Nadu"
      },
      {
-      "client": "M/s. United Industries Plastics Pvt Ltd",
-      "project": "Additional Electrical Installation works",
+      "client": "M/s. United Industries Plastics Pvt. Ltd",
+      "project": "Additional Electrical installation works",
       "location": "Pillaipakkam, Sriperumbudur, Tamil Nadu"
      },
      {
@@ -680,22 +680,22 @@
      },
      {
       "client": "M/s. Daimler India Commercial Vehicles Pvt. Ltd",
-      "project": "LT Electrical Installation works-ASE Carpentry shed",
+      "project": "LT Electrical installation works-ASE Carpentry shed",
       "location": "Oragadam, Sriperumbudur, Tamil Nadu"
      },
      {
-      "client": "M/s. VESTAS Wind Technology India Pvt Ltd",
-      "project": "Electrical Installation works",
+      "client": "M/s. VESTAS Wind Technology India Pvt. Ltd",
+      "project": "Electrical installation works",
       "location": "Nellikuppam"
      },
      {
       "client": "M/s. Suja Shoei Industries Private Limited",
-      "project": "Electrical Installation works",
+      "project": "Electrical installation works",
       "location": "Thindivanam"
      },
      {
-      "client": "M/s. Ruhrpumpen India Pvt Ltd",
-      "project": "Electrical Installation works",
+      "client": "M/s. Ruhrpumpen India Pvt. Ltd",
+      "project": "Electrical installation works",
       "location": "Vallam-Vadagal"
      }
     ]
@@ -705,8 +705,8 @@
     "rows": [
      {
       "client": "M/s. Shree Mother Plast India Private Limited",
-      "project": "11kVHT/LT Electrical Installation works",
-      "location": "Sipcot Industrial Estate,Vallam Vadagal Village,Sriperumbudhur"
+      "project": "11 kV HT/LT Electrical installation works",
+      "location": "Sipcot Industrial Estate, Vallam Vadagal Village, Sriperumbudur"
      },
      {
       "client": "M/s. KMA Power India Pvt. Ltd",
@@ -715,32 +715,32 @@
      },
      {
       "client": "M/s. India Jappan Lighting",
-      "project": "11kVHT/LT Electrical Installation works",
+      "project": "11 kV HT/LT Electrical installation works",
       "location": "Bhawal"
      },
      {
-      "client": "M/s. VESTAS Wind Technology India Pvt Ltd",
-      "project": "Electrical Installation works",
+      "client": "M/s. VESTAS Wind Technology India Pvt. Ltd",
+      "project": "Electrical installation works",
       "location": "Sholinganallur, Chennai"
      },
      {
       "client": "M/s. Michelin India Private Limited",
-      "project": "Electrical Installation works in B610 & B640 Building",
-      "location": "Thervoy Kandigai, Gummidipundi Taluk,"
+      "project": "Electrical installation works in B610 & B640 Building",
+      "location": "Thervoy Kandigai, Gummidipundi Taluk"
      },
      {
-      "client": "M/s. Visteon Automotive Systems India p.Ltd,",
-      "project": "Electrical Installation works",
+      "client": "M/s. Visteon Automotive Systems India Pvt. Ltd",
+      "project": "Electrical installation works",
       "location": "Maramalai Nagar"
      },
      {
       "client": "M/s. Daimler India Commercial Vehicles Pvt. Ltd",
-      "project": "Electrical Installation works in CIW, PBS, Tyre & Rim Building",
+      "project": "Electrical installation works in CIW, PBS, Tyre & Rim Building",
       "location": "Oragadam, Sriperumbudur, Tamil Nadu"
      },
      {
       "client": "M/s. Daimler India Commercial Vehicles Pvt. Ltd",
-      "project": "Electrical Installation works in ASE, OBL & Canteen",
+      "project": "Electrical installation works in ASE, OBL & Canteen",
       "location": "Oragadam, Sriperumbudur, Tamil Nadu"
      }
     ]
@@ -749,28 +749,28 @@
     "period": "2014–2015",
     "rows": [
      {
-      "client": "M/s. Varroc Polymers Pvt Ltd",
-      "project": "11kVHT/LT Electrical Installation works",
+      "client": "M/s. Varroc Polymers Pvt. Ltd",
+      "project": "11 kV HT/LT Electrical installation works",
       "location": "Elichur, Oragadam"
      },
      {
       "client": "M/s. Suja Shoei Industries Private Limited",
-      "project": "11kVHT/LT Electrical Installation works",
+      "project": "11 kV HT/LT Electrical installation works",
       "location": "Thindivanam"
      },
      {
       "client": "M/s. Wimplast Limited",
-      "project": "11kVHT/LT Electrical Installation works",
+      "project": "11 kV HT/LT Electrical installation works",
       "location": "Gummidipoondi"
      },
      {
       "client": "M/s. Gencor Pacific Auto Engineering Pvt. Ltd",
-      "project": "11kVHT/LT Electrical Installation works",
+      "project": "11 kV HT/LT Electrical installation works",
       "location": "Oragadam"
      },
      {
-      "client": "M/s. Reydel Automotive India Pvt. Ltd.",
-      "project": "11kVHT/LT Electrical Installation works",
+      "client": "M/s. Reydel Automotive India Pvt. Ltd",
+      "project": "11 kV HT/LT Electrical installation works",
       "location": "Vallam-Vadagal"
      },
      {
@@ -795,12 +795,12 @@
      },
      {
       "client": "M/s. Harsha Exito Engineering Private Limited",
-      "project": "Electrical Installation works",
+      "project": "Electrical installation works",
       "location": "Thervoykandigai"
      },
      {
-      "client": "M/s. United Industries Plastics Pvt Ltd",
-      "project": "Electrical Installation works",
+      "client": "M/s. United Industries Plastics Pvt. Ltd",
+      "project": "Electrical installation works",
       "location": "Pillaipakkam, Sriperumbudur, Tamil Nadu"
      },
      {
@@ -815,28 +815,28 @@
      },
      {
       "client": "M/s. Bekaert Industries Pvt. Ltd",
-      "project": "Electrical Installation works",
+      "project": "Electrical installation works",
       "location": "Thervoykandigai"
      },
      {
-      "client": "M/s. Samsung India Electronics Pvt.Ltd",
-      "project": "LT Electrical Installation works",
+      "client": "M/s. Samsung India Electronics Pvt. Ltd",
+      "project": "LT Electrical installation works",
       "location": "Sunguvarchatram"
      },
      {
-      "client": "M/s. Samsung India Electronics Pvt.Ltd",
+      "client": "M/s. Samsung India Electronics Pvt. Ltd",
       "project": "110kVSwitchyard works",
       "location": "Sunguvarchatram"
      },
      {
       "client": "M/s. Michelin India Private Limited",
-      "project": "Electrical Installation works in Yannai Building Power backup",
-      "location": "Thervoy Kandigai, Gummidipundi Taluk,"
+      "project": "Electrical installation works in Yannai Building Power backup",
+      "location": "Thervoy Kandigai, Gummidipundi Taluk"
      },
      {
       "client": "M/s. Michelin India Private Limited",
-      "project": "Electrical Installation works in Yannai Building Power backup",
-      "location": "Thervoy Kandigai, Gummidipundi Taluk,"
+      "project": "Electrical installation works in Yannai Building Power backup",
+      "location": "Thervoy Kandigai, Gummidipundi Taluk"
      },
      {
       "client": "M/s. SMCC Constrcution India Limited",
@@ -855,77 +855,77 @@
     "rows": [
      {
       "client": "M/s. Antolin Kasai Tek",
-      "project": "Electrical Installation works",
+      "project": "Electrical installation works",
       "location": "Panayur, Elichur Village"
      },
      {
       "client": "M/s. CT MIL",
-      "project": "Electrical Installation works",
+      "project": "Electrical installation works",
       "location": "Oragadam"
      },
      {
       "client": "M/s. MW High Tech Projects India Pvt. Ltd",
-      "project": "Electrical Installation works in M/s. Michelin Tyres",
-      "location": "Thervoy Kandigai, Gummidipundi Taluk,"
+      "project": "Electrical installation works in M/s. Michelin Tyres",
+      "location": "Thervoy Kandigai, Gummidipundi Taluk"
      },
      {
       "client": "M/s. SL Lumax Limited",
-      "project": "Electrical Installation works",
+      "project": "Electrical installation works",
       "location": "Irrungattukottai"
      },
      {
       "client": "M/s. Bright Autoplast Ltd",
-      "project": "Electrical Installation works",
+      "project": "Electrical installation works",
       "location": "Elichur"
      },
      {
       "client": "M/s. VALEO Lighting Systems India Private Limited",
-      "project": "Electrical Installation works",
+      "project": "Electrical installation works",
       "location": "Vallam"
      },
      {
-      "client": "M/s. Mecaplast India Pvt Ltd",
-      "project": "Electrical Installation works",
+      "client": "M/s. Mecaplast India Pvt. Ltd",
+      "project": "Electrical installation works",
       "location": "Maraimalai Nagar"
      },
      {
       "client": "M/s. Motherson Automotive Technologies & Engineering",
-      "project": "Electrical Installation works",
+      "project": "Electrical installation works",
       "location": "Pondhur"
      },
      {
       "client": "M/s. Motherson Automotive Technologies & Engineering - Unit III",
-      "project": "Electrical Installation works",
+      "project": "Electrical installation works",
       "location": "Pondhur"
      },
      {
       "client": "M/s. Kyungshin Idustrial Motherson Limited",
-      "project": "Electrical Installation works",
+      "project": "Electrical installation works",
       "location": "Oragadam"
      },
      {
-      "client": "M/s.Mahindra Worldcity Developers Limited",
-      "project": "Electrical Installation works",
+      "client": "M/s. Mahindra Worldcity Developers Limited",
+      "project": "Electrical installation works",
       "location": "Maraimalai Nagar"
      },
      {
-      "client": "M/s.Karthigeya Plastics & Technologies",
-      "project": "Electrical Installation works",
+      "client": "M/s. Karthigeya Plastics & Technologies",
+      "project": "Electrical installation works",
       "location": "Thirumudivakkam"
      },
      {
-      "client": "M/S.Horizon Paberbox Pvt Ltd",
-      "project": "Electrical Installation works",
+      "client": "M/s. Horizon Paberbox Pvt. Ltd",
+      "project": "Electrical installation works",
       "location": "Pudupakkam"
      },
      {
-      "client": "M/S.Danfoss Industries Pvt Ltd",
-      "project": "Electrical Installation works",
+      "client": "M/s. Danfoss Industries Pvt. Ltd",
+      "project": "Electrical installation works",
       "location": "Maraimalai Nagar"
      },
      {
-      "client": "M/S.Magal Engg Tech Pvt Ltd",
-      "project": "Electrical Installation works",
+      "client": "M/s. Magal Engg Tech Pvt. Ltd",
+      "project": "Electrical installation works",
       "location": "Oragadam"
      }
     ]
@@ -1199,7 +1199,7 @@
    "All Ganesh Electricals construction activities conform to the company quality standards."
   ],
   "supplierEvaluation": [
-   "Collect Supplier financial, technical, quality, cost , Client base, previous projects, ongoing projects volume details.. through Vendor registration form",
+   "Collect Supplier financial, technical, quality, cost, Client base, previous projects, on-going projects volume details through Vendor registration form",
    "Visit Supplier and audit the process",
    "Negotiate cost & delivery terms",
    "Add to approved supplier list",
@@ -1289,23 +1289,23 @@
  "featuredProjects": [
   {
    "voltage": "230 kV",
-   "title": "230kV S/s Electrification project",
-   "client": "M/s Michelin India Private Limited, Gummidipoondi, Chennai"
+   "title": "230 kV S/s Electrification project",
+   "client": "M/s. Michelin India Private Limited, Gummidipoondi, Chennai"
   },
   {
    "voltage": "110 kV",
-   "title": "110kV S/s Electrification project",
-   "client": "M/s SL Lumax Ltd, Irungattukottai, Chennai"
+   "title": "110 kV S/s Electrification project",
+   "client": "M/s. SL Lumax Ltd, Irungattukottai, Chennai"
   },
   {
    "voltage": "110 kV",
-   "title": "110kV S/s Electrification project",
-   "client": "M/s Danfoss Industies Pvt. Ltd, Oragadam, Chennai"
+   "title": "110 kV S/s Electrification project",
+   "client": "M/s. Danfoss Industries Pvt. Ltd, Oragadam, Chennai"
   },
   {
    "voltage": "110 kV",
-   "title": "110kV S/s Electrification project",
-   "client": "M/s India Yamaha Motor Pvt Ltd, Sriperumbudur, Chennai"
+   "title": "110 kV S/s Electrification project",
+   "client": "M/s. India Yamaha Motor Pvt. Ltd, Sriperumbudur, Chennai"
   },
   {
    "voltage": "",
@@ -1427,19 +1427,19 @@
    {
     "level": "110 kV Substation",
     "clients": [
-     "M/s. S.L.Lumax India Limited",
-     "M/s. Danfoss Industries Pvt Ltd, Oragadam",
-     "M/s. Samsung India Electronics Pvt Ltd, Sunguvarchatram",
-     "M/s. India Yamaha Motors Pvt Ltd",
-     "M/s. India Yamaha Motors Pvt Ltd – Vendor Park S/s"
+     "M/s. S.L. Lumax India Limited",
+     "M/s. Danfoss Industries Pvt. Ltd, Oragadam",
+     "M/s. Samsung India Electronics Pvt. Ltd, Sunguvarchatram",
+     "M/s. India Yamaha Motors Pvt. Ltd",
+     "M/s. India Yamaha Motors Pvt. Ltd – Vendor Park S/s"
     ]
    },
    {
     "level": "33 kV Voltage Level",
     "clients": [
      "M/s. Calsonic Kansei Motherson (P) Ltd, Oragadam",
-     "M/s. Valeo lighting Systems India Pvt Ltd, Sriperumbudur",
-     "M/s. Visteon Automotive System India Pvt Ltd, Maraimalai Nagar",
+     "M/s. Valeo lighting Systems India Pvt. Ltd, Sriperumbudur",
+     "M/s. Visteon Automotive System India Pvt. Ltd, Maraimalai Nagar",
      "M/s. Sundaram Auto components, Oragadam",
      "M/s. Indo Japan Lighting Ltd. (JAPAN) Thirumazhisai, Chennai"
     ]
@@ -1449,16 +1449,16 @@
     "clients": [
      "M/s. Daimler India Commercial Vehicles (P) Ltd, Oragadam",
      "M/s. Visteon Interior Systems India Private Limited, Sipcot",
-     "M/s. Thai Summit Autoparts India Pvt Ltd",
-     "M/s. Sakura Autoparts India Pvt Ltd",
+     "M/s. Thai Summit Autoparts India Pvt. Ltd",
+     "M/s. Sakura Autoparts India Pvt. Ltd",
      "M/s. Yamaha Motor Electronics India",
-     "M/s. Koyama Precision Works Pvt Ltd",
-     "M/s. Kyowa Castec India Pvt Ltd",
-     "M/s. KYB Motor Cycle Suspension India Pvt Ltd",
-     "M/s. TT Techno Park Management Services India Pvt Ltd",
-     "M/s. Johoku Manufacturing Pvt Ltd",
-     "M/s. Sekisui DLJM Molding Pvt Ltd",
-     "M/s. Mecaplast India Pvt Ltd",
+     "M/s. Koyama Precision Works Pvt. Ltd",
+     "M/s. Kyowa Castec India Pvt. Ltd",
+     "M/s. KYB Motor Cycle Suspension India Pvt. Ltd",
+     "M/s. TT Techno Park Management Services India Pvt. Ltd",
+     "M/s. Johoku Manufacturing Pvt. Ltd",
+     "M/s. Sekisui DLJM Molding Pvt. Ltd",
+     "M/s. Mecaplast India Pvt. Ltd",
      "M/s. Suja Shoei Ltd., (JAPAN) Mayiladuthurai",
      "M/s. NTN Bearings Ltd., (MAEDIA Corporation Japan)",
      "M/s. Mahindra World City",
@@ -1481,25 +1481,25 @@
      "M/s. Bright Auto Plast, Ezhichur",
      "M/s. Karthigeya Moulds & Dies, Thirumudivakkam",
      "M/s. Arham Plastic, Guindy",
-     "M/s. HIS Automotives Pvt Ltd, Thandalam, Sriperumpudur",
+     "M/s. HIS Automotives Pvt. Ltd, Thandalam, Sriperumpudur",
      "M/s. International Components India Ltd",
      "M/s. Valeo Friction Materials India Ltd, Chennai",
      "M/s. Thermal Systems (Valeo Group), Chennai",
-     "M/s. Varroc polymers Pvt Ltd, Chennai",
-     "M/s. Varroc Engineering Pvt Ltd, Chennai",
-     "M/s. Reydel Automotive India Pvt Ltd, Vallam-Vadagal",
+     "M/s. Varroc polymers Pvt. Ltd, Chennai",
+     "M/s. Varroc Engineering Pvt. Ltd, Chennai",
+     "M/s. Reydel Automotive India Pvt. Ltd, Vallam-Vadagal",
      "M/s. Ruhrpumpen India Private Limited, Chennai",
-     "M/s. Vestas Wind Technology India Pvt Ltd, Sholinganallur",
-     "M/s. Gamesa Wind Turbines Pvt Ltd, Sholinganallur",
+     "M/s. Vestas Wind Technology India Pvt. Ltd, Sholinganallur",
+     "M/s. Gamesa Wind Turbines Pvt. Ltd, Sholinganallur",
      "M/s. SMR Automotive, Chennai",
-     "M/s. HANIL Automotive Pvt Ltd, Sriperumbudur",
+     "M/s. HANIL Automotive Pvt. Ltd, Sriperumbudur",
      "M/s. Kyungshin Industrial Motherson (KIML) Chennai",
      "M/s. MothersonSumi Systems Ltd (MATE I)",
      "M/s. MothersonSumi Systems Ltd (MATE II)",
      "M/s. CTM INDIA PVT. LTD. (CTMIL), Chennai",
      "M/s. AV Light, Vallam-vadagal",
      "M/s. Saamy Industries, Vallam-Vadagal",
-     "M/s. Sree Mother Plast India Pvt Ltd, Vallam-Vadagal",
+     "M/s. Sree Mother Plast India Pvt. Ltd, Vallam-Vadagal",
      "M/s. PPAP Automotive, Vallam-Vadagal",
      "M/s. SM Exhaust Technology Private Limited, Vallam-Vadagal"
     ]
@@ -1507,24 +1507,24 @@
   ],
   "german": [
    "M/s. Daimler India Commercial Vehicles Pvt. Ltd",
-   "M/s. Suspa Pneumatics India Pvt Ltd",
+   "M/s. Suspa Pneumatics India Pvt. Ltd",
    "M/s. Mekins Muller Industries Ltd.",
    "M/s. Lyondellbasell Polymer",
-   "M/s. Boldrocchi India Pvt Ltd.",
-   "M/s. Coreteco India Pvt. Ltd."
+   "M/s. Boldrocchi India Pvt. Ltd",
+   "M/s. Coreteco India Pvt. Ltd"
   ],
   "sectors": [
    {
     "sector": "Garments & Leather Industries",
     "clients": [
-     "M/s. Sunbright fashions India pvt Ltd., Guindy, Chennai",
+     "M/s. Sunbright fashions India Pvt. Ltd, Guindy, Chennai",
      "M/s. Gilani Skin wears Exports, Oorapakkam, Chennai",
      "M/s. Naru Exports, Vellappanchavadi, Chennai",
      "M/s. Paramount Exports, Kattupakkam, Chennai",
      "M/s. Rajeswari Exports, Ekkattuthangal",
      "M/s. Vijay garments, Guindy",
      "M/s. AI Enterprises, Pattravakkam, Ambattur",
-     "M/s. Centigrade Apparels Pvt Ltd, Maraimalinagar",
+     "M/s. Centigrade Apparels Pvt. Ltd, Maraimalinagar",
      "M/s. Bhavan Garments, Vellappanchavadi",
      "M/s. Retro Saidapet"
     ]
@@ -1543,8 +1543,8 @@
     "clients": [
      "M/s. Jipmer Hospital, Pondicherry",
      "M/s. Mahindra world City Developers Ltd, Maraimalainagar",
-     "M/s. Gamesa wind Turbines Pvt Ltd., Red Hills",
-     "M/s. Threyes Srinisons harness Pvt ltd, Maraimalainagar, Padappai",
+     "M/s. Gamesa wind Turbines Pvt. Ltd, Red Hills",
+     "M/s. Threyes Srinisons harness Pvt. Ltd, Maraimalainagar, Padappai",
      "M/s. CT Mill Ltd, Orapakkam"
     ]
    }
@@ -1553,26 +1553,26 @@
    {
     "area": "Pillaipakkam Clients",
     "clients": [
-     "M/s Asian Sealing Products Pvt Ltd",
-     "M/s. United Industries Plastics Pvt Ltd"
+     "M/s. Asian Sealing Products Pvt. Ltd",
+     "M/s. United Industries Plastics Pvt. Ltd"
     ]
    },
    {
     "area": "Vallam Vadagal Clients",
     "clients": [
-     "M/s. India Yamaha Motor Pvt. Ltd., IYM",
+     "M/s. India Yamaha Motor Pvt. Ltd, IYM",
      "IYM Vendors",
-     "M/s. Thai Summit Autoparts India Pvt.Ltd.",
-     "M/s. Sakura Autoparts India Pvt. Ltd.",
-     "M/s. Yamaha motor electronics India Pvt. Ltd.",
-     "M/s. Sekisui DLJM Molding Pvt. Ltd.",
-     "M/s. KYB Motorcycle Suspension India Pvt. Ltd.",
-     "M/s. KYOWA Castec India Pvt Ltd",
-     "M/s. KOYAMA Precision Works India Pvt. Ltd.",
+     "M/s. Thai Summit Autoparts India Pvt. Ltd",
+     "M/s. Sakura Autoparts India Pvt. Ltd",
+     "M/s. Yamaha motor electronics India Pvt. Ltd",
+     "M/s. Sekisui DLJM Molding Pvt. Ltd",
+     "M/s. KYB Motorcycle Suspension India Pvt. Ltd",
+     "M/s. KYOWA Castec India Pvt. Ltd",
+     "M/s. KOYAMA Precision Works India Pvt. Ltd",
      "M/s. Reydel Automotive India",
      "M/s. RuhRPumpen India Private Limited",
      "M/s. AV Light Automotives Limited",
-     "M/s. Shree Mother Plast India Pvt Ltd",
+     "M/s. Shree Mother Plast India Pvt. Ltd",
      "M/s. Suprajit Automotive",
      "M/s. Kappa Electricals",
      "M/s. SM Auto Engineering",
@@ -1580,11 +1580,11 @@
      "M/s. Saamy Industries",
      "M/s. Badve Engineering Ltd.",
      "M/s. Valeo Lighting Systems India Pvt Limited",
-     "M/s. Valeo Clutch Pvt Ltd",
+     "M/s. Valeo Clutch Pvt. Ltd",
      "M/s. Thermal systems (Valeo Group)",
      "M/s. Sriram Foams",
      "M/s. Mekins Muller",
-     "M/s. Zetek Casting Pvt. Ltd."
+     "M/s. Zetek Casting Pvt. Ltd"
     ]
    }
   ]

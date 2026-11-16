@@ -114,7 +114,7 @@ test.describe("back to the tour", () => {
     // The world waits where the tour was left, stopped and hidden, while other pages are open.
     await expect(page.locator(".world")).toHaveCSS("visibility", "hidden");
     expect(await zone(page)).toBe("control");
-    await page.getByRole("link", { name: "Back to the tour: How we serve" }).click();
+    await page.getByRole("link", { name: "Back to the tour: How We Serve" }).click();
     await expect(page).toHaveURL(/\/GithubPages\/ge\/$/);
     await expectScrollNear(page, hold);
     await expect.poll(() => zone(page)).toBe("control");

@@ -760,3 +760,31 @@ Round 5 (owner request, 15 Nov 2026 — "improve the 2D website animation alignm
 - [x] Built by two agents in parallel (pages; 3D) and merged by the lead with the dead-code removal; posters and social
       images re-rendered; typecheck, lint, build, 28 unit and 78 browser tests green.
 - [ ] Owner review of the unified pages, the menu and the 3D smoothness in the browser.
+
+Round 6 (owner request, 16 Nov 2026 — "check the ge website 3d/2d support all desktop sizes and everything also there must be no inconsistency and do a verification and commit and push it")
+- [x] Desktop audit at 14 viewports — 1024×768, 1280×640, 1280×800, 1366×657, 1440×789, 1536×730, 1600×789, 1680×939,
+      1920×961, 1920×1080, 2560×961, 2560×1305, ultrawide 3440×1305 and 4K 3840×2000 (real browser viewports, with the
+      Windows scrollbar): the 3D home at all 8 chapter holds (112 screenshots), the 2D home and all 15 other pages in 2D at every
+      size and in 3D at 5 sizes (285 page measurements). Measured on each: sideways overflow, overlapping text, text cut at the
+      screen edge, headline text over drawings or photos, broken or enlarged images, console errors and failed requests, header
+      items, fonts and the left edge. Result: no overflow, overlap, cut-off text, errors or failed requests anywhere; the world
+      loads and every chapter shows its own room at every size; the inner pages are identical in both modes (75 pairs within
+      2 px); every page has one header, one left edge and its title at the same height.
+- [x] Fixed: on short laptop screens the 3D hero card ran under the header and its buttons were cut (1280×640) and the 2D hero's
+      buttons were below the first screen — the hero name now also scales with the height on desktops under 820 px and the 2D
+      hero has less padding: both fit at 1280×600, 1280×640, 1366×657, 1280×720 and 1536×730 (2D at 1024×600 still scrolls).
+- [x] Fixed: between 901 and 1280 px the footer columns were too narrow — "How we serve" and "Quality & Safety" wrapped and the
+      email broke inside the domain; the brand now sits on its own row above three columns (checked 1024–1920 px).
+- [x] Fixed: award photos (small originals, 137–318 px wide) are never enlarged (`object-fit: scale-down`).
+- [x] Consistency: page names in title case everywhere (How We Serve, How We Work, On-going Projects, Organisation Chart) in the
+      header, menu, footer, eyebrows, titles and social images; units always "230 kV" — also inside capitalised chips, labels
+      and the 3D control-room screens (was KV); the client's data cleaned once without changing facts: kV spacing (49 values),
+      Tamil Nadu (8), name initials and "Mr." spacing (Mr. B. Kumareson everywhere), "M/s.", "Pvt. Ltd", comma and full-stop
+      spacing, "yrs", place-name capitals and clear typos (Electical, carryout, Danfos, Kensai, Industies, Implimentation,
+      Liasioning, Sriperumbadhur, throughly, indepth); punctuation and stray capitals of the EHS policy text. The 2D and 3D
+      homes show the same email, telephone, voltages and figures (230 / 122 / 10 / 95).
+- [x] Posters of the control room and the office and all 14 page social images re-rendered; typecheck, lint, build, 28 unit
+      tests and the browser suite green; `tests/e2e/desktop.spec.ts` added (hero fit in both modes at six desktop sizes, footer
+      lines at five widths).
+- [ ] Client to confirm the spelling of two names that differ between the personnel table and the organisation chart
+      (P. Praveen Kumar / Mr. P. Pravinkumar; B. Muthu Kumar / Mr. B. Muthukumar) and "Horizon Paberbox" in the project list.

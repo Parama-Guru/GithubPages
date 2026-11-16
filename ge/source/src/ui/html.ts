@@ -4,6 +4,11 @@ export function esc(value: string): string {
   return value.replace(/[&<>"']/g, (char) => entities[char] ?? char);
 }
 
+/** Escaped text whose voltage units keep their case inside capitalised labels (kV, never KV). */
+export function units(value: string): string {
+  return esc(value).replace(/\b(kVA?)\b/g, '<span class="unit">$1</span>');
+}
+
 function asset(path: string): string {
   return `/GithubPages/ge/${path.replace(/^\//, "")}`;
 }

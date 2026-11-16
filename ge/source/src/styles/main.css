@@ -808,7 +808,9 @@ main {
   line-height: 1.1;
 }
 .hero-title {
-  font-size: 104px;
+  --hero-size: 104px;
+  /* --hero-cap: the short-screen limit below. */
+  font-size: min(var(--hero-size), var(--hero-cap, 1000px));
 }
 .hero-title span {
   display: block;
@@ -924,6 +926,10 @@ main {
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--text);
+}
+/* Units keep their case inside capitalised labels (kV, not KV). */
+.unit {
+  text-transform: none;
 }
 
 /* Home journey */
@@ -1615,7 +1621,8 @@ tbody tr:hover {
 .awards img {
   width: 100%;
   height: 240px;
-  object-fit: contain;
+  /* The award photos are small originals: shown whole and never enlarged past their own size. */
+  object-fit: scale-down;
   background: color-mix(in srgb, var(--text) 4%, transparent);
   border: 1px solid var(--line);
 }
@@ -2164,7 +2171,7 @@ main.is-leaving {
     --text-column: 680px;
   }
   .hero-title {
-    font-size: 128px;
+    --hero-size: 128px;
   }
   .chapter-title,
   .page-title {
@@ -2176,6 +2183,28 @@ main.is-leaving {
   }
   .chapter-panel {
     width: 680px;
+  }
+}
+
+/* Narrow desktops: the footer's four columns become a brand row over three, so the links and the email address do not
+   break. */
+@media (min-width: 901px) and (max-width: 1280px) {
+  .site-footer {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .footer-brand {
+    grid-column: 1 / -1;
+  }
+  .footer-brand > p:last-child {
+    max-width: 640px;
+  }
+}
+
+/* Short desktop screens (a laptop browser with its bars, 1280 × 640 or 1366 × 657): the hero name also scales with the
+   height, so the name, tagline, expertise and buttons fit the first screen in both modes. */
+@media (min-width: 901px) and (max-height: 820px) {
+  .hero-title {
+    --hero-cap: 12.5svh;
   }
 }
 
@@ -2191,7 +2220,7 @@ main.is-leaving {
     width: 180px;
   }
   .hero-title {
-    font-size: 88px;
+    --hero-size: 88px;
   }
   .chapter-title,
   .page-title {
@@ -2258,7 +2287,7 @@ main.is-leaving {
     }
   }
   .hero-title {
-    font-size: 68px;
+    --hero-size: 68px;
   }
   .chapter-title,
   .page-title {
@@ -2341,7 +2370,7 @@ main.is-leaving {
 
 @media (max-width: 560px) {
   .hero-title {
-    font-size: 54px;
+    --hero-size: 54px;
   }
   .chapter-title,
   .page-title {
@@ -2451,7 +2480,7 @@ main.is-leaving {
 
 @media (max-width: 400px) {
   .hero-title {
-    font-size: 48px;
+    --hero-size: 48px;
   }
   .chapter-title,
   .page-title {

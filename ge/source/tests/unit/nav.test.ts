@@ -11,7 +11,7 @@ describe("header navigation", () => {
       expect(
         links.map((link) => link[3]),
         entry.id,
-      ).toEqual(["Home", "About", "How we serve", "Projects", "Clients", "Quality &amp; Safety"]);
+      ).toEqual(["Home", "About", "How We Serve", "Projects", "Clients", "Quality &amp; Safety"]);
       expect(links[0]?.[1]).toBe(href("home"));
       expect(Boolean(links[0]?.[2]), entry.id).toBe(entry.id === "home");
     }

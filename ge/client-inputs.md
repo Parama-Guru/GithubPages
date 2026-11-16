@@ -15,6 +15,8 @@ Ganesh Electricals website and lists what is still needed from the client.
 | 6 | Confirm the awards and site records | The comments ask to verify the awards. | Alstom EHS appreciation award; Daimler site record of 2.67 million safe man-hours; Daimler A500+ inauguration on 4 August 2016. |
 | 7 | Should enquiry@ganeshelectricals.in stay? | Contact now uses only kumareson@ganeshelectricals.in. | It appears only as K. Elumalai's email in the key-personnel table. |
 | 8 | Screenshot of the "large white content area", if it is still seen | Every page and chapter was checked and now renders its content. | — |
+| 9 | Correct spelling of two names | The key-personnel table and the organisation chart spell them differently. | Table: "P. Praveen Kumar" and "B. Muthu Kumar"; chart: "Mr. P. Pravinkumar" and "Mr. B. Muthukumar" (email muthukumar@). |
+| 10 | Correct client name "Horizon Paberbox Pvt. Ltd" | It may be a typo for "Paperbox". | "M/s. Horizon Paberbox Pvt. Ltd" in the 2012–2018 project list. |
 
 ## B. Client comments — status
 

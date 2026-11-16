@@ -53,7 +53,7 @@ export const routes: Route[] = [
     id: "features",
     path: "features/",
     zone: "control",
-    label: "How we serve",
+    label: "How We Serve",
     title: "How We Serve Our Clients — Ganesh Electricals",
     description:
       "How Ganesh Electricals serves its clients: meeting requirements, quality and on-time delivery, client protocol, statutory and safety norms, and zero accidents.",
@@ -62,7 +62,7 @@ export const routes: Route[] = [
     id: "execution",
     path: "execution/",
     zone: "control",
-    label: "How we work",
+    label: "How We Work",
     title: "How We Work — Ganesh Electricals",
     description:
       "How Ganesh Electricals executes projects: local issue handling, TNEB liaisoning in 211 days, manpower deployment of 95 people per project and specialist equipment.",
@@ -77,7 +77,7 @@ export const routes: Route[] = [
   },
   ...(
     [
-      ["ongoing", "On-going", "On-going projects", "with sector and order value, including 110 kV switchyards and industrial installations."],
+      ["ongoing", "On-going", "On-going Projects", "with sector and order value, including 110 kV switchyards and industrial installations."],
       ["2023-2026", "2023–2026", "Projects 2023–2026", "executed from 2023 to 2026, including 110 kV switchyards and HT/LT electrical installations."],
       ["2019-2022", "2019–2022", "Projects 2019–2022", "executed from 2019 to 2022, including substations, HT/LT installations and panels."],
       ["2012-2018", "2012–2018", "Projects 2012–2018", "executed from 2012 to 2018, including switchyard works, HT/LT installations and cable laying."],
@@ -124,7 +124,7 @@ export const routes: Route[] = [
     zone: "office",
     label: "Organisation",
     title: "Organisation Chart — Ganesh Electricals",
-    description: "The organisation chart of Ganesh Electricals: liasioning, design, quality, projects, procurement, civil and administration teams under the Proprietor.",
+    description: "The organisation chart of Ganesh Electricals: liaisoning, design, quality, projects, procurement, civil and administration teams under the Proprietor.",
   },
   {
     id: "downloads",

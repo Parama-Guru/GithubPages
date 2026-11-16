@@ -96,7 +96,7 @@ export const clients = {
 const ehs = page("ehs").paragraphs;
 
 export const quality = {
-  policy: { title: "Quality Policy", paragraphs: ehs.slice(0, 2), signature: "B.Kumareson, Proprietor" },
+  policy: { title: "Quality Policy", paragraphs: ehs.slice(0, 2), signature: "B. Kumareson, Proprietor" },
   standards: { title: "Quality Standards", paragraphs: profile.quality.standards },
   workStandards: [
     { title: "Job-ready start work standards", body: ehs[2] ?? "" },
@@ -106,7 +106,7 @@ export const quality = {
   weeklyReport: profile.quality.weeklyReport,
   monthlyReport: profile.quality.monthlyReport,
   inspections: profile.quality.inspections,
-  ehs: { intro: ehs[4] ?? "", committed: ehs[5] ?? "", commitments: site.commitments as string[], closing: ehs[6] ?? "", signature: "B.Kumareson, Proprietor" },
+  ehs: { intro: ehs[4] ?? "", committed: ehs[5] ?? "", commitments: site.commitments as string[], closing: ehs[6] ?? "", signature: "B. Kumareson, Proprietor" },
   ehsStandards: profile.ehsStandards,
 };
 

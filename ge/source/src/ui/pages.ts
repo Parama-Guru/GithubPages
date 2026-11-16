@@ -21,11 +21,11 @@ import { href, routes, type RouteId } from "@/routes/routes";
 import { chapterNumber, chapters } from "@/timeline/chapters";
 import { heroMotif } from "./art";
 import { homeExtra } from "./flat";
-import { arrow, arrowLeft, arrowUp, esc, img, photo } from "./html";
+import { arrow, arrowLeft, arrowUp, esc, img, photo, units } from "./html";
 import { renderOrgChart } from "./orgchart";
 
 const link = (id: RouteId, label: string, kind = "text-link") => `<a class="${kind}" href="${href(id)}">${esc(label)}${kind === "button" ? arrowUp : arrow}</a>`;
-const list = (items: string[], className = "") => `<ul${className ? ` class="${className}"` : ""}>${items.map((item) => `<li>${esc(item)}</li>`).join("")}</ul>`;
+const list = (items: string[], className = "") => `<ul${className ? ` class="${className}"` : ""}>${items.map((item) => `<li>${units(item)}</li>`).join("")}</ul>`;
 const tags = (items: string[]) => list(items, "tags");
 const groupRoute = (group: ProjectGroup) => `projects-${group.slug}` as RouteId;
 
@@ -48,7 +48,7 @@ function label(index: number, text: string) {
 
 function statistics(compact = false) {
   return `<dl class="stats${compact ? " stats-compact" : ""}">${whyUs.statistics
-    .map((stat) => `<div><dt>${esc(compact ? stat.short : stat.label)}</dt><dd data-count="${stat.value.replace(/,/g, "")}" data-final="${esc(stat.value)}">${esc(stat.value)}</dd></div>`)
+    .map((stat) => `<div><dt>${units(compact ? stat.short : stat.label)}</dt><dd data-count="${stat.value.replace(/,/g, "")}" data-final="${esc(stat.value)}">${esc(stat.value)}</dd></div>`)
     .join("")}</dl>`;
 }
 
@@ -94,7 +94,7 @@ function featured() {
   return `<div class="cards">${featuredProjects
     .map(
       (item) =>
-        `<article><span class="mono-label">${esc(item.voltage || "Electrification")}</span><h3>${esc(item.title)}</h3><p>${esc(item.client)}</p></article>`,
+        `<article><span class="mono-label">${units(item.voltage || "Electrification")}</span><h3>${esc(item.title)}</h3><p>${esc(item.client)}</p></article>`,
     )
     .join("")}</div>`;
 }
@@ -116,8 +116,8 @@ const chapterBodies: Record<string, (index: number) => string> = {
     <ol class="mini-timeline">${milestoneSummary.map((item) => `<li><strong>${item.year}</strong><span>${esc(item.title)}</span></li>`).join("")}</ol>
     <div class="actions">${link("about", "About us")}</div>`,
   "why-us": (index) => `
-    ${label(index, "How we serve")}
-    <h2 class="chapter-title" data-split>How we serve</h2>
+    ${label(index, "How We Serve")}
+    <h2 class="chapter-title" data-split>How We Serve</h2>
     <p class="chapter-lead">${esc(whyUs.lead)}</p>
     ${statistics(true)}
     <div class="actions">${link("features", "How we serve our clients")}</div>`,
@@ -143,7 +143,7 @@ const chapterBodies: Record<string, (index: number) => string> = {
     ${label(index, "Leadership")}
     <h2 class="chapter-title" data-split>Leadership</h2>
     <p class="chapter-lead">${esc(leadership.paragraphs[0] ?? "")}</p>
-    <div class="actions">${link("leadership", "Leadership")}${link("organisation", "Organisation chart")}</div>`,
+    <div class="actions">${link("leadership", "Leadership")}${link("organisation", "Organisation Chart")}</div>`,
   contact: (index) => `
     ${label(index, "Contact")}
     <h2 class="chapter-title" data-split>Contact Us</h2>
@@ -241,16 +241,16 @@ const pageBodies: Partial<Record<RouteId, () => string>> = {
       .join("")}</ol>`) +
     section("Credentials", "Licence, registration & rating", credentialCards()) +
     section("Achievements", "Recognised on site", achievementBlock()) +
-    sheet(`<div class="actions">${link("features", "How we serve")}${link("execution", "How we work")}${link("organisation", "Organisation chart")}${link("projects", "Projects")}</div>`),
+    sheet(`<div class="actions">${link("features", "How We Serve")}${link("execution", "How We Work")}${link("organisation", "Organisation Chart")}${link("projects", "Projects")}</div>`),
   features: () =>
-    hero("features", "How we serve", whyUs.title, whyUs.lead) +
+    hero("features", "How We Serve", whyUs.title, whyUs.lead) +
     sheet(`<div class="principles">${whyUs.principles
       .map((item, index) => `<article><span class="mono-label">${chapterNumber(index + 1)}</span><h2>${esc(item.title)}</h2></article>`)
       .join("")}</div>`) +
     sheet(statistics()) +
-    sheet(`<p class="sheet-lead">${esc(company.capability)}</p><div class="actions">${link("execution", "How we work")}${link("projects", "Projects")}</div>`),
+    sheet(`<p class="sheet-lead">${esc(company.capability)}</p><div class="actions">${link("execution", "How We Work")}${link("projects", "Projects")}</div>`),
   execution: () =>
-    hero("execution", "How we work", "How we work", execution.capability) +
+    hero("execution", "How We Work", "How We Work", execution.capability) +
     section("Handling local issues", "Rapport on the ground", execution.localIssues.map((text) => `<p>${esc(text)}</p>`).join("")) +
     section(
       "TNEB liaisoning",
@@ -327,7 +327,7 @@ const pageBodies: Partial<Record<RouteId, () => string>> = {
     hero("leadership", "Leadership", "Leadership", `${leadership.name}, ${leadership.title}`) +
     sheet(`<div class="split">${img(leadership.photo.src, leadership.photo.width, leadership.photo.height, leadership.photo.alt, 'class="photo"')}
       <div><p class="chapter-label"><span></span>Established in 1997</p>${leadership.paragraphs.map((text) => `<p>${esc(text)}</p>`).join("")}<p>${esc(leadership.note)}</p>
-      <div class="actions">${link("organisation", "Organisation chart")}</div></div></div>`) +
+      <div class="actions">${link("organisation", "Organisation Chart")}</div></div></div>`) +
     sheet(
       dataTable(
         "Key personnel",
@@ -372,7 +372,7 @@ for (const group of projectGroups) {
   const id = groupRoute(group);
   const ongoing = group.slug === "ongoing";
   pageBodies[id] = () =>
-    hero(id, "Projects", ongoing ? "On-going projects" : "Projects", ongoing ? `${group.count} projects in progress` : `${group.label} · ${group.count} projects executed`, groupNav(group.slug)) +
+    hero(id, "Projects", ongoing ? "On-going Projects" : "Projects", ongoing ? `${group.count} projects in progress` : `${group.label} · ${group.count} projects executed`, groupNav(group.slug)) +
     group.sections.map((part) => sheet(projectTable(ongoing ? part.heading : `Projects ${part.heading}`, part.rows, ongoing))).join("");
 }
 

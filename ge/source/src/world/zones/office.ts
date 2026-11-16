@@ -45,7 +45,7 @@ export const buildOffice: ZoneBuilder = async (context) => {
   boardMaterial.color.setScalar(0.9);
   g.add(box(m.steel, [0.1, 2.0, 3.9], [-4.94, 2.0, -104.6]));
   g.add(plane(boardMaterial, 3.7, 1.85, [-4.88, 2.0, -104.6], [0, Math.PI / 2, 0]));
-  zone.pickables.push({ object: g.children[g.children.length - 1]!, id: "route:organisation", label: "Organisation chart" });
+  zone.pickables.push({ object: g.children[g.children.length - 1]!, id: "route:organisation", label: "Organisation Chart" });
 
   const portrait = framed(m, image(`/GithubPages/ge/${leadership.photo.src}`), 2.4, 2.4 / (leadership.photo.width / leadership.photo.height), [-4.9, 2.1, -108.2], Math.PI / 2);
   for (const material of portrait.userData.ownedMaterials) zone.own(material);

@@ -1,7 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 import { href, routes } from "../../src/routes/routes";
 
-const headerOrder = ["Home", "About", "How we serve", "Projects", "Clients", "Quality & Safety"];
+const headerOrder = ["Home", "About", "How We Serve", "Projects", "Clients", "Quality & Safety"];
 
 async function ready(page: Page) {
   await page.waitForFunction(() => ["ready", "static", "idle"].includes(document.querySelector<HTMLElement>(".world")?.dataset.world ?? ""), null, {
@@ -55,7 +55,7 @@ test.describe("header navigation", () => {
     await expect(page).toHaveURL(/\/projects\/$/);
     await page.getByRole("link", { name: "On-going" }).first().click();
     await expect(page).toHaveURL(/\/projects\/ongoing\/$/);
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText("On-going projects");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("On-going Projects");
     await expectCurrent(page, "Projects");
     await expect(page.locator("nav[aria-label='Breadcrumb'], .breadcrumbs")).toHaveCount(0);
     await page.evaluate(() => window.scrollTo(0, 900));

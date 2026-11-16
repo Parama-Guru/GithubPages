@@ -66,7 +66,7 @@ export function statScreen(value: string, caption: string, lit: number) {
     context.fillStyle = tone(ink.screenLine, 0.45 + lit * 0.55);
     context.font = fonts.mono(26);
     context.letterSpacing = "0.12em";
-    context.fillText(caption.toUpperCase(), 40, 64);
+    context.fillText(caption.toUpperCase().replace(/\bKV(A?)\b/g, "kV$1"), 40, 64);
     context.letterSpacing = "0px";
     context.fillStyle = tone(ink.screenValue, 0.5 + lit * 0.5);
     fitFont(context, value, w - 68, fonts.display, 230);
