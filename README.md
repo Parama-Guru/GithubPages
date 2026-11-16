@@ -13,6 +13,16 @@ Static sites published with GitHub Pages.
 | `/GithubPages/CCT/` | [CCT: Confusion-Calibrated Tutoring](https://parama-guru.github.io/GithubPages/CCT/) - NIT Hackathon, 2027 |
 | `/GithubPages/originzero/` | [OriginZero approval deck](https://parama-guru.github.io/GithubPages/originzero/) — seven slides, presented as a website |
 
+## Portfolio cards
+
+The landing page lists one card per project, filtered by product, type and year. Each card's about text is
+at most 120 characters. The card rules live in the [portfolio-card skill](.github/skills/portfolio-card/SKILL.md);
+before publishing a change to `index.html`, run this from the repository root:
+
+```powershell
+powershell -NoProfile -File .github/skills/portfolio-card/scripts/check-cards.ps1
+```
+
 ## OriginZero deck
 
 A research collaboration portal for the Applied Mathematics & Computational Science department at

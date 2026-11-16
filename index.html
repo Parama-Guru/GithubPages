@@ -445,13 +445,21 @@
 
       <section class="work" aria-label="Projects">
       <div class="cards" data-cards>
-      <a class="card" href="https://harimurugan-ellappan.vercel.app/" data-product="website" data-year="2027">
-        <p class="card-meta">client / 2027</p>
+      <a class="card" href="https://parama-guru.github.io/concept-grove/" data-product="application" data-type="personal" data-year="2026">
+        <p class="card-meta">Open-source study app / 2026</p>
+        <h2>Concept Grove</h2>
+        <p>
+          600 original machine learning, deep learning and NLP flashcards with spaced repetition.
+          Free to use, no sign-in needed.
+        </p>
+      </a>
+
+      <a class="card" href="https://harimurugan-ellappan.vercel.app/" data-product="website" data-type="client" data-year="2026">
+        <p class="card-meta">Client website / 2026</p>
         <h2>Harimurugan Ellappan Portfolio</h2>
         <p>
-          Portfolio website for a Chennai-based IT infrastructure and ERP consultant with 28 years
-          in manufacturing and auto-ancillary industries — expertise, services, approach and
-          credentials, with direct contact.
+          Portfolio for a Chennai IT infrastructure and ERP consultant with 28 years in
+          manufacturing and auto-ancillary sectors.
         </p>
       </a>
 
@@ -459,32 +467,30 @@
         <p class="card-meta">Solari Hackathon / 2026</p>
         <h2>Openable — built on Solari</h2>
         <p>
-          Opens files nothing else will: corrupt PDFs, legacy Word/Excel, metafiles, PostScript and scans.
-          Each upload runs in a disposable Solari microVM with real LibreOffice, Ghostscript and Tesseract.
-          Recovered 18 of 18 damaged and legacy test files.
+          Opens corrupt PDFs, legacy Office files and scans in disposable Solari microVMs.
+          Recovered 18 of 18 test files.
         </p>
       </a>
 
-      <a class="card" href="matweb/" data-product="application" data-year="2026">
+      <a class="card" href="matweb/" data-product="application" data-type="client" data-year="2026">
         <p class="card-meta">Matrimony application / Client preview / 2026</p>
         <h2>GenZ Matrimony</h2>
         <p>
-          A modern, bilingual matrimony experience with an animated landing page,
-          log-in and sign-up. Front-end preview with sample stories and browser-only
-          demo data; database integration follows client approval.
+          Bilingual matrimony app with an animated landing page, log-in and sign-up.
+          Front-end preview using demo data.
         </p>
       </a>
 
-      <a class="card" href="ge/" data-product="website" data-year="2026">
+      <a class="card" href="ge/" data-product="website" data-type="client" data-year="2026">
         <p class="card-meta">3D website / 2026</p>
         <h2>Ganesh Electricals — 3D website</h2>
         <p>
-          An immersive Three.js website for Ganesh Electricals, established in 1997,
-          a renowned firm providing EHV and MV/LV installations for several industries.
+          An immersive Three.js website for Ganesh Electricals, the EHV and MV/LV electrical
+          contractor established in 1997.
         </p>
       </a>
 
-      <a class="card" href="https://parama-guru.github.io/Ge/" data-product="website" data-year="2026">
+      <a class="card" href="https://parama-guru.github.io/Ge/" data-product="website" data-type="client" data-year="2026">
         <p class="card-meta">2D website / 2026</p>
         <h2>Ganesh Electricals — 2D website</h2>
         <p>
@@ -493,13 +499,12 @@
         </p>
       </a>
 
-      <a class="card" href="https://parama-guru.github.io/Tirunex/" data-product="website" data-year="2026">
+      <a class="card" href="https://parama-guru.github.io/Tirunex/" data-product="website" data-type="client" data-year="2026">
         <p class="card-meta">Company website / 2026</p>
         <h2>Tirunex</h2>
         <p>
-          Company website for Tirunex, a technology and talent partner for growing businesses —
-          ERP and CRM, AI agents and automation, digital transformation, technology services and
-          manpower solutions, with industry pages and a consultation form.
+          Company website for Tirunex, a technology and talent partner for ERP and CRM,
+          AI automation and manpower solutions.
         </p>
       </a>
 
@@ -507,8 +512,8 @@
         <p class="card-meta">Club Inauguration / 29 September 2026 / F201</p>
         <h2>Yuva Tourism Club inauguration</h2>
         <p>
-          PSG College of Technology. Inauguration programme with the Chief Guest
-          address, team introductions, annual plan 2026-27, and photo session.
+          Inauguration programme at PSG College of Technology: Chief Guest address,
+          team introductions and annual plan 2026-27.
         </p>
       </a>
 
@@ -516,8 +521,8 @@
         <p class="card-meta">Semester 9 / 2026</p>
         <h2>Network Science presentation</h2>
         <p>
-          Signed Random Networks. An 18-minute presentation for three speakers,
-          with interactive graphs and structural balance experiments.
+          Signed Random Networks: an 18-minute, three-speaker talk with interactive graphs
+          and structural balance experiments.
         </p>
       </a>
 
@@ -568,6 +573,8 @@
           { id: "academic", label: "Academic" },
           { id: "hackathon", label: "Hackathon" },
           { id: "professional", label: "Professional" },
+          { id: "client", label: "Client" },
+          { id: "personal", label: "Personal" },
         ];
         const SORTS = [
           { id: "featured", label: "Featured" },

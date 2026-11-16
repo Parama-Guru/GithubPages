@@ -6,6 +6,7 @@
 - Publish ready-to-open HTML with its required assets. Prefer self-contained files for presentations so they also work offline.
 - Never commit `node_modules`, package caches, browser caches, test artifacts, or local build workspaces. Keep optional development tooling local and ignored.
 - Add completed presentations to the root index with accurate titles and course metadata. Use relative, case-correct links that work under `/GithubPages/`.
+- Write and edit root `index.html` cards by `.github/skills/portfolio-card/SKILL.md` (about text at most 120 characters) and run its `scripts/check-cards.ps1` before publishing.
 - Limit edits to the requested project and explicitly authorized shared files. Do not include unrelated untracked work in a commit.
 - Verify direct-file behavior, static subdirectory hosting, responsive layouts, and the deployed URL before declaring publication complete.
 - Commit and push only when explicitly authorized; never force-push routine deployments.
