@@ -6,8 +6,9 @@ const zones = ["approach", "lobby", "control", "hall", "gallery", "safety", "off
 const pages = routes.filter((entry) => entry.id !== "not-found");
 
 async function ready(page: Page) {
-  // "idle": a page other than home with 3D on, where the world is not loaded until the way home.
-  await page.waitForFunction(() => ["ready", "static", "idle"].includes(document.querySelector<HTMLElement>(".world")?.dataset.world ?? ""), null, { timeout: 60_000 });
+  // "idle": a page other than home with 3D on, where the world is not loaded until the way home. The page script must have
+  // started (__ge): the prerendered page says "static" until then, before the world has even begun to load.
+  await page.waitForFunction(() => "__ge" in window && ["ready", "static", "idle"].includes(document.querySelector<HTMLElement>(".world")?.dataset.world ?? ""), null, { timeout: 60_000 });
 }
 
 async function canvasData(page: Page) {
@@ -59,7 +60,7 @@ test.describe("3D journey", () => {
       await page.evaluate((y) => window.scrollTo(0, y), await chapterHold(page, index));
       await expect.poll(async () => (await canvasData(page)).zone, { timeout: 15_000 }).toBe(zones[index]);
       const data = await canvasData(page);
-      expect(Number(data.calls)).toBeLessThanOrEqual(120);
+      expect(Number(data.calls)).toBeLessThanOrEqual(110);
       expect(Number(data.triangles)).toBeLessThanOrEqual(300_000);
     }
     expect(external).toEqual([]);

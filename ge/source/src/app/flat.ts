@@ -1,5 +1,6 @@
 import type { Controller } from "./journey";
 import { gsap, ScrollTrigger } from "./motion";
+import { initSignatures } from "./signatures";
 
 /* Animations of every page but home (in both modes) and of the 2D home (3D off: the menu switch, reduced motion, Data
    Saver, no WebGL or a failed 3D load). Styles in styles/main.css (pages) and styles/flat.css (2D home, line art, reveals).
@@ -14,7 +15,7 @@ type Options = { animate: boolean; intro: boolean };
 const html = document.documentElement;
 // Lists whose items follow one another; any other target rises as one block.
 const SEQUENCE =
-  ".tags, .year-links, .flat-timeline, .flat-principles, .flat-extra > ul, .cards, .principles, .timeline, .gallery, .year-cards, .documents, .awards, .stats, .figures, .expertise, .manpower, .steps, .commitments, .logo-grid, .ehs-standards, .roles, .columns";
+  ".tags, .year-links, .flat-timeline, .flat-principles, .flat-extra > ul, .cards, .principles, .timeline, .gallery, .year-cards, .awards, .stats, .figures, .expertise, .manpower, .steps, .commitments, .logo-grid, .ehs-standards, .roles, .columns, .directory";
 const HOME_TARGETS =
   ":scope > .chapter-panel > *, :scope > .flat-extra:is(.flat-marquee, .flat-contact-art), :scope > .flat-extra > :is(.flat-timeline, .flat-principles, ul, .flat-portrait, .flat-sign)";
 // Two-column blocks reveal column by column; everything else in a sheet rises as it is.
@@ -230,6 +231,9 @@ export function initFlat(root: HTMLElement, { animate, intro }: Options): Contro
   if (heroArt && heroChapter && matchMedia("(min-width: 1000px)").matches) {
     tweens.push(gsap.to(heroArt, { yPercent: 7, ease: "none", scrollTrigger: { trigger: heroChapter, start: "top top", end: "bottom top", scrub: true } }));
   }
+
+  // The home's scroll effects and each page's own effect (app/signatures.ts).
+  cleanups.push(initSignatures(root));
 
   return {
     destroy() {

@@ -31,11 +31,14 @@ export function createPost(renderer: WebGLRenderer, scene: Scene, camera: Perspe
   const exposure = new BrightnessContrastEffect({ brightness: 0, contrast: 0 });
   const dof = tier === "high" ? new DepthOfFieldEffect(camera, { worldFocusRange: 6, bokehScale: 0 }) : null;
   composer.addPass(new EffectPass(camera, bloom, vignette, tone, exposure));
-  if (dof) composer.addPass(new EffectPass(camera, dof));
+  const dofPass = dof ? new EffectPass(camera, dof) : null;
+  if (dofPass) composer.addPass(dofPass);
   composer.addPass(new EffectPass(camera, new SMAAEffect({ preset: tier === "high" ? SMAAPreset.HIGH : SMAAPreset.MEDIUM })));
   return {
     render(delta, focus, distance) {
-      if (dof) {
+      if (dof && dofPass) {
+        // At a hold nothing is out of focus, so the depth-of-field passes (about a dozen draws) are skipped.
+        dofPass.enabled = focus > 0.001;
         dof.bokehScale = focus * 5;
         dof.cocMaterial.worldFocusDistance = distance;
       }

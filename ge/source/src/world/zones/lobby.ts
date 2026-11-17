@@ -1,7 +1,7 @@
-import { BoxGeometry, BufferGeometry, Mesh, MeshBasicMaterial, PlaneGeometry } from "three";
+import { BoxGeometry, BufferGeometry, MeshBasicMaterial } from "three";
 import { company, milestoneSummary } from "@/content";
 import { box, contactShadow, merged, partition, placed, plane, pool, room } from "../kit";
-import { energyMaterial } from "../materials";
+import { layout } from "../layout";
 import { image, label } from "../textures";
 import { plaque } from "./painters";
 import { createZone, cue, glowMaterial, type ZoneBuilder } from "./shared";
@@ -9,8 +9,8 @@ import { createZone, cue, glowMaterial, type ZoneBuilder } from "./shared";
 export const buildLobby: ZoneBuilder = async (context) => {
   const { m } = context;
   const plaques = milestoneSummary.map((item, index) => ({ item, label: label(`plaque-${index}`, 640, 440, plaque(item.year, item.title, item.body, 0)), lit: -1 }));
-  const energy = energyMaterial("warm", 5);
 
+  // The bus under the plaques carries current once they light (effects/network.ts, feed "lobby").
   const zone = createZone(context, (frame) => {
     const reveal = cue(-frame.camera.z, -0.5, 3.4);
     plaques.forEach((entry, index) => {
@@ -20,10 +20,7 @@ export const buildLobby: ZoneBuilder = async (context) => {
         entry.label.redraw(plaque(entry.item.year, entry.item.title, entry.item.body, lit));
       }
     });
-    energy.uniforms.uPower!.value = reveal;
-    energy.uniforms.uTime!.value = frame.time;
   });
-  zone.own(energy);
   const g = zone.group;
 
   g.add(room(m, { width: 12, height: 5.2, near: 0, far: -16, strips: 2 }));
@@ -36,10 +33,8 @@ export const buildLobby: ZoneBuilder = async (context) => {
     g.add(plane(material, 2.1, 2.1 / entry.label.aspect, [5.88, 2.25, z], [0, -Math.PI / 2, 0]));
     g.add(box(m.lightWarm, [0.05, 0.03, 1.9], [5.82, 3.12, z]));
   });
-  const bus = new Mesh(new PlaneGeometry(7.4, 0.08), energy);
-  bus.position.set(5.86, 1.32, -13);
-  bus.rotation.y = -Math.PI / 2;
-  g.add(bus, box(m.copper, [0.03, 0.05, 7.6], [5.92, 1.32, -13]));
+  const bus = layout.lobby.bus;
+  g.add(box(m.copper, [0.03, 0.05, bus.from - bus.to + 0.2], [bus.x + 0.06, bus.y, (bus.from + bus.to) / 2]));
 
   g.add(box(m.wood, [1.0, 1.1, 4.6], [-3.6, 0.55, -8.5]));
   g.add(box(m.copper, [1.12, 0.05, 4.72], [-3.6, 1.12, -8.5]));

@@ -788,3 +788,55 @@ Round 6 (owner request, 16 Nov 2026 — "check the ge website 3d/2d support all 
       lines at five widths).
 - [ ] Client to confirm the spelling of two names that differ between the personnel table and the organisation chart
       (P. Praveen Kumar / Mr. P. Pravinkumar; B. Muthu Kumar / Mr. B. Muthukumar) and "Horizon Paberbox" in the project list.
+
+Version 2.1 (owner request, 16 Nov 2026 — "add some animation to this part … like that for all the ones in the home", "for the 3D part you can also use WebGL to even improve the experience … optimisation and new features … this is version 2.1 … don't push it, I would like to see the difference")
+- [x] 2D home card motion: as each card group rises in, its accent lines draw and its numbers arrive in turn (Quality &
+      Safety tile bars and numbers, credential column rules and underlines, principle numbers, the figures' rules, the
+      founder photo's frame, the contact details); hover answers with colour and a short line, and the project lists fill
+      with emerald from the left. CSS on the existing reveal states; reduced motion keeps the final state.
+- [x] 3D: hand-written WebGL (GLSL) effects — current pulsing through every live conductor with a power-up front as the
+      visitor walks in, GPU particle dust in the lit rooms and ionised motes and corona at the yard insulators, soft light
+      shafts under the canopy, hall, safety-room and yard lights, drifting cloud in the sky; no flashes over 3 per second
+      (unit test).
+- [x] New feature "Energise the switchyard": click the breaker (or its anchored HTML button, keyboard and screen readers)
+      to close it — the lamp turns green, a power-up runs out along the line, the floodlights brighten and a hum swells.
+- [x] Optimisation: adaptive render resolution from measured GPU frame time, portal culling (neighbouring rooms drawn
+      only through their doorways), instancing and shared textures, no depth of field at holds, no drawing under the menu.
+      Measured: draw calls at holds 58–89 → 44–72 (desktop), GPU time per frame at holds 7.1–14.0 → 4.9–6.3 ms, main-thread
+      blocking in the first 6 s equal or lower than v2 (traces, 1× and 4× CPU), no long task while scrolling.
+- [x] Low tier (phones) without dust and shafts and with a cheaper sky; the 2D site loads none of it. Posters and the home
+      social image re-rendered. 36 unit tests and the browser suite green.
+- [x] 2D home scroll effects (owner, 16–17 Nov: "add some more 2D animation … a little more complex … a little bit of scroll
+      effect"): the hero's name, tagline, expertise and buttons drift up at different speeds as it is left; the forest and
+      emerald bands open from an inset, rounded card to the full width; the project photos drift and settle from a slight
+      zoom; the client belt speeds up with the scroll and eases back; the milestone line is filled by the scroll and each
+      milestone lights as it is reached; the founder's photo and frame move apart a little.
+- [x] Page signatures ("for all the 2D independent pages also add animation … elegant and professional … all must be
+      independent and different"): one effect of its own on every other page, in both modes (`src/app/signatures.ts`) —
+      About: the brand statement writes itself word by word; How We Serve: principles light like indicator lamps; How We
+      Work: the manpower table becomes a bar chart; Projects: photo parallax in the frames; project lists: a marigold rule
+      under each heading, rows cascading in (or a marigold scan when the table is already on screen), live dots on the
+      On-going list; Clients: the logo wall assembles in a diagonal wave; Quality & Safety: titles stay in view while read
+      and a reading line fills; Leadership: roles open and close smoothly, + turns to ×; Organisation Chart: grows level by
+      level; Downloads: rows settle like paper; Contact: fields arrive in turn, focus line, charging send button; 404: a
+      lamp test along the cards.
+- [x] Nothing on screen at the first paint is hidden: the project list already in view is scanned instead of cascaded
+      (mobile Lighthouse 2012–2018 93 → 98, largest paint 2.7 → 1.3 s). Mobile Lighthouse 100 for On-going, Downloads,
+      Clients, Contact and Organisation Chart; 2D home 100/99; pages 100 on desktop.
+- [x] Verified: typecheck, lint, 36 unit tests, 90 browser tests (new `tests/e2e/signatures.spec.ts`: every effect ends in
+      its final state, Quality & Safety titles stay in view, reduced motion shows everything at once, the home bands and
+      milestone line reach full); filmstrips of every effect without console errors; desktop audit of the 2D home
+      (1280×640, 1920×961, 3440×1305) and all pages (1366×657, 1920×961) without overlap, overflow or cut text.
+- [x] Owner, 17 Nov: "The manpower table becomes a bar chart — this is not happening … is this the bar chart you told?" —
+      the local preview did have it, but as 3 px lines under the cells it did not read as a chart. Now a real bar chart, part
+      of the page in every mode: under each role an 8 px bar on a faint track shows its team against the largest, with the
+      scale written under the chart ("Bars compare each team with the largest: 40 helpers."); the gradient reaches the
+      marigold only for the largest teams; the bars of a row line up when a name wraps. With motion each bar runs out with
+      its number as the role comes into view (same trigger, 1.8 s and easing as the counter), so on a phone the lower bars
+      wait until they are on screen. Role names made consistent: Liaison CEIG/TNEB (was "Liasion"), Procurement Manager,
+      Store Keeper, Safety Engineer (as in the organisation chart).
+- [x] Verified: typecheck, lint, 36 unit tests, 91 browser tests (the signatures spec checks the bars' exact shares, the
+      phone waiting, reduced motion and the scale line); screenshots at 1920, 1680 (3D mode), 1024 and 390 px; Lighthouse
+      How We Work 100 desktop, 100 mobile (three runs; one noisy run 97); no layout shift.
+- [x] Version 2.1 committed locally, not pushed (owner: "don't push but commit and keep it ready").
+- [ ] Owner compares v2.1 locally with the live v2, then decides on publishing (`git push`, then verify Pages and the live site).

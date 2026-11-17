@@ -1,46 +1,30 @@
-import { BoxGeometry, BufferGeometry, Group, InstancedMesh, Matrix4, Mesh, MeshBasicMaterial, Object3D, PlaneGeometry, Quaternion, Vector3 } from "three";
+import { BoxGeometry, BufferGeometry, Matrix4, Mesh, MeshBasicMaterial, PlaneGeometry, Quaternion, Vector3 } from "three";
 import { projectGroups, projectImages } from "@/content";
 import { animated, instance } from "../assets";
-import { box, contactShadow, framed, merged, partition, placed, plane, pool, room } from "../kit";
+import { box, contactShadow, cylinder, framed, instancedCopies, merged, partition, placed, pool, room } from "../kit";
+import { layout } from "../layout";
 import { energyMaterial } from "../materials";
 import { image, label } from "../textures";
 import { sign } from "./painters";
 import { createZone, cue, pause, type ZoneBuilder } from "./shared";
 
-function instancedRow(source: Group, transforms: Matrix4[]): Group {
-  const row = new Group();
-  source.updateMatrixWorld(true);
-  source.traverse((object: Object3D) => {
-    const mesh = object as Mesh;
-    if (!mesh.isMesh) return;
-    const local = mesh.matrixWorld.clone();
-    const instanced = new InstancedMesh(mesh.geometry, mesh.material, transforms.length);
-    transforms.forEach((transform, index) => instanced.setMatrixAt(index, transform.clone().multiply(local)));
-    instanced.userData.shared = true;
-    instanced.computeBoundingSphere();
-    row.add(instanced);
-  });
-  return row;
-}
+/** Parts inside a cabinet, which only the hero panel ever shows: the row's doors stay shut (9 draws instead of 16). */
+const INSIDE = new Set(["Breaker", "Busbars", "Interior"]);
 
-const HERO_PANEL = new Vector3(-4.2, 0, -48.5);
+const HERO_PANEL = new Vector3(...layout.hall.heroPanel);
 
 export const buildHall: ZoneBuilder = async (context) => {
   const { m } = context;
-  const energy = energyMaterial("cool", 14);
   const heroEnergy = energyMaterial("warm", 3);
   const rig = await animated("switchgear");
   const hero = rig.root;
 
+  // The trunk, the trays and the hero panel's feeder carry current in effects/network.ts (feeds "trunk" and "feeder").
   const zone = createZone(context, (frame) => {
-    const power = cue(-frame.camera.z, 31.5, 38);
-    energy.uniforms.uPower!.value = power * 0.85;
-    energy.uniforms.uTime!.value = frame.time;
     rig.scrub(frame.panel);
     heroEnergy.uniforms.uPower!.value = cue(frame.panel, 0.55, 1);
     heroEnergy.uniforms.uTime!.value = frame.time;
   });
-  zone.own(energy);
   zone.own(heroEnergy);
   const dispose = zone.dispose;
   zone.dispose = () => {
@@ -65,7 +49,7 @@ export const buildHall: ZoneBuilder = async (context) => {
     transforms.push(new Matrix4().compose(new Vector3(-4.2, 0, z), rotation, new Vector3(1, 1, 1)));
   }
   const rowSource = await instance("switchgear");
-  g.add(instancedRow(rowSource, transforms));
+  g.add(instancedCopies(rowSource, transforms, INSIDE));
   g.add(contactShadow(m, [-4.2, 0, -48.6], 1.8, 27));
 
   hero.position.copy(HERO_PANEL);
@@ -76,17 +60,31 @@ export const buildHall: ZoneBuilder = async (context) => {
   heroGlow.position.set(-4.18 + 0.33, 1.25, HERO_PANEL.z);
   heroGlow.rotation.y = Math.PI / 2;
   g.add(heroGlow, pool(m, [-3.2, 0, HERO_PANEL.z], 3.2));
+  // The ceiling spot whose beam falls on the hero panel (effects/shafts.ts).
+  g.add(cylinder(m.darkMetal, 0.17, 0.26, [HERO_PANEL.x + 2.2, 7.87, HERO_PANEL.z], 16), cylinder(m.lightWarm, 0.13, 0.02, [HERO_PANEL.x + 2.2, 7.73, HERO_PANEL.z], 16));
 
+  // The project-group signs share one texture (a band each), so the four are a single draw.
+  const bands = projectGroups.length;
+  const signs = label("year-signs", 900, 180 * bands, () => undefined);
+  const painter = (signs.texture.image as HTMLCanvasElement).getContext("2d") as CanvasRenderingContext2D;
+  const faces: BufferGeometry[] = [];
   for (const [index, group] of projectGroups.entries()) {
     // One sign per task: painting them all at once was a long task on a phone.
     await pause();
+    painter.save();
+    painter.translate(0, index * 180);
+    sign(group.label, "Projects")(painter, 900, 180);
+    painter.restore();
     const z = -43 - index * 5;
-    const plate = label(`year-${group.slug}`, 900, 180, sign(group.label, "Projects"));
-    const material = zone.own(new MeshBasicMaterial({ map: plate.texture, toneMapped: false }));
+    const face = new PlaneGeometry(2.6, 2.6 / 5);
+    const uv = face.getAttribute("uv");
+    for (let i = 0; i < uv.count; i++) uv.setY(i, (uv.getY(i) + bands - 1 - index) / bands);
+    faces.push(placed(face, [-3.55, 4.6, z], [0, Math.PI / 2, 0]));
     g.add(box(m.darkMetal, [0.02, 0.02, 0.02], [-3.6, 5.6, z]));
-    g.add(plane(material, 2.6, 2.6 / plate.aspect, [-3.55, 4.6, z], [0, Math.PI / 2, 0]));
     g.add(box(m.steel, [0.02, 1.2, 0.02], [-3.56, 5.6, z - 1.1]), box(m.steel, [0.02, 1.2, 0.02], [-3.56, 5.6, z + 1.1]));
   }
+  signs.texture.needsUpdate = true;
+  g.add(merged(zone.own(new MeshBasicMaterial({ map: signs.texture, toneMapped: false })), faces));
   await pause();
 
   projectImages.forEach((photo, index) => {
@@ -110,13 +108,12 @@ export const buildHall: ZoneBuilder = async (context) => {
   g.add(merged(m.steel, trays));
   const cables: BufferGeometry[] = [];
   for (const x of [-4.6, 4.6]) for (let k = 0; k < 4; k++) cables.push(placed(new BoxGeometry(0.06, 0.06, 31), [x - 0.2 + k * 0.13, 6.06, -48]));
+  // The hero panel's feeder leaves the tray and drops onto the panel's roof.
+  const drop = HERO_PANEL.x - 0.15;
+  cables.push(placed(new BoxGeometry(0.05, layout.hall.trays.y - 2.36, 0.05), [drop, (layout.hall.trays.y + 2.36) / 2, HERO_PANEL.z]));
   g.add(merged(m.black, cables));
 
   g.add(box(m.darkMetal, [0.7, 0.42, 31], [0, 6.8, -48]));
-  const flow = new Mesh(new PlaneGeometry(31, 0.22), energy);
-  flow.position.set(0, 6.58, -48);
-  flow.rotation.set(Math.PI / 2, 0, Math.PI / 2);
-  g.add(flow);
 
   zone.lights.push(
     { position: [-2.2, 3.4, -48.5], color: "#ffe3c0", intensity: 12, distance: 9 },

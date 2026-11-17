@@ -1,1 +1,0 @@
-import{k as e}from"./shared-4L5o055s.js";var t=e.ink;function n(e,t){let n=Number.parseInt(e.slice(1),16);return`rgba(${n>>16&255},${n>>8&255},${n&255},${Math.max(0,Math.min(1,t))})`}export{n,t};

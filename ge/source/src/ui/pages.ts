@@ -79,6 +79,16 @@ function credentialCards() {
     .join("")}</div>`;
 }
 
+// The manpower table as a bar chart: each role's bar is its team against the largest (--share, styles/main.css); with
+// motion each bar runs out with its number as it comes into view (app/signatures.ts, styles/flat.css).
+function manpowerChart() {
+  const largest = execution.manpower.reduce((top, item) => (item.count > top.count ? item : top));
+  return `<dl class="manpower">${execution.manpower
+    .map((item) => `<div style="--share:${(item.count / largest.count).toFixed(3)}"><dt>${esc(item.role)}</dt><dd${tally(String(item.count))}>${item.count}</dd></div>`)
+    .join("")}</dl>
+    <p class="manpower-scale">Bars compare each team with the largest: ${largest.count} ${esc(largest.role.toLowerCase())}.</p>`;
+}
+
 function awardFigure(name: string, caption: string) {
   const [width, height] = awardSizes[name] ?? [300, 300];
   return `<figure>${img(`media/${name}.webp`, width, height, caption)}<figcaption>${esc(caption)}</figcaption></figure>`;
@@ -258,11 +268,7 @@ const pageBodies: Partial<Record<RouteId, () => string>> = {
       `<ol class="steps">${execution.tneb.steps.map(([step = "", days = ""]) => `<li><span>${esc(step)}</span><strong>${esc(days)}</strong></li>`).join("")}</ol>
       <p class="steps-total"><span>Total</span><strong>${esc(execution.tneb.total)}</strong></p>`,
     ) +
-    section(
-      "Manpower deployment",
-      `${execution.manpowerTotal} people per project`,
-      `<dl class="manpower">${execution.manpower.map((item) => `<div><dt>${esc(item.role)}</dt><dd${tally(String(item.count))}>${item.count}</dd></div>`).join("")}</dl>`,
-    ) +
+    section("Manpower deployment", `${execution.manpowerTotal} people per project`, manpowerChart()) +
     section("Equipment", "Access equipment on site", tags(execution.equipment)),
   projects: () =>
     hero("projects", "Projects", "Projects", company.capability, tags(company.expertise)) +

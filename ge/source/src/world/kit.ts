@@ -1,4 +1,4 @@
-import { BoxGeometry, BufferGeometry, CylinderGeometry, Group, Mesh, MeshBasicMaterial, PlaneGeometry, type Material, type Object3D, type Texture, Vector3 } from "three";
+import { BoxGeometry, BufferAttribute, BufferGeometry, CylinderGeometry, Group, InstancedMesh, Matrix4, Mesh, MeshBasicMaterial, PlaneGeometry, type Material, type Object3D, type Texture, Vector3 } from "three";
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 import type { Materials } from "./materials";
 
@@ -8,7 +8,7 @@ export type LightSpec = { position: Vec; color: string; intensity: number; dista
 
 export type Pickable = { object: Object3D; id: string; label: string };
 
-export type Frame = { time: number; delta: number; camera: Vector3; panel: number; motion: boolean };
+export type Frame = { time: number; delta: number; camera: Vector3; panel: number; motion: boolean; energy: number };
 
 export type Zone = {
   group: Group;
@@ -66,6 +66,61 @@ export function merged(material: Material, parts: BufferGeometry[]): Mesh {
   const geometry = mergeGeometries(parts, false);
   for (const part of parts) part.dispose();
   return new Mesh(geometry, material);
+}
+
+/** A float copy of a (quantized, interleaved) model geometry, so its parts can be transformed and merged. */
+function plain(source: BufferGeometry): BufferGeometry {
+  const geometry = new BufferGeometry();
+  for (const [name, attribute] of Object.entries(source.attributes)) {
+    const size = attribute.itemSize;
+    const array = new Float32Array(attribute.count * size);
+    const read = [attribute.getX, attribute.getY, attribute.getZ, attribute.getW];
+    for (let i = 0; i < attribute.count; i++) for (let k = 0; k < size; k++) array[i * size + k] = read[k]?.call(attribute, i) ?? 0;
+    geometry.setAttribute(name, new BufferAttribute(array, size));
+  }
+  if (source.index) geometry.setIndex(new BufferAttribute(source.index.array.slice(), 1));
+  return geometry;
+}
+
+/**
+ * Copies of a model as one instanced draw per material. A material's single part is drawn from the model's own
+ * geometry (shared, nothing copied); several parts with one material are merged first. Parts under a node named in
+ * `skip` are left out.
+ */
+export function instancedCopies(source: Object3D, transforms: Matrix4[], skip: ReadonlySet<string> = new Set()): Group {
+  const copies = new Group();
+  source.updateMatrixWorld(true);
+  const root = source.matrixWorld.clone().invert();
+  const parts = new Map<Material, Mesh[]>();
+  source.traverse((object: Object3D) => {
+    const mesh = object as Mesh;
+    if (!mesh.isMesh || Array.isArray(mesh.material)) return;
+    for (let node: Object3D | null = mesh; node && node !== source; node = node.parent) if (skip.has(node.name)) return;
+    parts.set(mesh.material, [...(parts.get(mesh.material) ?? []), mesh]);
+  });
+  const each = new Matrix4();
+  const add = (geometry: BufferGeometry, material: Material, local: Matrix4, shared: boolean) => {
+    const instanced = new InstancedMesh(geometry, material, transforms.length);
+    transforms.forEach((transform, index) => instanced.setMatrixAt(index, each.multiplyMatrices(transform, local)));
+    // The model's own geometry is shared with every other copy; merged geometry belongs to the zone.
+    instanced.userData.shared = shared;
+    instanced.computeBoundingSphere();
+    copies.add(instanced);
+  };
+  const localOf = (mesh: Mesh) => new Matrix4().multiplyMatrices(root, mesh.matrixWorld);
+  for (const [material, meshes] of parts) {
+    const pieces = meshes.length > 1 ? meshes.map((mesh) => plain(mesh.geometry).applyMatrix4(localOf(mesh))) : [];
+    const combined = pieces.length ? mergeGeometries(pieces, false) : null;
+    for (const piece of pieces) piece.dispose();
+    if (combined) add(combined, material, new Matrix4(), false);
+    else for (const mesh of meshes) add(mesh.geometry, material, localOf(mesh), true);
+  }
+  return copies;
+}
+
+/** A transform from a position, a turn about the vertical axis and a uniform scale. */
+export function placement(x: number, y: number, z: number, turn = 0, scale = 1): Matrix4 {
+  return new Matrix4().makeRotationY(turn).scale(new Vector3(scale, scale, scale)).setPosition(x, y, z);
 }
 
 export function placed(geometry: BufferGeometry, position: Vec, rotation: Vec = [0, 0, 0]): BufferGeometry {
@@ -208,6 +263,8 @@ export function disposeGroup(group: Object3D, shared: Set<Material>): void {
   group.traverse((object) => {
     const mesh = object as Mesh;
     if (mesh.geometry && !object.userData.shared) mesh.geometry.dispose();
+    // Instance matrices have GPU buffers of their own.
+    if ((object as InstancedMesh).isInstancedMesh) (object as InstancedMesh).dispose();
     for (const material of (object.userData.ownedMaterials as Material[] | undefined) ?? []) if (!shared.has(material)) material.dispose();
   });
 }

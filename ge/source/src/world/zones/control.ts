@@ -1,6 +1,7 @@
 import { BoxGeometry, BufferGeometry, MeshBasicMaterial } from "three";
 import { whyUs } from "@/content";
 import { box, contactShadow, merged, partition, placed, plane, pool, room } from "../kit";
+import { layout } from "../layout";
 import { fonts, label } from "../textures";
 import { diagram, statScreen } from "./painters";
 import { ink, tone } from "../ink";
@@ -8,7 +9,8 @@ import { createZone, cue, type ZoneBuilder } from "./shared";
 
 const format = (value: number, final: string) => (final.includes(",") ? Math.round(value).toLocaleString("en-US") : String(Math.round(value)));
 
-const VIDEO_WALL = { x: 6.9, y: 2.6, z: -25.2 };
+// Current runs on the single-line diagram once it is drawn (effects/network.ts, feed "diagram").
+const VIDEO_WALL = layout.control.videoWall;
 
 export const buildControl: ZoneBuilder = async (context) => {
   const { m } = context;
@@ -56,13 +58,12 @@ export const buildControl: ZoneBuilder = async (context) => {
     { texture: line.texture, aspect: line.aspect },
     { texture: principles.texture, aspect: principles.aspect },
   ];
-  const sw = 2.55;
-  const sh = 1.5;
+  const { width: sw, height: sh, gap } = layout.control.screen;
   screens.forEach((screen, index) => {
     const col = index % 3;
     const row = Math.floor(index / 3);
-    const z = VIDEO_WALL.z + (col - 1) * (sw + 0.12);
-    const y = VIDEO_WALL.y + 0.81 - row * (sh + 0.12);
+    const z = VIDEO_WALL.z + (col - 1) * (sw + gap);
+    const y = VIDEO_WALL.y + 0.81 - row * (sh + gap);
     const material = zone.own(new MeshBasicMaterial({ map: screen.texture, toneMapped: false }));
     material.color.setScalar(0.92);
     g.add(plane(material, sw, sh, [VIDEO_WALL.x - 0.02, y, z], [0, -Math.PI / 2, 0]));

@@ -438,7 +438,7 @@ html:not(.has-3d) #projects .year-links a::after {
 }
 html:not(.has-3d) #projects .year-links a:hover {
   border-color: var(--emerald);
-  background: var(--emerald);
+  background-color: var(--emerald);
   color: var(--ivory);
 }
 html:not(.has-3d) #projects .year-links a:hover::after {
@@ -608,6 +608,158 @@ html:not(.has-3d) #quality .tags li::before {
   color: var(--muted);
 }
 
+/* Card motion (v2.1): when a group of cards rises in (app/flat.ts: .rv-wait before, [data-rv] while revealing), its
+   accent lines draw and its numbers arrive in turn; hover answers with colour and a short line. Transform and opacity
+   only; without scripts or with reduced motion everything is in its final state and hover changes colour alone. */
+html:not(.has-3d) #quality .tags li {
+  border-top-color: transparent;
+  transition: background-color 0.3s ease;
+}
+html:not(.has-3d) #quality .tags li::after {
+  content: "";
+  position: absolute;
+  inset: -3px -1px auto;
+  height: 3px;
+  background: var(--emerald);
+  transform-origin: left;
+  transition: background-color 0.3s ease;
+}
+html:not(.has-3d) #quality .tags li:hover {
+  background: var(--ivory);
+}
+html:not(.has-3d) #quality .tags li:hover::after {
+  background: var(--marigold);
+}
+html:not(.has-3d) #quality .tags li:hover::before {
+  color: var(--terracotta);
+}
+html.flat-motion #quality .tags[data-rv] li::after {
+  transition:
+    transform 0.8s var(--flat-ease),
+    background-color 0.3s ease;
+  transition-delay: calc(var(--rv-delay, 0s) + 0.3s + var(--i, 0) * 120ms), 0s;
+}
+html.flat-motion #quality .tags.rv-wait li::after {
+  transform: scaleX(0);
+  transition: none;
+}
+html.flat-motion #quality .tags[data-rv] li::before {
+  transition:
+    opacity 0.5s ease,
+    transform 0.6s var(--flat-ease);
+  transition-delay: calc(var(--rv-delay, 0s) + 0.65s + var(--i, 0) * 120ms);
+}
+html.flat-motion #quality .tags.rv-wait li::before {
+  opacity: 0;
+  transform: translate3d(-10px, 0, 0);
+  transition: none;
+}
+/* Credentials: a marigold line draws under each title, and grows on hover. */
+.flat-creds strong::after {
+  content: "";
+  display: block;
+  width: 40px;
+  height: 2px;
+  margin-top: 10px;
+  background: var(--marigold);
+  transform-origin: left;
+}
+html.flat-motion .flat-creds[data-rv] strong::after {
+  transition: transform 0.7s var(--flat-ease);
+  transition-delay: calc(var(--rv-delay, 0s) + 0.4s + var(--i, 0) * 120ms);
+}
+html.flat-motion .flat-creds.rv-wait strong::after {
+  transform: scaleX(0);
+  transition: none;
+}
+/* How We Serve: the principle numbers slide in after their rows; a marigold line runs under the row on hover. */
+.flat-principles li {
+  position: relative;
+}
+.flat-principles li::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 -1px;
+  height: 1px;
+  background: var(--marigold);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+html.flat-motion .flat-principles[data-rv] .mono-label {
+  transition:
+    opacity 0.5s ease,
+    transform 0.6s var(--flat-ease);
+  transition-delay: calc(var(--rv-delay, 0s) + 0.35s + var(--i, 0) * 80ms);
+}
+html.flat-motion .flat-principles.rv-wait .mono-label {
+  opacity: 0;
+  transform: translate3d(-10px, 0, 0);
+  transition: none;
+}
+/* The figures' marigold rules grow up beside them as they count. */
+html:not(.has-3d) #why-us .stats div {
+  position: relative;
+  border-left-color: transparent;
+}
+html:not(.has-3d) #why-us .stats div::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 -2px;
+  width: 2px;
+  background: var(--marigold);
+  transform-origin: bottom;
+}
+html.flat-motion #why-us .stats[data-rv] div::before {
+  transition: transform 0.9s var(--flat-ease);
+  transition-delay: calc(var(--rv-delay, 0s) + 0.2s + var(--i, 0) * 100ms);
+}
+html.flat-motion #why-us .stats.rv-wait div::before {
+  transform: scaleY(0);
+  transition: none;
+}
+/* Leadership: the emerald frame slides out behind the photograph after it is uncovered. */
+html.flat-motion .flat-portrait[data-rv]::before {
+  transition: transform 1s var(--flat-ease) calc(var(--rv-delay, 0s) + 0.5s);
+}
+html.flat-motion .flat-portrait.rv-wait::before {
+  transform: translate3d(-18px, -18px, 0);
+  transition: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .flat-creds strong::after,
+  .flat-principles li::after,
+  .flat-principles p,
+  .flat-timeline li::before {
+    transition: transform 0.45s var(--flat-ease);
+  }
+  .flat-creds li:hover strong::after {
+    transform: scaleX(1.8);
+  }
+  .flat-principles li:hover::after {
+    transform: scaleX(1);
+  }
+  .flat-principles li:hover p {
+    transform: translate3d(6px, 0, 0);
+  }
+  .flat-timeline li:hover::before {
+    transform: scale(1.3);
+  }
+  /* The project lists fill with emerald from the left. */
+  html:not(.has-3d) #projects .year-links a {
+    background-image: linear-gradient(var(--emerald), var(--emerald));
+    background-repeat: no-repeat;
+    background-size: 0% 100%;
+    transition:
+      background-size 0.4s var(--flat-ease),
+      border-color 0.25s,
+      color 0.25s;
+  }
+  html:not(.has-3d) #projects .year-links a:hover {
+    background-color: var(--paper);
+    background-size: 100% 100%;
+  }
+}
+
 /* 06 Leadership: the founder's photograph framed in emerald, the signature under the text */
 html:not(.has-3d) .flat-leader {
   display: contents;
@@ -775,8 +927,25 @@ html:not(.has-3d) #contact .button:hover {
     border-bottom: 0;
   }
   .flat-creds li + li {
+    position: relative;
     padding-left: 24px;
-    border-left: 1px solid var(--line);
+  }
+  /* The column rules grow down as the credentials rise in (Card motion below). */
+  .flat-creds li + li::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 1px;
+    background: var(--line);
+    transform-origin: top;
+  }
+  html.flat-motion .flat-creds[data-rv] li + li::before {
+    transition: transform 0.9s var(--flat-ease);
+    transition-delay: calc(var(--rv-delay, 0s) + var(--i, 0) * 120ms);
+  }
+  html.flat-motion .flat-creds.rv-wait li + li::before {
+    transform: scaleY(0);
+    transition: none;
   }
   html:not(.has-3d) #leadership .chapter-panel > *,
   html:not(.has-3d) #leadership .flat-sign {
@@ -878,5 +1047,435 @@ html:not(.has-3d) #contact .button:hover {
   }
   .flat-motif {
     width: 96px;
+  }
+}
+
+/* ---------------------------------------------------------------------------------------------------------------------
+   Signatures (v2.1, app/signatures.ts): the 2D home's scroll effects and one quiet effect of its own on every other page,
+   in both modes. Classes and custom properties come from the script (motion only); what may be on screen at load waits
+   from the first paint only when scripts run and motion is allowed, so no JavaScript or reduced motion shows it final.
+   ------------------------------------------------------------------------------------------------------------------- */
+
+/* Home: the dark bands open from an inset, rounded card to the full width (--band 0 → 1). */
+html:not(.has-3d) #why-us.is-band,
+html:not(.has-3d) #contact.is-band {
+  background: none;
+  isolation: isolate;
+}
+html:not(.has-3d) .is-band::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--forest);
+  clip-path: inset(0 calc((1 - var(--band, 1)) * 5%) round calc((1 - var(--band, 1)) * 36px));
+}
+html:not(.has-3d) #contact.is-band::before {
+  background: var(--emerald);
+}
+/* Home: the project photographs drift against the scroll and settle from a slight zoom (--kb 0 → 1). */
+.flat-mosaic.is-drifting figure img {
+  transform: translate3d(0, calc((var(--kb, 0.5) - 0.5) * var(--dir, 1) * 14px), 0) scale(calc((1.14 - var(--kb, 0.5) * 0.04) * var(--hz, 1)));
+  transition: transform 0.5s var(--flat-ease);
+}
+.flat-mosaic.is-drifting figure:hover img {
+  --hz: 1.05;
+}
+/* Home: the milestone line follows the scroll and each milestone lights as the current reaches it (--fill, --at). */
+html.flat-motion .flat-timeline.is-scrubbed::before {
+  transform: scaleX(var(--fill, 1));
+  transition: none;
+}
+html.flat-motion .flat-timeline.is-scrubbed li::before {
+  --lit: clamp(0, (var(--fill, 1) - var(--at, 0)) * 16, 1);
+  background: color-mix(in srgb, var(--marigold) calc(var(--lit) * 100%), var(--paper));
+  transform: scale(calc(0.7 + var(--lit) * 0.3));
+  transition: none;
+}
+html.flat-motion .flat-timeline.is-scrubbed li:hover::before {
+  transform: scale(1.3);
+}
+@media (max-width: 1099px) {
+  html.flat-motion .flat-timeline.is-scrubbed::before {
+    transform: scaleY(var(--fill, 1));
+  }
+}
+/* Home: the founder's photograph and its frame move apart a little (--pd −1 → 1). */
+.flat-portrait.is-depth img {
+  transform: translate3d(0, calc(var(--pd, 0) * -8px), 0);
+}
+.flat-portrait.is-depth::before {
+  translate: 0 calc(var(--pd, 0) * 8px);
+}
+
+/* About: the brand statement writes itself word by word as it is read (--read 0 → 1 over --n words). */
+.is-writing .bw {
+  opacity: clamp(0, calc(var(--read, 1) * (var(--n, 1) + 6) - var(--w, 0)), 1);
+  transition: opacity 0.2s linear;
+}
+
+/* How We Serve: the principles light in turn like indicator lamps (--lit 0 → 6; --k a card's place). */
+.principles.is-lamps article {
+  position: relative;
+}
+.principles.is-lamps article::before {
+  content: "";
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--marigold);
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--marigold) 20%, transparent),
+    0 0 16px 2px color-mix(in srgb, var(--marigold) 55%, transparent);
+  opacity: clamp(0.18, calc(var(--lit, 6) - var(--k, 0)), 1);
+  transform: scale(clamp(0.7, calc(0.7 + (var(--lit, 6) - var(--k, 0)) * 0.3), 1));
+}
+.principles.is-lamps article::after {
+  content: "";
+  position: absolute;
+  inset: -1px auto -1px -3px;
+  width: 3px;
+  background: var(--marigold);
+  transform-origin: top;
+  transform: scaleY(clamp(0, calc(var(--lit, 6) - var(--k, 0)), 1));
+}
+
+/* How We Work: the manpower table turns into its bar chart — each bar (styles/main.css) runs out to its share of the
+   largest team as its role comes into view, with the same timing as its number counting up (power2.out, 1.8 s). */
+html.flat-motion .manpower div::after {
+  transition: clip-path 1.8s cubic-bezier(0.33, 1, 0.68, 1);
+}
+html.flat-motion .manpower div.bar-wait::after {
+  clip-path: inset(0 100% 0 0 round 4px);
+  transition: none;
+}
+
+/* Projects: each photograph moves within its frame against the scroll (--py −1 → 1); the captions slide in. */
+.gallery figure.is-parallax img {
+  transform: translate3d(0, calc(var(--py, 0) * -3.5%), 0) scale(calc(1.09 * var(--hz, 1)));
+  transition: transform 0.45s var(--flat-ease);
+}
+.gallery figure.is-parallax:hover img {
+  --hz: 1.04;
+}
+html.flat-motion .gallery[data-rv] figcaption {
+  transition:
+    opacity 0.6s ease,
+    transform 0.7s var(--flat-ease);
+  transition-delay: calc(var(--rv-delay, 0s) + 0.45s + var(--i, 0) * 80ms);
+}
+html.flat-motion .gallery.rv-wait figcaption {
+  opacity: 0;
+  transform: translate3d(-14px, 0, 0);
+  transition: none;
+}
+
+/* Project lists: the rows cascade in under a marigold rule (--r a row's place); on-going projects carry a live mark. */
+.table-block h2 {
+  position: relative;
+}
+.page[data-page^="projects-"] .table-block h2::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -10px;
+  width: 64px;
+  height: 2px;
+  background: var(--marigold);
+  transform-origin: left;
+}
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .page[data-page^="projects-"] .table-block:not(.is-played) h2::after {
+    transform: scaleX(0);
+  }
+}
+/* Below the fold (hidden by the script only once it knows the table is off screen): the rows cascade in. */
+.page[data-page^="projects-"] .table-block.cascade-wait tbody tr {
+  opacity: 0;
+  transform: translate3d(0, 12px, 0);
+}
+.page[data-page^="projects-"] .table-block.is-cascading:not(.is-settled) tbody tr {
+  transition:
+    opacity 0.5s ease,
+    transform 0.6s var(--flat-ease);
+  transition-delay: calc(var(--r, 0) * 45ms + 0.1s);
+}
+/* Already in view: a marigold light scans down the rows, which stay readable throughout. */
+.page[data-page^="projects-"] .table-block.is-scanning:not(.is-settled) tbody td {
+  animation: row-scan 1.3s ease both;
+  animation-delay: calc(var(--r, 0) * 60ms + 0.2s);
+}
+@keyframes row-scan {
+  30% {
+    background-color: color-mix(in srgb, var(--marigold) 16%, transparent);
+  }
+}
+.page[data-page^="projects-"] .table-block.is-played:not(.is-settled) h2::after {
+  transition: transform 0.9s var(--flat-ease);
+}
+.page[data-page^="projects-"] tbody tr:hover td {
+  background: color-mix(in srgb, var(--marigold) 9%, transparent);
+}
+.page[data-page^="projects-"] tbody tr:hover td:first-child {
+  box-shadow: inset 3px 0 0 var(--marigold);
+}
+.page[data-page="projects-ongoing"] tbody td:first-child {
+  position: relative;
+}
+.page[data-page="projects-ongoing"] tbody td:first-child::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  width: 7px;
+  height: 7px;
+  margin-top: -3.5px;
+  border-radius: 50%;
+  background: var(--emerald);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .page[data-page="projects-ongoing"] tbody td:first-child::after {
+    animation: live-pulse 2.4s ease-in-out infinite;
+    animation-delay: calc(var(--r, 0) * 0.15s);
+  }
+}
+@keyframes live-pulse {
+  50% {
+    opacity: 0.4;
+    transform: scale(1.5);
+  }
+}
+
+/* Clients: the logo wall assembles in a diagonal wave (--d a logo's diagonal). */
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .page[data-page="clients"] .logo-grid:not(.is-played) img {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0) scale(0.8);
+  }
+}
+.page[data-page="clients"] .logo-grid.is-played:not(.is-settled) img {
+  transition:
+    opacity 0.6s ease,
+    transform 0.8s var(--flat-ease);
+  transition-delay: calc(var(--d, 0) * 70ms + 0.1s);
+}
+.page[data-page="clients"] .logo-grid li {
+  transition: background-color 0.3s ease;
+}
+.page[data-page="clients"] .logo-grid li:hover {
+  background: color-mix(in srgb, var(--marigold) 10%, var(--logo-tile));
+}
+@media (prefers-reduced-motion: no-preference) {
+  .page[data-page="clients"] .logo-grid.is-settled img {
+    transition: transform 0.35s var(--flat-ease);
+  }
+  .page[data-page="clients"] .logo-grid.is-settled li:hover img {
+    transform: scale(1.07);
+  }
+}
+
+/* Quality & Safety: a policy's title stays in view while it is read, and the line beside it fills (--pp 0 → 1). */
+@media (min-width: 901px) {
+  .page[data-page="quality-safety"] .policy > div:first-child {
+    position: sticky;
+    top: calc(var(--header) + 32px);
+    align-self: start;
+  }
+  .policy.is-read {
+    position: relative;
+  }
+  .policy.is-read::before,
+  .policy.is-read::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc((100% - 48px) * 0.35 + 23px);
+    width: 2px;
+  }
+  .policy.is-read::before {
+    background: var(--line);
+  }
+  .policy.is-read::after {
+    background: var(--marigold);
+    transform-origin: top;
+    transform: scaleY(var(--pp, 1));
+  }
+}
+
+/* Leadership: the roles open and close smoothly, and the marker turns from + to ×. */
+.roles details[open] summary::after {
+  content: "+";
+  transform: rotate(45deg);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .roles details {
+    interpolate-size: allow-keywords;
+  }
+  .roles details::details-content {
+    block-size: 0;
+    overflow-y: clip;
+    transition:
+      block-size 0.5s var(--flat-ease),
+      content-visibility 0.5s allow-discrete;
+  }
+  .roles details[open]::details-content {
+    block-size: auto;
+  }
+  .roles summary::after,
+  .roles summary strong {
+    transition: transform 0.35s var(--flat-ease);
+  }
+  .roles summary:hover strong {
+    transform: translate3d(5px, 0, 0);
+  }
+}
+
+/* Organisation: the chart grows from the Proprietor down, level by level (--lvl a box's depth). */
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .org-section:not(.is-played) .org-box {
+    opacity: 0;
+    transform: translate3d(0, -10px, 0) scale(0.94);
+  }
+  .org-section:not(.is-played) li::before,
+  .org-section:not(.is-played) li::after,
+  .org-section:not(.is-played) ul ul::before {
+    opacity: 0;
+  }
+}
+.org-section.is-played:not(.is-settled) .org-box {
+  transition:
+    opacity 0.45s ease,
+    transform 0.6s var(--flat-ease);
+  transition-delay: calc(var(--lvl, 0) * 150ms + 0.12s);
+}
+.org-section.is-played:not(.is-settled) li::before,
+.org-section.is-played:not(.is-settled) li::after {
+  transition: opacity 0.4s ease;
+  transition-delay: calc(var(--lvl, 0) * 150ms);
+}
+.org-section.is-played:not(.is-settled) ul ul::before {
+  transition: opacity 0.4s ease;
+  transition-delay: calc(var(--lvl, 0) * 150ms + 0.3s);
+}
+
+/* Downloads: the document rows settle like sheets of paper and their rules draw across (--k a row's place). */
+.page[data-page="downloads"] .documents li {
+  position: relative;
+  transform-origin: left top;
+}
+.page[data-page="downloads"] .documents li::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1px;
+  background: var(--accent);
+  transform-origin: left;
+}
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .page[data-page="downloads"] .documents:not(.is-played) > li {
+    opacity: 0;
+    transform: translate3d(0, 26px, 0) rotate(-1.4deg);
+  }
+  .page[data-page="downloads"] .documents:not(.is-played) > li::after {
+    transform: scaleX(0);
+  }
+}
+.page[data-page="downloads"] .documents.is-played:not(.is-settled) > li {
+  transition:
+    opacity 0.6s ease,
+    transform 0.9s var(--flat-ease);
+  transition-delay: calc(var(--k, 0) * 140ms + 0.1s);
+}
+.page[data-page="downloads"] .documents.is-played:not(.is-settled) > li::after {
+  transition: transform 1s var(--flat-ease);
+  transition-delay: calc(var(--k, 0) * 140ms + 0.45s);
+}
+.page[data-page="downloads"] .documents li:hover::after {
+  background: var(--marigold);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .page[data-page="downloads"] .documents h2 {
+    transition: transform 0.3s var(--flat-ease);
+  }
+  .page[data-page="downloads"] .documents li:hover h2 {
+    transform: translate3d(6px, 0, 0);
+  }
+}
+
+/* Contact: the fields arrive in turn, a marigold line draws under the field in use, and the send button charges. */
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .page[data-page="contact"] .fields:not(.is-played) > label {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0);
+  }
+}
+.page[data-page="contact"] .fields.is-played:not(.is-settled) > label {
+  transition:
+    opacity 0.5s ease,
+    transform 0.7s var(--flat-ease);
+  transition-delay: calc(var(--k, 0) * 90ms + 0.1s);
+}
+.page[data-page="contact"] .fields :is(input, textarea) {
+  background-image: linear-gradient(var(--marigold), var(--marigold));
+  background-position: left bottom;
+  background-repeat: no-repeat;
+  background-size: 0% 2px;
+}
+.page[data-page="contact"] .fields :is(input, textarea):focus {
+  background-size: 100% 2px;
+}
+.page[data-page="contact"] .fields label:focus-within {
+  color: var(--accent-strong);
+}
+.page[data-page="contact"] .enquiry .button {
+  background-image: linear-gradient(var(--marigold), var(--marigold));
+  background-repeat: no-repeat;
+  background-size: 0% 100%;
+}
+.page[data-page="contact"] .enquiry .button:hover {
+  background-image: linear-gradient(var(--marigold), var(--marigold));
+  background-size: 100% 100%;
+  color: var(--forest);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .page[data-page="contact"] .fields :is(input, textarea) {
+    transition:
+      border-color 0.2s,
+      box-shadow 0.2s,
+      background-size 0.5s var(--flat-ease);
+  }
+  .page[data-page="contact"] .enquiry .button {
+    transition:
+      background-size 0.45s var(--flat-ease),
+      color 0.25s ease,
+      transform 0.2s ease;
+  }
+}
+
+/* 404: a lamp test runs once along the page cards — each lights in turn (--k a card's place). */
+.page[data-page="not-found"] .year-cards.is-played:not(.is-settled) a {
+  animation: lamp-test 0.9s var(--flat-ease) both;
+  animation-delay: calc(var(--k, 0) * 110ms + 0.2s);
+}
+.page[data-page="not-found"] .year-cards.is-played:not(.is-settled) .icon {
+  animation: lamp-icon 0.9s var(--flat-ease) both;
+  animation-delay: calc(var(--k, 0) * 110ms + 0.2s);
+}
+@keyframes lamp-test {
+  45% {
+    border-color: var(--marigold);
+    background-color: color-mix(in srgb, var(--marigold) 14%, var(--paper));
+  }
+}
+@keyframes lamp-icon {
+  45% {
+    color: var(--marigold);
+    transform: translate3d(6px, 0, 0);
   }
 }

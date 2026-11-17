@@ -2,7 +2,7 @@ import { BoxGeometry, BufferGeometry, CatmullRomCurve3, Mesh, TubeGeometry, Vect
 import { mergeGeometries } from "three/addons/utils/BufferGeometryUtils.js";
 import { company } from "@/content";
 import { animated, instance } from "../assets";
-import { box, contactShadow, cylinder, merged, placed, plane, pool } from "../kit";
+import { box, contactShadow, cylinder, instancedCopies, merged, placed, placement, plane, pool } from "../kit";
 import { label } from "../textures";
 import { ink, tone } from "../ink";
 import { createZone, cue, glowMaterial, type ZoneBuilder } from "./shared";
@@ -111,12 +111,7 @@ export const buildApproach: ZoneBuilder = async (context) => {
     [60, -140, -0.3],
   ];
   const wires: BufferGeometry[] = [];
-  towers.forEach(([x, z, r], index) => {
-    const copy = index === 0 ? tower : tower.clone(true);
-    copy.position.set(x, 0, z);
-    copy.rotation.y = r;
-    g.add(copy);
-  });
+  g.add(instancedCopies(tower, towers.map(([x, z, r]) => placement(x, 0, z, r))));
   for (const [a, b] of [
     [0, 2],
     [1, 3],

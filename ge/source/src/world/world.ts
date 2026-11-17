@@ -8,6 +8,7 @@ import {
   NeutralToneMapping,
   NoToneMapping,
   PerspectiveCamera,
+  Plane,
   PMREMGenerator,
   PointLight,
   Raycaster,
@@ -25,12 +26,16 @@ import {
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import type { ZoneKey } from "@/routes/routes";
 import { preloadAssets, type AssetName } from "./assets";
+import { createEffects, type Effects } from "./effects";
+import { createGovernor, GpuTimer, type Governor } from "./governor";
+import { layout } from "./layout";
 import { look } from "./look";
 import { batch, type Frame, type LightSpec, type Pickable, type Zone } from "./kit";
 import { createMaterials, disposeMaterials, paintMaterials, skyMaterial, type SkyMaterial } from "./materials";
 import { clamp01, lerpPose, smootherstep, type Pose } from "./math";
 import { palette } from "./palette";
 import { evenRanges, exposureAt, sampleJourney, travelAt, zoneAt, zoneOrder, type ChapterRange } from "./path";
+import { cullThroughDoorway, doorwayBetween } from "./portals";
 import type { Post } from "./post";
 import { disposeTextures, fontsReady } from "./textures";
 import { pause, type Tier, type ZoneBuilder } from "./zones/shared";
@@ -130,9 +135,30 @@ type WorldOptions = {
   onProgress?: (value: number) => void;
   onHover?: (label: string | null, x: number, y: number) => void;
   onPick?: (id: string) => void;
+  /** Screen position of a control anchored in the scene (the switchyard's), called when it moves or shows. */
+  onMarker?: (id: string, x: number, y: number, visible: boolean) => void;
 };
 
-export type Metrics = { calls: number; triangles: number; geometries: number; textures: number; zone: ZoneKey; tier: Tier; frameMs: number; zones: number };
+export type Metrics = {
+  calls: number;
+  triangles: number;
+  geometries: number;
+  textures: number;
+  zone: ZoneKey;
+  tier: Tier;
+  frameMs: number;
+  zones: number;
+  /** Render scale chosen from the measured GPU time (1 = the tier's full resolution). */
+  scale: number;
+  /** Recent GPU time of a frame in ms (0 where the browser cannot measure it). */
+  gpuMs: number;
+};
+
+// Pixel-ratio caps per tier, and how far adaptive resolution may go below them.
+const RATIO: Record<Tier, number> = { high: 1.5, medium: 1.25, low: 1 };
+const MIN_SCALE: Record<Tier, number> = { high: 0.6, medium: 0.7, low: 0.8 };
+/** GPU milliseconds a frame may take before the resolution steps down (60 fps with room for the browser). */
+const FRAME_BUDGET = 13.5;
 
 export class World {
   readonly renderer: WebGLRenderer;
@@ -187,6 +213,26 @@ export class World {
   private readonly aim = new Vector3();
   private readonly written = new Map<string, string>();
   private frames: number;
+  private effects: Effects | null = null;
+  private effectsTime = 0;
+  private energy = 0;
+  /** The full-screen menu covers the canvas: nothing is drawn until it closes. */
+  private covered = false;
+  private readonly timer: GpuTimer;
+  private readonly governor: Governor;
+  private gpuMs = 0;
+  /** A new render scale waits for the camera to rest: resizing the drawing buffer mid-scroll would drop a frame. */
+  private rescale = false;
+  private moved = 0;
+  /** The render scale in use (share of the tier's pixel ratio). */
+  private scale = 1;
+  // The breaker's operating mechanism, where the scene's control for it is anchored (main.ts, app/hotspot.ts).
+  private readonly marker = new Vector3(layout.yard.bay.mechanism, 1.95, layout.yard.bay.z + 0.2);
+  private readonly projected = new Vector3();
+  private markerState = "";
+  private readonly buffer = new Vector2();
+  private readonly portal = [new Plane(), new Plane(), new Plane(), new Plane()];
+  private readonly shown = (key: ZoneKey) => this.zones.get(key)?.group.visible ?? false;
 
   constructor(options: WorldOptions) {
     this.options = options;
@@ -194,6 +240,8 @@ export class World {
     this.motion = options.motion;
     this.frames = Number(options.canvas.dataset.frames ?? 0);
     this.renderer = new WebGLRenderer({ canvas: options.canvas, antialias: options.tier === "low", powerPreference: "high-performance", alpha: false, stencil: false });
+    this.timer = new GpuTimer(this.renderer.getContext() as WebGL2RenderingContext);
+    this.governor = createGovernor({ min: MIN_SCALE[options.tier], budget: FRAME_BUDGET });
     // Reading a shader's info log waits for the GPU process to finish everything queued before it; the shaders are
     // fixed, so production builds skip the check (a stall of up to half a second when a new room first appeared).
     this.renderer.debug.checkShaderErrors = import.meta.env.DEV;
@@ -214,7 +262,7 @@ export class World {
       this.pool.push(light);
       this.scene.add(light);
     }
-    this.sky = new Mesh(new SphereGeometry(700, 32, 16), skyMaterial());
+    this.sky = new Mesh(new SphereGeometry(700, 32, 16), skyMaterial(options.tier === "low" ? 3 : 5));
     this.sky.renderOrder = -10;
     this.sky.frustumCulled = false;
     this.scene.add(this.sky);
@@ -234,6 +282,20 @@ export class World {
     this.options.canvas.dataset.look = `${look.surfaces.copper?.color ?? ""}|${look.ink.accent}|${look.models.PanelEnamel?.color ?? ""}`;
   }
 
+  /** The WebGL effects drawn across every room (effects/index.ts), built in short tasks while loading. */
+  private async addEffects(): Promise<void> {
+    if (this.effects || this.disposed) return;
+    const effects = await createEffects(this.tier, pause);
+    if (this.disposed) {
+      effects.dispose();
+      return;
+    }
+    this.effects = effects;
+    effects.setTier(this.tier);
+    this.scene.add(effects.group);
+    this.write("effects", effects.names.join(","));
+  }
+
   async load(initial: Target): Promise<void> {
     this.target = initial;
     const pose = this.currentTargetPose();
@@ -251,11 +313,13 @@ export class World {
     const post = this.tier === "low" ? null : loadPost().then(() => !this.disposed && this.applyTier());
     // Each of the next steps starts in a task of its own (the renderer's context set-up took the one before).
     await pause();
+    const effects = this.addEffects();
+    await pause();
     const environment = this.environment();
     await pause();
     const surfaces = paintMaterials(this.materials, pause);
     await fonts;
-    await Promise.all([...needed.map((key) => this.ensure(key).then(step)), models, ...modules, post, environment, surfaces]);
+    await Promise.all([...needed.map((key) => this.ensure(key).then(step)), models, ...modules, post, environment, surfaces, effects]);
     this.applyPose();
     // Textures go up one per task and the programs link in the background; the first frame then only draws. Left to
     // that frame, uploads and links froze the poster-to-scene cross-fade half way (a washed-out double exposure).
@@ -418,12 +482,27 @@ export class World {
 
   setJourney(progress: number, ranges?: ChapterRange[]): void {
     if (ranges) this.ranges = ranges;
-    this.journey = clamp01(progress);
+    const next = clamp01(progress);
+    if (next !== this.journey) this.moved = performance.now();
+    this.journey = next;
     this.dirty = true;
   }
 
   setPanel(value: number): void {
     this.panel = clamp01(value);
+    this.dirty = true;
+  }
+
+  /** The switchyard's power-up (0 standing by, 1 energised), tweened by the page like the panel. */
+  setEnergy(value: number): void {
+    this.energy = clamp01(value);
+    this.dirty = true;
+  }
+
+  setCovered(covered: boolean): void {
+    if (covered === this.covered) return;
+    this.covered = covered;
+    this.last = performance.now();
     this.dirty = true;
   }
 
@@ -458,9 +537,10 @@ export class World {
     const width = window.innerWidth;
     const height = window.innerHeight;
     this.viewport = { width, height };
-    const ratio = Math.min(window.devicePixelRatio, this.tier === "high" ? 1.5 : this.tier === "medium" ? 1.25 : 1);
-    this.renderer.setPixelRatio(ratio);
+    this.scale = this.governor.scale;
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, RATIO[this.tier]) * this.scale);
     this.renderer.setSize(width, height, false);
+    this.write("scale", this.scale.toFixed(2));
     this.camera.aspect = width / height;
     const wide = width > 900;
     this.camera.setViewOffset(width, height, wide ? -width * 0.17 : 0, wide ? 0 : height * 0.17, width, height);
@@ -481,6 +561,8 @@ export class World {
       tier: this.tier,
       frameMs: Math.round(average * 10) / 10,
       zones: this.zones.size,
+      scale: this.scale,
+      gpuMs: Math.round(this.gpuMs * 10) / 10,
     };
   }
 
@@ -502,6 +584,8 @@ export class World {
     this.zones.clear();
     this.post?.dispose();
     this.warmTarget.dispose();
+    this.effects?.dispose();
+    this.timer.dispose();
     disposeMaterials(this.materials);
     disposeTextures();
     this.sky.geometry.dispose();
@@ -526,6 +610,10 @@ export class World {
     const direct = !this.post;
     sky.uTop.value.set(direct ? palette.skyTopLow : palette.skyTop);
     sky.uHorizon.value.set(direct ? palette.skyHorizonLow : palette.skyHorizon);
+    if (this.effects) {
+      this.effects.setTier(this.tier);
+      this.write("effects", this.effects.names.join(","));
+    }
     this.resize();
   }
 
@@ -751,6 +839,12 @@ export class World {
   private tick(now: number): void {
     const delta = Math.min((now - this.last) / 1000, 0.1);
     this.last = now;
+    // Behind the full-screen menu nothing would be seen: the scene holds still until it closes.
+    if (this.covered) return;
+    if (this.rescale && now - this.moved > 400 && !this.transition) {
+      this.rescale = false;
+      this.resize();
+    }
     const transitioning = this.transition !== null;
     if (this.transition && now - this.transition.start >= this.transition.duration) this.transition = null;
     const settling = Math.abs(this.parallax.x - this.parallaxTarget.x) + Math.abs(this.parallax.y - this.parallaxTarget.y) > 0.002;
@@ -770,8 +864,23 @@ export class World {
     this.stream(zone);
     this.atmosphere(zone);
     this.assignLights();
-    const frame: Frame = { time: this.motion ? this.clock : 0, delta, camera: this.camera.position, panel: this.panel, motion: this.motion };
+    const time = this.motion ? this.clock : 0;
+    const frame: Frame = { time, delta, camera: this.camera.position, panel: this.panel, motion: this.motion, energy: this.energy };
     for (const built of this.zones.values()) if (built.group.visible) built.update(frame);
+    this.cullPortals(zone);
+    this.sky.material.uniforms.uTime.value = time;
+    this.effects?.update({
+      time,
+      // Ambient frames are drawn at about 30 fps, so the effects advance by the time since the last frame drawn.
+      delta: Math.max(0, time - this.effectsTime),
+      camera: this.camera.position,
+      shown: this.shown,
+      panel: this.panel,
+      energy: this.energy,
+      lights: this.pool,
+      pixels: this.renderer.getDrawingBufferSize(this.buffer).y / (2 * Math.tan((this.camera.fov * Math.PI) / 360)),
+    });
+    this.effectsTime = time;
     if (transitioning && this.transition) {
       const t = (now - this.transition.start) / this.transition.duration;
       this.focus = Math.sin(Math.PI * clamp01(t));
@@ -782,9 +891,14 @@ export class World {
     if (this.post) this.post.setExposure(output);
     else this.renderer.toneMappingExposure = 1.05 * output;
     const distance = this.aim.set(...pose.target).distanceTo(this.camera.position);
+    // Only the running loop is timed: its GPU time steers the render scale (adapt).
+    const timed = this.running && this.motion;
+    if (timed) this.adapt(now);
     this.renderer.info.reset();
+    if (timed) this.timer.begin();
     if (this.post) this.post.render(delta, this.focus, distance);
     else this.renderer.render(this.scene, this.camera);
+    if (timed) this.timer.end();
     this.hover();
     this.dirty = false;
     this.frameTimes.push(performance.now() - started);
@@ -798,11 +912,52 @@ export class World {
     const position = this.camera.position;
     this.write("camera", `${position.x.toFixed(2)},${position.y.toFixed(2)},${position.z.toFixed(2)}`);
     this.write("panel", this.panel.toFixed(2));
+    this.write("energy", this.energy.toFixed(2));
     this.write("motion", String(this.motion));
     this.write("exposure", exposure.toFixed(2));
     this.write("focus", this.focus.toFixed(2));
     const subject = this.aim.set(...pose.target).project(this.camera);
     this.write("subject", `${Math.round(((subject.x + 1) / 2) * this.viewport.width)},${Math.round(((1 - subject.y) / 2) * this.viewport.height)}`);
+    this.placeMarker(-position.z);
+  }
+
+  /**
+   * The rooms next to the camera's are seen only through their doorway: their objects outside that view are not drawn
+   * (see portals.ts). Entering a room, the next one shows through the far doorway; this skips most of its objects.
+   */
+  private cullPortals(current: ZoneKey): void {
+    let culled = 0;
+    for (const [key, built] of this.zones) {
+      if (!built.group.visible) continue;
+      const doorway = key === current ? null : doorwayBetween(current, key);
+      if (doorway) built.group.updateMatrixWorld();
+      culled += cullThroughDoorway(built.group, this.camera.position, doorway, this.portal);
+    }
+    this.write("culled", String(culled));
+  }
+
+  /** Feeds the GPU time of finished frames to the governor; a new scale is applied once the camera rests (tick). */
+  private adapt(now: number): void {
+    const samples = this.timer.collect();
+    if (!samples.length) return;
+    for (const ms of samples) {
+      this.gpuMs = this.gpuMs ? this.gpuMs * 0.9 + ms * 0.1 : ms;
+      if (this.governor.sample(ms, now) !== null) this.rescale = true;
+    }
+    this.write("gpu", this.gpuMs.toFixed(1));
+  }
+
+  /** Reports where the switchyard's control sits on screen while the yard is held in view. */
+  private placeMarker(depth: number): void {
+    if (!this.options.onMarker) return;
+    const point = this.projected.copy(this.marker).project(this.camera);
+    const x = Math.round(((point.x + 1) / 2) * this.viewport.width);
+    const y = Math.round(((1 - point.y) / 2) * this.viewport.height);
+    const visible = this.shown("yard") && depth > 114.6 && point.z < 1 && x > 24 && x < this.viewport.width - 24 && y > 24 && y < this.viewport.height - 24;
+    const state = visible ? `${x},${y}` : "hidden";
+    if (state === this.markerState) return;
+    this.markerState = state;
+    this.options.onMarker("energise", x, y, visible);
   }
 
   private write(key: string, value: string): void {

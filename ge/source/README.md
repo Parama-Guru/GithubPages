@@ -36,7 +36,7 @@ After changing the scene, run `build`, `serve`, `posters`, then `build` again so
 | `src/routes/routes.ts` | Clean URLs, titles, descriptions, zones |
 | `src/ui/` | HTML templates shared by the prerender and the client router |
 | `src/app/` | Motion (Lenis + GSAP), home journey, page controller, tour position for Back (`tour.ts`), preferences, sound |
-| `src/world/` | Three.js runtime: camera path, zones, materials, textures, shaders, post-processing |
+| `src/world/` | Three.js runtime: camera path, zones, materials, textures, shaders, post-processing; `effects/` (WebGL effects drawn across every room, version 2.1), `governor.ts` (adaptive resolution), `portals.ts` (portal culling), `layout.ts` (positions shared by rooms and effects) |
 | `blender/build_assets.py` | Switchgear, entrance doors, transformer, insulator string and lattice tower (baked AO, door/breaker animations; colours from `src/world/look.json`) |
 | `blender/camera_path.blend`, `camera_path.py` | Camera keys for the scroll journey and every page, edited in Blender |
 | `tools/` | Prerender, publish, static server, Blender/asset build, poster and screenshot tools |
@@ -179,6 +179,42 @@ single-line diagram, transformer, factory, shield, org chart, document, tower, a
   on hover. Everything starts from an IntersectionObserver (no layout reads in scroll handlers) and only transform,
   opacity, clip-path and stroke-dashoffset animate. No 3D chunk, model or poster is requested without 3D (the home
   posters sit in a `<picture>` whose `(scripting: none)` source is empty).
+- Card motion (v2.1): as each group of cards on the 2D home rises in, its accent lines draw and its numbers arrive in
+  turn — the Quality & Safety tiles' emerald bars and numbers, the credentials' column rules and marigold underlines, the
+  principle numbers, the figures' marigold rules, the founder photo's emerald frame and the contact details one by one.
+  Hover answers with colour and a short line (tile bar turns marigold, credential underline lengthens, a marigold line
+  runs under a principle, the project lists fill with emerald from the left, milestone dots grow). CSS only, on the
+  existing reveal states of `app/flat.ts`.
+- Scroll effects on the 2D home (v2.1, `src/app/signatures.ts` and the "Signatures" block at the end of
+  `src/styles/flat.css`): leaving the hero, its name, tagline, expertise and buttons drift up at different speeds; the
+  forest and emerald bands open from an inset, rounded card to the full width; the project photographs drift against the
+  scroll and settle from a slight zoom; the client belt runs faster while the page is scrolled and eases back when it
+  stops; the milestone line fills with the scroll and each milestone lights as the current reaches it; the founder's
+  photograph and its frame move apart a little.
+- Page signatures (v2.1): every other page has one quiet effect of its own, the same in both modes:
+  - About: the brand statement writes itself word by word as it is read.
+  - How We Serve: the six principles light in turn like indicator lamps.
+  - How We Work: the manpower table is a bar chart — under each role, a bar on a faint track shows its team against the
+    largest (40 helpers; the scale is written under the chart), the emerald-to-marigold gradient reaching the marigold only
+    for the largest teams. With motion, each bar runs out with its number as the role comes into view (the same trigger,
+    1.8 s and easing as the counter), so on a phone the lower bars wait until they are on screen. The bars are part of the
+    page (`--share` written by `ui/pages.ts`), so reduced motion and no JavaScript show the finished chart.
+  - Projects: each photograph moves within its frame against the scroll, and the captions slide in.
+  - The four project lists: a marigold rule draws under each heading; tables below the fold cascade in row by row, a
+    table already on screen is scanned once by a marigold light instead (its rows are never hidden); the On-going list
+    marks each project with a live, pulsing dot.
+  - Clients: the logo wall assembles in a diagonal wave.
+  - Quality & Safety: a policy's title stays in view while it is read (901 px and wider) and a line beside it fills.
+  - Leadership: the role cards open and close smoothly (`::details-content`), and the marker turns from + to ×.
+  - Organisation Chart: the chart grows from the Proprietor down, level by level.
+  - Downloads: the document rows settle like sheets of paper and their rules draw across.
+  - Contact: the fields arrive in turn, a marigold line draws under the field in use, and the send button charges.
+  - 404: a lamp test runs once along the page cards.
+
+  Rules: only transform, opacity and clip-path animate, mostly through a custom property that a ScrollTrigger writes (no
+  layout reads while scrolling); nothing on screen at the first paint is hidden (it would delay the largest paint); the
+  final state is the CSS default, so reduced motion, no JavaScript and a failed effect show everything.
+  `tests/e2e/signatures.spec.ts` checks that every effect ends in its final state.
 - Reduced motion and no JavaScript show every element in its final state. `tests/e2e/flat.spec.ts` and
   `tests/e2e/pages.spec.ts` cover the 2D home and the shared pages (same layout in both modes within 2 px, no world on
   direct entry, no long tasks during page changes, menu accessibility).
@@ -248,9 +284,102 @@ Remaining Lighthouse notes, by design: "unused JavaScript" lists `three.core` (t
 part of the start chunk (GSAP and ScrollTrigger code paths not run on the first screen); `robots.txt` and the
 back/forward cache findings come from the local server and the headless browser, not from the site (see below).
 
+## Version 2.1 — WebGL effects
+
+The owner asked for more of WebGL itself in the 3D tour: a better experience, optimisation and new features. Three.js
+already draws through WebGL 2; version 2.1 adds hand-written GLSL (shader materials, instancing, animation that runs on
+the GPU) and raw WebGL where it pays off (GPU timer queries), with no new dependency. The effects live in
+`src/world/effects/` and `src/world/shaders/`; the rooms keep their own files.
+
+- **Current in the conductors** (`effects/network.ts`, `effects/routes.ts`, `shaders/network.*`): every conductor that
+  carries current — the lobby bus under the plaques, the hall's busbar trunk and cable trays, the hero panel's feeder,
+  the single-line diagram on the control room's video wall, and in the yard the bay's droppers and the line out to the
+  first tower — is one mesh and one draw call. Each vertex carries its circuit and its distance from the circuit's
+  source; per circuit, uniform arrays hold its power, how far it is energised and a travelling power-up front, and the
+  fragment shader draws a faint steady glow with comets running along it (their travel is integrated on the CPU, so a
+  change of speed never jumps). The plant powers up as the visitor walks in: the lobby bus lights with the plaques, the
+  diagram once it is drawn, the hall's trunk ahead of the visitor; the yard's line glows gently on arrival.
+- **Dust, ionised motes and corona** (`effects/particles.ts`, `shaders/particles.*`): one point draw. 2,000 dust motes
+  (1,200 on the medium tier) wrap in a box that travels with the camera and drift by fixed seeds; the vertex shader lights
+  them by the six nearest lamps and light shafts, so they show only where light falls, indoors. At the yard's six
+  insulator strings a soft corona breathes and ionised motes rise once the yard is energised. No per-particle work runs
+  on the CPU.
+- **Light shafts** (`effects/shafts.ts`, `shaders/shaft.*`): soft cones of light in hazy air under the façade canopy's
+  downlights, the spot over the hall's hero panel, the safety room's downlight and the yard's four floodlights; one
+  instanced draw. Brightest along the axis as seen from the camera, fading towards the silhouette, the floor and the
+  lens, with slowly drifting 3D-noise haze; the cones of rooms out of view collapse in the vertex shader.
+- **Drifting cloud** (`shaders/sky.frag`): a thin layer of fair-weather cloud (fbm noise on a plane above the camera)
+  crowding towards the horizon and warm on the sun's side, in the palette's ivory and sage (`cloudLight`, `cloudShade`
+  in `palette.ts`).
+- **Energise the switchyard** (new interaction): the yard has a line bay — a live-tank circuit-breaker pole under each
+  phase with droppers to the conductors, and an operating mechanism with a status lamp (`zones/yard.ts`). Clicking a
+  pole or the mechanism closes the breaker: the lamp turns from red to green, a power-up runs from the poles up the
+  droppers and out along the line to the first tower, the current speeds up, the floodlights brighten, the insulators
+  glow and, with sound on, a 100/200/300 Hz load hum swells under the 50 Hz hum (`app/sound.ts`). Clicking again opens
+  it. Like the switchgear panel it is a 0–1 state tweened by the page (`World.setEnergy`, canvas `data-energy`);
+  leaving the home page opens it quietly. Its HTML equivalent is a button anchored on the mechanism in the scene
+  (`app/hotspot.ts`, styles under `html.has-3d .scene-hotspot`): "Energise the switchyard" with `aria-pressed`, shown
+  while the yard is held in view and never over the chapter text, its label reading towards the text, shortened to
+  "Energise" below 600 px (the full name stays for screen readers). It follows "Send an enquiry" in the tab order, and
+  focusing it from elsewhere brings the yard into view. Only the 3D tour creates it; the 2D site is unchanged.
+- **No flashing** (WCAG 2.3.1): comets pass any point less than three times a second, the corona breathes below 1 Hz
+  within ±18 % of its brightness, and a power-up is one travelling front; `tests/unit/effects.test.ts` checks the rates.
+
+Optimisation:
+
+- **Adaptive resolution** (`governor.ts`): the GPU time of every frame is measured with `EXT_disjoint_timer_query_webgl2`
+  queries (read back a few frames later). When the slower frames exceed 13.5 ms the render scale steps down by 15 %
+  (never below 60 % of the tier's pixel ratio; 70 % medium, 80 % low); it steps back up only after 6 s and only if the
+  slower frames would still fit the budget at the larger size, and a new scale waits until the camera rests. Canvas
+  `data-scale` and `data-gpu` show it.
+- **Fewer draw calls**: the switchgear row leaves out the parts behind its closed doors and merges parts by material (9
+  instanced draws instead of 16, about 20,000 triangles fewer); repeated models (the yard's transformers, insulator
+  strings and towers, the approach's towers) are instanced per material (`instancedCopies` in `kit.ts`); the twelve
+  client plates are one instanced draw from a logo atlas with a per-plate reveal (`shaders/plate.*`); the four
+  project-group signs share one texture; the old per-room energy meshes are replaced by the network's one draw.
+- **Portal culling** (`portals.ts`): a neighbouring room is only seen through its doorway, so its objects outside the
+  view through the doorway are not drawn.
+- **Depth of field is skipped at the holds**, where nothing is out of focus (about a dozen post-processing draws), and
+  **nothing is drawn while the full-screen menu covers the scene**.
+- The effects are built in short tasks before the shader warm-up, so their programs compile off the main thread with
+  the rest; the rooms' new materials compile with their room. Everything new is disposed with the world or its room.
+
+Tiers: desktop (high) draws everything; medium has fewer motes; the low tier (phones, no post-processing) keeps the
+current in the conductors, the power-up and the yard's corona, skips dust and light shafts, and its cloud uses 3 noise
+octaves instead of 5. The 2D site (3D switched off, reduced motion, Data Saver, 2G, no WebGL) downloads none of it.
+
+Measured on the production build served with gzip (Edge, AMD Radeon 780M, 1440 × 900), v2 being the published copy
+measured alongside on the same machine:
+
+| | v2 | v2.1 |
+|---|---|---|
+| Draw calls at the eight chapter holds, desktop | 58–89 | 44–72 |
+| Draw calls at the holds, low tier | 26–57 | 22–50 |
+| Most draw calls anywhere along the tour (between rooms), desktop / low | 126 / 94 | 100 / 66 |
+| GPU time of a frame at the holds (timer queries) | 7.1–14.0 ms | 4.9–6.3 ms |
+| CPU time of a frame (e2e sample, average of the eight rooms) | 3.5 ms | 3.1 ms |
+| Main-thread tasks over 50 ms while scrolling the tour (`tools/scroll-perf.mjs`, 3 runs each) | 0 | 0 |
+| First visit, desktop (e2e budget 2.5 MiB) | 852 KiB | 865 KiB |
+| First screen ready on fast 4G (e2e limit 2.5 s) | 1.79 s | 1.67 s |
+| Lighthouse performance, 3D home, desktop (medians of three sets of 3 interleaved runs) | 92 · 91 · 81 | 98 · 94 · 76 |
+| Lighthouse performance, 3D home, mobile (medians of three sets) | 72 · 70 · 73 | 79 · 74 · 78 |
+| Lighthouse total blocking time, mobile (medians of two sets) | 1.74 s · 1.62 s | 0.88 s · 0.97 s |
+| Lighthouse accessibility and best practices, every run | 100 | 100 |
+
+Other processes loaded the machine during the Lighthouse runs (v2 had scored 97–99 on desktop and 79–83 on mobile on
+a quiet machine), so only the side-by-side numbers compare; the third desktop set ran under the heaviest load. The
+boot's long tasks are the same in both builds.
+
+`tests/unit/effects.test.ts` covers the adaptive scale's hysteresis, portal culling, the routes' distances and the
+flash rates; `tests/e2e/effects.spec.ts` energises the yard from the scene and with its button (mouse, keyboard, axe),
+checks the effects named on each tier, the draw-call budgets at every hold (110 desktop, 70 low tier), that nothing is
+drawn behind the menu and that the 2D site loads no WebGL. The journey test in `site.spec.ts` now allows 110 draw calls.
+
 ## Known limitations
 
 - GitHub Pages serves a custom 404 and `robots.txt` only from the repository root; `ge/404.html` is used for
   in-site navigation, and `sitemap.xml` can be submitted to search engines directly.
 - Frame rate on real phones has not been measured on physical devices; the site lowers quality automatically
   when frames are slow.
+- Adaptive resolution needs GPU timer queries (`EXT_disjoint_timer_query_webgl2`: Chrome and Edge, not Safari or
+  Firefox); without them the render scale stays at the tier's, and the tier still steps down when frames are slow.

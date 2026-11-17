@@ -10,6 +10,7 @@ import { initFlat } from "./app/flat";
 import { chapterScroll, initJourney, type Controller } from "./app/journey";
 import { createMotion, gsap, scrollTo, ScrollTrigger, type Motion } from "./app/motion";
 import { initPage } from "./app/page";
+import { createHotspot, type Hotspot } from "./app/hotspot";
 import { chapterInView, chapterProgress, entryChapter, labelBack, rememberChapter, rememberedChapter, resumeChapter, trackTour } from "./app/tour";
 import { play, setSound } from "./app/sound";
 
@@ -28,6 +29,11 @@ let current: Route = matchRoute(location.pathname);
 let controller: Controller = { destroy: () => undefined };
 let world: World | null = null;
 const panel = { value: 0 };
+// The switchyard's breaker (3D: the bay in the yard; HTML: the button anchored on it, app/hotspot.ts).
+const energy = { value: 0 };
+let energised = false;
+let hotspot: Hotspot | null = null;
+let marker = { x: 0, y: 0, visible: false };
 const JOURNEY: Target = { kind: "journey" };
 // <main> fades out for this long (main.css main.is-leaving) before the next page is swapped in.
 const LEAVE_MS = caps.reduced ? 0 : 220;
@@ -128,6 +134,44 @@ function setPanel(open: boolean): void {
   if (open) play("breaker");
 }
 
+/** Closes or opens the switchyard's breaker: a power-up runs out along the line (or back) and the load hum follows. */
+function setEnergy(on: boolean, quiet = false): void {
+  energised = on;
+  gsap.to(energy, {
+    value: on ? 1 : 0,
+    duration: caps.reduced || quiet ? 0 : on ? 2.6 : 1.8,
+    ease: on ? "power1.inOut" : "power2.out",
+    overwrite: true,
+    onUpdate: () => world?.setEnergy(energy.value),
+  });
+  hotspot?.setPressed(on);
+  if (!quiet) play(on ? "energise" : "release");
+}
+
+/** The button for the switchyard's breaker, in the last chapter of the 3D tour. */
+function energiseControl(): Hotspot | null {
+  const host = main.querySelector<HTMLElement>("#contact");
+  if (!host) return null;
+  const created = createHotspot(host, {
+    label: "Energise the switchyard",
+    short: "Energise",
+    pressed: energised,
+    onToggle: () => setEnergy(!energised),
+    onFocusAway: () => {
+      const y = chapterScroll(main, "contact");
+      if (y !== null) scrollTo(motion, y, 1.2);
+    },
+  });
+  created.place(marker.x, marker.y, marker.visible);
+  return created;
+}
+
+function onMarker(id: string, x: number, y: number, visible: boolean): void {
+  if (id !== "energise") return;
+  marker = { x, y, visible };
+  hotspot?.place(x, y, visible);
+}
+
 function enterFacility(y: number): void {
   play("door");
   scrollTo(motion, y, 3.4);
@@ -150,11 +194,14 @@ function mount(next: Route, intro = true): Controller {
   const journey = initJourney(main, flat ? { ...motion, enabled: false } : motion, world, enterFacility, intro);
   const untrack = trackTour(main);
   const site = flat ? initFlat(main, { animate: flatMotion, intro }) : null;
+  hotspot = !flat && world ? energiseControl() : null;
   return {
     destroy() {
       site?.destroy();
       journey.destroy();
       untrack();
+      hotspot?.destroy();
+      hotspot = null;
     },
   };
 }
@@ -190,6 +237,7 @@ async function navigate(url: URL, push = true, resume: string | null = null): Pr
   main.classList.remove("is-entering");
   main.classList.add("is-leaving");
   if (panel.value > 0) setPanel(false);
+  if (energised && !home) setEnergy(false, true);
   if (!home) parkWorld();
   else if (world && has3d()) {
     // The tour opens where it was left (or at its front): that room loads while the page fades out.
@@ -296,6 +344,8 @@ function bindShell(): void {
     if (target.closest("[data-menu-open]")) {
       menu()?.showModal();
       motion.lenis?.stop();
+      // The menu covers the whole screen, so the scene stops drawing behind it.
+      world?.setCovered(true);
       return;
     }
     if (target.closest("[data-menu-close]")) {
@@ -319,6 +369,7 @@ function bindShell(): void {
       const second = main.querySelectorAll<HTMLElement>(".chapter")[1];
       if (second) enterFacility(second.offsetTop + (second.offsetHeight - window.innerHeight) * 0.32);
     } else if (id === "panel") setPanel(panel.value < 0.5);
+    else if (id === "energise") setEnergy(!energised);
     else if (id.startsWith("route:")) {
       const destination = new URL(href(id.slice(6) as RouteId), location.href);
       void world.presentPick().then(() => navigate(destination));
@@ -328,6 +379,7 @@ function bindShell(): void {
     "close",
     (event) => {
       if ((event.target as HTMLElement).id === "site-menu") {
+        world?.setCovered(false);
         motion.lenis?.start();
         document.querySelector<HTMLElement>("[data-menu-open]")?.focus();
       }
@@ -501,6 +553,7 @@ async function bootWorld(resume: string | null = null): Promise<void> {
       tier: caps.tier,
       motion: !caps.reduced,
       onHover,
+      onMarker,
       onProgress: (progress) => {
         watch();
         if (bar) bar.style.width = `${Math.round(25 + progress * 75)}%`;
@@ -519,6 +572,7 @@ async function bootWorld(resume: string | null = null): Promise<void> {
     booting = false;
     world = created;
     created.setPanel(panel.value);
+    created.setEnergy(energy.value);
     created.goTo(JOURNEY, 0);
     stage.dataset.world = "ready";
     stage.classList.add("is-interactive");

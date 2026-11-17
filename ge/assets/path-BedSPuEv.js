@@ -1,1 +1,0 @@
-export{t as evenRanges}from"./path-BIuTGTeJ.js";

@@ -125,18 +125,24 @@ export function energyMaterial(role: EnergyRole = "cool", scale = 6) {
   });
 }
 
-export function skyMaterial() {
+/** The sky dome with drifting cloud; `octaves` of cloud noise (fewer on phones). */
+export function skyMaterial(octaves = 5) {
   const uniforms = {
     uTop: { value: new Color(palette.skyTop) },
     uHorizon: { value: new Color(palette.skyHorizon) },
     uGlow: { value: new Color(palette.skyGlow) },
     uGlowDirection: { value: new Vector3(0.9, 0.04, 0.6) },
     uStars: { value: palette.stars },
+    uTime: { value: 0 },
+    uClouds: { value: palette.clouds },
+    uCloudLight: { value: new Color(palette.cloudLight) },
+    uCloudShade: { value: new Color(palette.cloudShade) },
   };
   const material = new ShaderMaterial({
     vertexShader: skyVert,
     fragmentShader: skyFrag,
     uniforms,
+    defines: { CLOUD_OCTAVES: octaves },
     side: 1,
     depthWrite: false,
   });

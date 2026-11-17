@@ -8,6 +8,9 @@ export type ScenePalette = {
   skyTopLow: string;
   skyHorizonLow: string;
   skyGlow: string;
+  cloudLight: string;
+  cloudShade: string;
+  clouds: number;
   stars: number;
   hemiSky: string;
   hemiGround: string;
@@ -35,6 +38,9 @@ export const palette: ScenePalette = {
   skyTopLow: "#3f8f93",
   skyHorizonLow: "#f0cf9c",
   skyGlow: "#ffb866",
+  cloudLight: "#fff0dc",
+  cloudShade: "#a9bdb0",
+  clouds: 0.72,
   stars: 0,
   hemiSky: "#f4e3c4",
   hemiGround: "#2a3b31",

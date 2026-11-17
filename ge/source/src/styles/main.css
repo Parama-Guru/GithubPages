@@ -1698,7 +1698,9 @@ tbody tr:hover {
   font-size: 34px;
   color: var(--figure);
 }
-/* Twenty roles: five, four or two to a row, so the last row is always full. */
+/* Twenty roles: five, four or two to a row, so the last row is always full. Each role is also a bar of a bar chart: its
+   team against the largest (--share, ui/pages.ts) on a faint track. The emerald-to-marigold gradient spans the whole
+   track, so only the largest teams reach the marigold. */
 .manpower {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -1707,13 +1709,30 @@ tbody tr:hover {
   border-left: 1px solid var(--line);
 }
 .manpower div {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  /* The bar keeps to the bottom, so the bars of a row line up when a role's name wraps. */
+  grid-template-rows: 1fr auto;
   align-items: baseline;
-  gap: 12px;
-  padding: 14px 18px;
+  gap: 14px 12px;
+  padding: 16px 18px 18px;
   border-right: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
+}
+.manpower div::before,
+.manpower div::after {
+  content: "";
+  grid-area: 2 / 1 / 3 / -1;
+  align-self: center;
+  height: 8px;
+  border-radius: 4px;
+}
+.manpower div::before {
+  background: color-mix(in srgb, var(--emerald) 10%, transparent);
+}
+.manpower div::after {
+  background: linear-gradient(90deg, var(--emerald), var(--marigold));
+  clip-path: inset(0 calc((1 - var(--share, 1)) * 100%) 0 0 round 4px);
 }
 .manpower dt {
   font-size: 14px;
@@ -1724,6 +1743,11 @@ tbody tr:hover {
   font: 600 24px/1.1 var(--font-display);
   font-variant-numeric: tabular-nums;
   color: var(--figure);
+}
+.manpower-scale {
+  margin: 14px 0 0;
+  font-size: 13px;
+  color: var(--muted);
 }
 .ehs-standards {
   columns: 3 240px;
@@ -2117,6 +2141,120 @@ html.has-3d:not(.is-page) .site-footer {
 }
 .hover-label.is-visible {
   opacity: 1;
+}
+/* A control anchored on the 3D scene: the switchyard's breaker bay (app/hotspot.ts, placed by the world each frame it
+   moves). It shows only while the bay is held in view, stays reachable by keyboard (focusing it brings the yard into
+   view) and its label is its accessible name; aria-pressed tells whether the yard is energised. */
+html.has-3d .scene-hotspot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--on-accent);
+  font: 600 11px/1 var(--font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate3d(var(--x, -100px), var(--y, -100px), 0) translate(-22px, -22px);
+  transition: opacity 0.4s ease;
+}
+html.has-3d .scene-hotspot.is-left {
+  flex-direction: row-reverse;
+  transform: translate3d(var(--x, -100px), var(--y, -100px), 0) translate(calc(-100% + 22px), -22px);
+}
+html.has-3d .scene-hotspot:is(.is-visible, :focus-visible) {
+  opacity: 1;
+  pointer-events: auto;
+}
+html.has-3d .scene-hotspot:focus-visible {
+  outline: none;
+}
+.scene-hotspot-mark {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  border: 1.5px solid var(--marigold);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--forest) 86%, transparent);
+  color: var(--marigold);
+  box-shadow: 0 6px 18px rgba(6, 30, 22, 0.35);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+.scene-hotspot-mark svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+}
+/* A slow ring that invites a click (opacity and transform only). */
+.scene-hotspot-mark::after {
+  content: "";
+  position: absolute;
+  inset: -1.5px;
+  border: 1.5px solid var(--marigold);
+  border-radius: 50%;
+  animation: hotspot-ring 2.6s ease-out infinite;
+}
+@keyframes hotspot-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  70%,
+  100% {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+.scene-hotspot[aria-pressed="true"] .scene-hotspot-mark {
+  background: var(--marigold);
+  color: var(--forest);
+}
+.scene-hotspot[aria-pressed="true"] .scene-hotspot-mark::after {
+  animation: none;
+  opacity: 0;
+}
+.scene-hotspot-label {
+  padding: 9px 12px;
+  background: var(--accent);
+  white-space: nowrap;
+  box-shadow: 0 6px 18px rgba(6, 30, 22, 0.25);
+}
+.scene-hotspot:hover .scene-hotspot-label {
+  background: var(--accent-strong);
+}
+.scene-hotspot:focus-visible .scene-hotspot-mark {
+  outline: 3px solid var(--marigold);
+  outline-offset: 3px;
+}
+/* Narrow screens show "Energise"; the rest of the name stays available to screen readers. */
+@media (max-width: 600px) {
+  .scene-hotspot-more {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scene-hotspot-mark::after {
+    animation: none;
+  }
 }
 .route-curtain {
   position: fixed;

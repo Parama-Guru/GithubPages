@@ -1,5 +1,5 @@
 import { BoxGeometry, BufferGeometry, CylinderGeometry, Group, MeshBasicMaterial, SphereGeometry } from "three";
-import { box, merged, partition, placed, plane, pool, room } from "../kit";
+import { box, cylinder, merged, partition, placed, plane, pool, room } from "../kit";
 import { fitFont, fonts, label } from "../textures";
 import { hazard } from "./painters";
 import { ink } from "../ink";
@@ -70,6 +70,8 @@ export const buildSafety: ZoneBuilder = async (context) => {
   g.add(box(m.darkMetal, [0.08, 2.0, 3.4], [-4.95, 2.1, -87.5]));
   g.add(plane(boardMaterial, 3.2, 3.2 / board.aspect, [-4.9, 2.1, -87.5], [0, Math.PI / 2, 0]));
   g.add(pool(m, [3.6, 0, -88], 6), pool(m, [-3.6, 0, -87.5], 4));
+  // The downlight over the helmet rack, whose beam shows in the air (effects/shafts.ts).
+  g.add(cylinder(m.lightWarm, 0.2, 0.03, [3.6, 4.47, -88], 20));
 
   zone.lights.push({ position: [3, 4, -88.5], color: "#fff0d6", intensity: 30, distance: 10 }, { position: [-3, 4, -87], color: "#e9f2ff", intensity: 14, distance: 9 });
   return zone;
